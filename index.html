@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แผนเที่ยวฮ่องกง 3 วัน 3 คืน มกราคม 2027</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif; background: #f5f4f0; color: #1a1a1a; padding: 24px 16px; }
+  .container { max-width: 720px; margin: 0 auto; }
+
+  .trip-header { text-align: center; padding: 2rem 0 1.5rem; }
+  .badge-new { display: inline-block; background: #E8F8F0; color: #1D9E75; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.5px; }
+  .trip-title { font-size: 28px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
+  .trip-sub { font-size: 14px; color: #888; }
+
+  .overview-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .ov-item { background: #fff; border: 1px solid #e5e3dc; border-radius: 12px; padding: 12px; text-align: center; }
+  .ov-icon { font-size: 20px; margin-bottom: 4px; }
+  .ov-label { font-size: 11px; color: #888; margin-bottom: 2px; }
+  .ov-val { font-size: 13px; font-weight: 600; }
+
+  .day-card { background: #fff; border: 1px solid #e5e3dc; border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+  .day-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #e5e3dc; }
+  .day-badge { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+  .day-info { flex: 1; }
+  .day-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  .day-date { font-size: 12px; color: #888; }
+  .day-icon { font-size: 22px; }
+
+  .events { padding: 14px 18px; display: flex; flex-direction: column; gap: 11px; }
+  .event { display: flex; align-items: flex-start; gap: 10px; }
+  .event-time { font-size: 12px; color: #999; min-width: 50px; padding-top: 2px; }
+  .event-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .event-content { flex: 1; }
+  .event-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .event-note { font-size: 12px; color: #888; margin-bottom: 3px; }
+  .tag-new { font-size: 10px; background: #FFF0E5; color: #C45C00; padding: 1px 6px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+  .tag-food { font-size: 10px; background: #FEF0F5; color: #B03060; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
+  .map-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #185FA5; text-decoration: none; background: #E6F1FB; padding: 2px 8px; border-radius: 20px; margin-top: 3px; }
+  .map-link:hover { background: #B5D4F4; }
+
+  .tip-box { margin: 4px 18px 14px; background: #fdf8ef; border-radius: 10px; padding: 10px 14px; display: flex; gap: 8px; }
+  .tip-text { font-size: 12px; color: #7a6030; }
+
+  .budget-section { background: #fff; border: 1px solid #e5e3dc; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .section-title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+  .budget-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .budget-item { background: #f5f4f0; border-radius: 10px; padding: 12px; text-align: center; }
+  .budget-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .budget-amount { font-size: 14px; font-weight: 600; }
+  .budget-total { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e3dc; display: flex; justify-content: space-between; align-items: center; }
+  .budget-total-label { font-size: 13px; color: #666; }
+  .budget-total-amount { font-size: 20px; font-weight: 700; }
+
+  .tips-section { background: #fff; border: 1px solid #e5e3dc; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .tips-grid { display: flex; flex-direction: column; gap: 8px; }
+  .tip-row { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #444; }
+  .tip-row span:first-child { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .packing-section { background: #fff; border: 1px solid #e5e3dc; border-radius: 14px; padding: 18px; margin-bottom: 2rem; }
+  .packing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .packing-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; }
+
+  .d1-badge { background: #E6F1FB; color: #185FA5; }
+  .d2-badge { background: #EAF3DE; color: #3B6D11; }
+  .d3-badge { background: #FBEAF0; color: #993556; }
+  .d4-badge { background: #EEEDFE; color: #3C3489; }
+
+  .dot-blue { background: #378ADD; }
+  .dot-green { background: #1D9E75; }
+  .dot-pink { background: #D4537E; }
+  .dot-amber { background: #BA7517; }
+  .dot-purple { background: #7F77DD; }
+  .dot-orange { background: #D85A30; }
+  .dot-gray { background: #9E9B96; }
+  .dot-teal { background: #0E8A84; }
+
+  .resto-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0ede6; }
+  .resto-row:last-child { border-bottom: none; }
+  .resto-emoji { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  .resto-body { flex: 1; }
+  .resto-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .resto-note { font-size: 12px; color: #555; margin-bottom: 3px; }
+  .resto-sub { font-size: 11px; color: #999; margin-bottom: 4px; }
+  .tag-hotpot { font-size: 10px; background: #FEF0F5; color: #B03060; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .tag-bbq { font-size: 10px; background: #E6F1FB; color: #185FA5; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .tag-noodle { font-size: 10px; background: #EAF3DE; color: #3B6D11; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .tag-korean { font-size: 10px; background: #EEEDFE; color: #3C3489; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .tag-beef { font-size: 10px; background: #FFF0E5; color: #C45C00; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+
+  /* ===== HERO IMAGE ===== */
+  .trip-hero { position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .trip-hero-img { width: 100%; height: 230px; object-fit: cover; display: block; }
+  .trip-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.68) 100%); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 1.8rem 1.5rem; text-align: center; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.18); backdrop-filter: blur(6px); color: #fff; font-size: 11px; font-weight: 600; padding: 3px 12px; border-radius: 20px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.35); letter-spacing: 0.5px; }
+  .hero-title { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+  .hero-sub { font-size: 13px; color: rgba(255,255,255,0.88); text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+
+  /* ===== DAY CARD BANNER ===== */
+  .day-banner-wrap { position: relative; overflow: hidden; }
+  .day-banner-img { width: 100%; height: 120px; object-fit: cover; display: block; filter: brightness(0.88); }
+  .day-banner-overlay { position: absolute; inset: 0; display: flex; align-items: center; padding: 14px 18px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  .day-banner-overlay.arr { background: linear-gradient(105deg, rgba(10,20,60,0.72) 0%, rgba(30,10,70,0.45) 100%); }
+  .day-banner-overlay.d1  { background: linear-gradient(105deg, rgba(10,50,120,0.72) 0%, rgba(10,100,60,0.35) 100%); }
+  .day-banner-overlay.d2  { background: linear-gradient(105deg, rgba(20,80,30,0.72) 0%, rgba(10,60,80,0.35) 100%); }
+  .day-banner-info { flex: 1; }
+  .day-banner-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 3px; text-shadow: 0 1px 5px rgba(0,0,0,0.6); }
+  .day-banner-date { font-size: 11px; color: rgba(255,255,255,0.82); }
+  .day-banner-icon { font-size: 26px; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="trip-hero">
+    <img class="trip-hero-img" src="https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=1200&auto=format&fit=crop&h=460&q=80" alt="Hong Kong Skyline">
+    <div class="trip-hero-overlay">
+      <div class="hero-badge">✦ อัปเดต มกราคม 2027</div>
+      <div class="hero-title">✈️ ฮ่องกง 3 วัน 3 คืน</div>
+      <div class="hero-sub">ม.ค. 2027 · อากาศเย็นสบาย 🌤️ · ฤดูกาลท่องเที่ยวสุดดี · เตรียมรับตรุษจีน</div>
+    </div>
+  </div>
+
+  <div class="overview-strip">
+    <div class="ov-item"><div class="ov-icon">🗓️</div><div class="ov-label">ระยะเวลา</div><div class="ov-val">3 วัน 3 คืน</div></div>
+    <div class="ov-item"><div class="ov-icon">🏨</div><div class="ov-label">ที่พัก</div><div class="ov-val">Nathan Hotel ★★★★</div></div>
+    <div class="ov-item"><div class="ov-icon">💰</div><div class="ov-label">งบรวม/คน</div><div class="ov-val">~22,230 ฿</div></div>
+    <div class="ov-item"><div class="ov-icon">🚇</div><div class="ov-label">เดินทาง</div><div class="ov-val">MTR + Star Ferry</div></div>
+  </div>
+
+  <!-- Arrival Evening 27 Jan -->
+  <div class="day-card">
+    <div class="day-banner-wrap">
+      <img class="day-banner-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop&h=240&q=80" alt="TST Waterfront">
+      <div class="day-banner-overlay arr">
+        <div class="day-badge d1-badge" style="font-size:11px; background:rgba(255,255,255,0.18); color:#fff; border:1.5px solid rgba(255,255,255,0.4);">✈️</div>
+        <div class="day-banner-info">
+          <div class="day-banner-name">คืนแรก — เดินทางถึง · TST Zone 🌃</div>
+          <div class="day-banner-date">พุธ 27 ม.ค. · Avenue of Stars · A Symphony of Lights · Temple Street</div>
+        </div>
+        <div class="day-banner-icon">🌃</div>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event"><span class="event-time">17:40</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">✈️ Emirates EK ถึง HKG (ออกจาก BKK 13:45)</div>
+        <div class="event-note">เที่ยวบินตรง ~3 ชม. · ผ่านตม. + รับกระเป๋า ~45 นาที · รับ Octopus Card ที่สนามบินได้เลย</div>
+      </div></div>
+      <div class="event"><span class="event-time">19:00</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">Airport Express → Kowloon Station 🚆</div>
+        <div class="event-note">~24 นาที · ออกทุก 10 นาที · ค่าโดยสาร ~115 HKD · ต่อรถไป Nathan Hotel สบาย</div>
+      </div></div>
+      <div class="event"><span class="event-time">19:30</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">เช็คอิน Nathan Hotel ★★★★ 🏨</div>
+        <div class="event-note">Rating 9.0/10 · Check-in หลัง 15:00 · Check-out ก่อน 12:00 · อาหารเช้า optional +459 ฿ · วางกระเป๋า อาบน้ำ เปลี่ยนเสื้อ</div>
+        <a class="map-link" href="https://www.google.com/maps/search/Nathan+Hotel+Hong+Kong" target="_blank">📍 Nathan Hotel, Kowloon</a>
+      </div></div>
+      <div class="event"><span class="event-time">20:00</span><div class="event-dot dot-purple"></div><div class="event-content">
+        <div class="event-name">✨ A Symphony of Lights — แสงสีเสียงริมอ่าว</div>
+        <div class="event-note">เดิน ~10 นาทีจากโรงแรม · Show เลเซอร์ + ดนตรี 13 นาที · ทุกคืน 20:00 น. · ดูฝั่ง TST Waterfront วิวดีสุด · ฟรี ตลอดปี</div>
+        <a class="map-link" href="https://www.google.com/maps/search/Avenue+of+Stars+Hong+Kong" target="_blank">📍 TST Waterfront</a>
+      </div></div>
+      <div class="event"><span class="event-time">20:15</span><div class="event-dot dot-pink"></div><div class="event-content">
+        <div class="event-name">Avenue of Stars 🌟</div>
+        <div class="event-note">วิวยามค่ำ Victoria Harbour สวยที่สุด! · รูปปั้น Bruce Lee · ไฟเมืองสะท้อนน้ำ · เดินริมน้ำชิลๆ · ฟรี</div>
+      </div></div>
+      <div class="event"><span class="event-time">21:00</span><div class="event-dot dot-orange"></div><div class="event-content">
+        <div class="event-name">Temple Street Night Market 🏮</div>
+        <div class="event-note">เดิน ~10 นาทีจากโรงแรม · อาหารซีฟู้ดริมถนน · ของที่ระลึก · หมอดูไพ่ · เปิดถึง 23:00 · เดินกลับโรงแรมสบาย</div>
+        <a class="map-link" href="https://www.google.com/maps/search/Temple+Street+Night+Market+Hong+Kong" target="_blank">📍 Temple Street, Jordan</a>
+      </div></div>
+      <div class="event"><span class="event-time">21:30</span><div class="event-dot dot-orange"></div><div class="event-content">
+        <div class="event-name">🍢 อาหารค่ำแถว TST — Ki'son Roasted Goose</div>
+        <div class="event-note">ห่านย่างกรอบสูตรกวางตุ้ง · 34-36A Cameron Road, TST · เดินจากโรงแรม ~5 นาที · ราคาถูก เหมาะมื้อค่ำแรก</div>
+        <a class="map-link" href="https://www.openrice.com/en/hongkong/r-kison-roasted-goose-tsim-sha-tsui-hong-kong-style-chinese-bbq-r850248" target="_blank">📍 Ki'son Roasted Goose, TST</a>
+      </div></div>
+      <div class="event"><span class="event-time">22:15</span><div class="event-dot dot-pink"></div><div class="event-content">
+        <div class="event-name">🍮 Kai Kai Dessert (佳佳甜品) — ของหวานปิดท้าย</div>
+        <div class="event-note">ขนมหวานกวางตุ้งตำนาน · Michelin Bib Gourmand · ซุปงาดำ + ลูกชิดน้ำขิง · 29 Ning Po Street, Jordan · เปิดถึง 01:00 น. · เดินจากโรงแรม ~5 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Nathan+Hotel,+378+Nathan+Rd,+Yau+Ma+Tei,+Hong+Kong&destination=Kai+Kai+Dessert,+29+Ning+Po+Street,+Jordan,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Nathan Hotel → Kai Kai Dessert</a>
+      </div></div>
+    </div>
+    <div class="tip-box"><span>⭐</span><span class="tip-text">มกราคมอากาศ 14–20°C เย็นสบายที่สุดในรอบปี · คืนแรกเดินเล่นแถวโรงแรมได้เลย ทุกอย่างอยู่ในระยะเดิน · เก็บแรงไว้สำหรับดิสนี่ย์พรุ่งนี้!</span></div>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="day-card">
+    <div class="day-banner-wrap">
+      <img class="day-banner-img" src="https://images.unsplash.com/photo-1651927249079-a65ebd668ee0?w=800&auto=format&fit=crop&h=240&q=80" alt="Disneyland">
+      <div class="day-banner-overlay d1">
+        <div class="day-badge d1-badge" style="background:rgba(255,255,255,0.18); color:#fff; border:1.5px solid rgba(255,255,255,0.4);">1</div>
+        <div class="day-banner-info">
+          <div class="day-banner-name">วันที่ 1 — Wong Tai Sin + Disneyland 🛕🏰 · Toonzii Day ❤️</div>
+          <div class="day-banner-date">พฤหัส 28 ม.ค. · วัดก่อนเช้า · One Dim Sum · Marvel · Frozen · Toy Story Land</div>
+        </div>
+        <div class="day-banner-icon">🏰</div>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event"><span class="event-time">07:00</span><div class="event-dot dot-teal"></div><div class="event-content">
+        <div class="event-name">🛕 Wong Tai Sin Temple (黃大仙祠) <span class="tag-new">ขอพรเช้า!</span></div>
+        <div class="event-note">วัดเต๋าที่ศักดิ์สิทธิ์ที่สุดในฮ่องกง · เปิด 07:30 น. · ขอพรด้วยไม้เซียมซี · สวยงามยามเช้าก่อนคนเยอะ</div>
+        <div class="event-note">🚇 <strong>MTR:</strong> สาย Tsuen Wan 🔴 (Jordan → Prince Edward) · เปลี่ยนสาย Kwun Tong 🟢 (Prince Edward → Lok Fu → Wong Tai Sin) · ~15 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Nathan+Hotel,+378+Nathan+Rd,+Yau+Ma+Tei,+Hong+Kong&destination=Wong+Tai+Sin+Temple,+2+Chuk+Yuen+Village,+Wong+Tai+Sin,+Hong+Kong&travelmode=transit" target="_blank">🗺️ เส้นทางจาก Nathan Hotel</a>
+      </div></div>
+      <div class="event"><span class="event-time">08:30</span><div class="event-dot dot-amber"></div><div class="event-content">
+        <div class="event-name">🥟 One Dim Sum (一點心) <span class="tag-food">มื้อเช้า</span></div>
+        <div class="event-note">ติ่มซำ Michelin-recommended · ชาร์ซิวเปา · ฮาเกา · ขนมปังไส้คัสตาร์ด · เปิด 08:30 น. พอดี!</div>
+        <div class="event-note">🚇 <strong>MTR:</strong> สาย Kwun Tong 🟢 ย้อนกลับ 3 สถานี (Wong Tai Sin → Lok Fu → Prince Edward) · ~7 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Wong+Tai+Sin+Temple,+2+Chuk+Yuen+Village,+Wong+Tai+Sin,+Hong+Kong&destination=One+Dim+Sum,+15+Playing+Field+Rd,+Prince+Edward,+Hong+Kong&travelmode=transit" target="_blank">🗺️ เส้นทางจาก Wong Tai Sin</a>
+        <div class="event-note" style="margin-top:6px;padding:6px 10px;background:#f5f4f0;border-radius:8px;">
+          🔄 <strong>สำรองใกล้ๆ เผื่อปิด:</strong><br>
+          · <strong>Kam Wah Cafe (金華冰廳)</strong> — ขนมปังสับปะรด + นมชา ชื่อดัง · 47 Bute St, Mong Kok · เดิน 5 นาทีจาก Prince Edward MTR · เปิด 06:30 น.
+          <a class="map-link" href="https://www.google.com/maps/search/Kam+Wah+Cafe+Mong+Kok+Hong+Kong" target="_blank">📍 Kam Wah Cafe</a><br>
+          · <strong>Tsui Wah (翠華餐廳)</strong> — Cha Chaan Teng ตลอด 24 ชม. · สาขา Mong Kok · Yuanyang + โทสต์ฝาแฝด
+          <a class="map-link" href="https://www.google.com/maps/search/Tsui+Wah+Restaurant+Mong+Kok+Hong+Kong" target="_blank">📍 Tsui Wah, Mong Kok</a>
+        </div>
+      </div></div>
+      <div class="event"><span class="event-time">10:00</span><div class="event-dot dot-green"></div><div class="event-content">
+        <div class="event-name">Hong Kong Disneyland 🏰</div>
+        <div class="event-note">เปิด 10:00–21:00 น. · ค่าเข้า ≈ 2,800 บาท · จอง Klook ล่วงหน้าถูกกว่า</div>
+        <div class="event-note">🚇 <strong>MTR:</strong> สาย Tsuen Wan 🔴 (Prince Edward → Lai King) · เปลี่ยนสาย Tung Chung 🟠 (Lai King → Sunny Bay) · เปลี่ยนสาย Disneyland Resort 🟣 → Disneyland Resort · ~35 นาที</div>
+        <div class="event-note">🎫 <strong>Disney Premier Access (Fast Pass)</strong> · 1 ไรด์ ≈ HK$79–109 (~350–480 ฿) · แพ็ก 3 ไรด์ ≈ HK$199+ (~880 ฿+) · ซื้อในแอปได้เลยวันไป · แนะนำซื้อ Frozen + Iron Man</div>
+        <a class="map-link" href="https://www.hongkongdisneyland.com/offers-discounts/disney-premier-access/" target="_blank">📍 Hong Kong Disneyland</a>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=One+Dim+Sum,+15+Playing+Field+Rd,+Prince+Edward,+Hong+Kong&destination=Hong+Kong+Disneyland&travelmode=transit" target="_blank">🗺️ เส้นทางจาก One Dim Sum</a>
+      </div></div>
+      <div class="event"><span class="event-time">10:30</span><div class="event-dot dot-green"></div><div class="event-content">
+        <div class="event-name">Castle of Magical Dreams + Main Street U.S.A. 🏯</div>
+        <div class="event-note">ถ่ายรูปปราสาทก่อนคนเยอะ · ซื้อ Souvenir ร้าน Emporium</div>
+      </div></div>
+      <div class="event"><span class="event-time">12:00</span><div class="event-dot dot-amber"></div><div class="event-content">
+        <div class="event-name">Toy Story Land 🤠</div>
+        <div class="event-note">Toy Soldier Parachute Drop · RC Racer · Slinky Dog Spin · แนะนำใช้ Disney Premier Access</div>
+      </div></div>
+      <div class="event"><span class="event-time">14:00</span><div class="event-dot dot-amber"></div><div class="event-content">
+        <div class="event-name">Marvel Universe + Avengers Campus 🦸</div>
+        <div class="event-note">Iron Man Experience · Ant-Man and The Wasp: Nano Battle! · ไรด์สนุกมากที่สุด</div>
+      </div></div>
+      <div class="event"><span class="event-time">16:00</span><div class="event-dot dot-purple"></div><div class="event-content">
+        <div class="event-name">World of Frozen ❄️ <span class="tag-new">โซนใหม่!</span></div>
+        <div class="event-note">Frozen Ever After (เรือ) · Wandering Oaken's Sliding Sleighs · ถ่ายรูปกับ Elsa</div>
+      </div></div>
+      <div class="event"><span class="event-time">19:00</span><div class="event-dot dot-pink"></div><div class="event-content">
+        <div class="event-name">Momentous Nighttime Spectacular ✨</div>
+        <div class="event-note">花火 + แสงสี + Projection Show หน้าปราสาท · ดูหน้าปราสาทฝั่งขวาวิวดีสุด</div>
+        <div class="event-note">🚇 <strong>MTR กลับ:</strong> สาย Disneyland Resort 🟣 → Sunny Bay · เปลี่ยนสาย Tung Chung 🟠 → Lai King · เปลี่ยนสาย Tsuen Wan 🔴 → Jordan · ~35 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Hong+Kong+Disneyland+Resort+Station&destination=Nathan+Hotel,+378+Nathan+Rd,+Yau+Ma+Tei,+Hong+Kong&travelmode=transit" target="_blank">🗺️ เส้นทางกลับ Nathan Hotel</a>
+      </div></div>
+    </div>
+    <div class="tip-box"><span>⭐</span><span class="tip-text">Wong Tai Sin เปิด 07:30 · ใช้เวลาแค่ 45 นาทีก็ได้บรรยากาศวัดยามเช้าสวยๆ แล้วต่อ One Dim Sum พอดีเปิด 08:30 · ถึง Disneyland ก่อนเปิด 10 นาที วิ่งไป Frozen ก่อนเลย คิวยาวที่สุด!</span></div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-card">
+    <div class="day-banner-wrap">
+      <img class="day-banner-img" src="https://images.unsplash.com/photo-1576788369575-6c610e20c04d?w=800&auto=format&fit=crop&h=240&q=80" alt="HK Island">
+      <div class="day-banner-overlay d2">
+        <div class="day-badge d2-badge" style="background:rgba(255,255,255,0.18); color:#fff; border:1.5px solid rgba(255,255,255,0.4);">2</div>
+        <div class="day-banner-info">
+          <div class="day-banner-name">วันที่ 2 — HK Island + บินกลับ 🏝️</div>
+          <div class="day-banner-date">พฤหัส 29 ม.ค. · Kennedy Town · Ding Ding · Bakehouse · Peak Tram · Yung Kee · Star Ferry · M+ · สนามบิน</div>
+        </div>
+        <div class="day-banner-icon">🚃</div>
+      </div>
+    </div>
+    <div class="events">
+      <div class="event"><span class="event-time">07:30</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">MTR: Nathan Hotel → Kennedy Town 🚇</div>
+        <div class="event-note">🚇 <strong>MTR:</strong> สาย Tsuen Wan 🔴 (Jordan → Central) · เปลี่ยนสาย Island Line 🔵 (Central → Sheung Wan → Kennedy Town ปลายสาย) · ~25 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Nathan+Hotel,+378+Nathan+Rd,+Yau+Ma+Tei,+Hong+Kong&destination=Kennedy+Town+Station,+Hong+Kong&travelmode=transit" target="_blank">🗺️ เส้นทาง Nathan Hotel → Kennedy Town</a>
+      </div></div>
+      <div class="event"><span class="event-time">08:00</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">🏀 Kennedy Town Playground — Basketball Court <span class="tag-new">Viral บน Xiaohongshu!</span></div>
+        <div class="event-note">สนามบาสกลางแจ้ง · วิวผ่านรั้วเห็น Skyline ฮ่องกง · จุดถ่ายรูปสุดฮิต · ฟรี · เดิน ~5 นาทีจาก MTR</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Kennedy+Town+Station,+Hong+Kong&destination=Kennedy+Town+Playground,+Sai+Cheung+Street,+Kennedy+Town,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Kennedy Town MTR → สนามบาส</a>
+      </div></div>
+      <div class="event"><span class="event-time">08:30</span><div class="event-dot dot-teal"></div><div class="event-content">
+        <div class="event-name">☕ % Arabica Kennedy Town</div>
+        <div class="event-note">คาเฟ่ minimalist ชื่อดัง · Latte + Single Origin · วิวริมทะเล · เดิน ~3 นาทีจากสนามบาส</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Kennedy+Town+Playground,+Sai+Cheung+Street,+Kennedy+Town,+Hong+Kong&destination=%25+Arabica,+23+Catchick+Street,+Kennedy+Town,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน สนามบาส → % Arabica</a>
+      </div></div>
+      <div class="event"><span class="event-time">09:00</span><div class="event-dot dot-amber"></div><div class="event-content">
+        <div class="event-name">🚃 Ding Ding Tram — Kennedy Town → Central</div>
+        <div class="event-note">รถรางสองชั้นสุดคลาสสิก · ~3 HKD · ~30 นาที · นั่งชั้นบนด้านหน้าวิวดีสุด! · ป้ายปลายสาย Kennedy Town</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=%25+Arabica,+23+Catchick+Street,+Kennedy+Town,+Hong+Kong&destination=Kennedy+Town+Tram+Terminus,+Kennedy+Town,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน % Arabica → ป้ายรถราง</a>
+      </div></div>
+      <div class="event"><span class="event-time">09:30</span><div class="event-dot dot-pink"></div><div class="event-content">
+        <div class="event-name">🎡 Hong Kong Observation Wheel</div>
+        <div class="event-note">กงล้อสูง 60 เมตร · วิว Victoria Harbour 360° · Central Harbourfront · ~15 นาที/รอบ · ลงรถรางแถว Central เดินถึงเลย ~5 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Des+Voeux+Road+Central,+Central,+Hong+Kong&destination=Hong+Kong+Observation+Wheel,+Central+Harbourfront,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน ป้ายรถราง Central → Observation Wheel</a>
+      </div></div>
+      <div class="event"><span class="event-time">10:15</span><div class="event-dot dot-amber"></div><div class="event-content">
+        <div class="event-name">🚋 Peak Tram → Victoria Peak 🌇</div>
+        <div class="event-note">รถรางเก่าแก่ 130 ปี · วิวพาโนรามา · จอง Ticket ล่วงหน้า! · Garden Road Terminal · ขึ้นเช้าวิวชัด หมอกน้อยกว่าบ่าย</div>
+        <div class="event-note">🚶 <strong>เดินได้ ~12 นาที</strong> (ผ่าน Central ขึ้นเนินเล็กน้อย) · หรือ 🚕 <strong>แท็กซี่ ~HK$30</strong> ถ้าเหนื่อย</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Hong+Kong+Observation+Wheel,+Central+Harbourfront,+Hong+Kong&destination=Peak+Tram+Lower+Terminus,+33+Garden+Road,+Central,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Observation Wheel → Peak Tram</a>
+      </div></div>
+      <div class="event"><span class="event-time">10:30</span><div class="event-dot dot-orange"></div><div class="event-content">
+        <div class="event-name">🥐 Bakehouse The Peak <span class="tag-food">ของว่าง</span></div>
+        <div class="event-note">อยู่ใน Peak Tower G08 · ออกจากรถรางถึงเลย · Sourdough + Croissant + กาแฟ · เปิด 09:00 น. (จ–ศ) / 08:00 น. (เสาร์–อาทิตย์)</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Peak+Tram+Upper+Terminus,+Victoria+Peak,+Hong+Kong&destination=Bakehouse+The+Peak,+Peak+Tower,+128+Peak+Road,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Peak Tram → Bakehouse G08</a>
+      </div></div>
+      <div class="event"><span class="event-time">11:00</span><div class="event-dot dot-purple"></div><div class="event-content">
+        <div class="event-name">🌇 Sky Terrace 428 + Peak Circle Walk</div>
+        <div class="event-note">🎫 <strong>Sky Terrace 428</strong> — ดาดฟ้าบนสุด Peak Tower · วิว 360° · ตั๋ว ~HK$100 (~450 ฿) · ขึ้น Lift จาก G08 เลย</div>
+        <div class="event-note">🚶 <strong>Peak Circle Walk (ฟรี)</strong> — เดินรอบเขา ~30 นาที · วิวป่าไม้ + Skyline สลับกัน · ไม่ต้องซื้อตั๋ว</div>
+      </div></div>
+      <div class="event"><span class="event-time">11:45</span><div class="event-dot dot-amber"></div><div class="event-content">
+        <div class="event-name">🦢 Yung Kee (鏞記酒家) <span class="tag-food">มื้อเที่ยง</span></div>
+        <div class="event-note">ห่านย่างตำนาน 80 ปี · Michelin Bib Gourmand · 32-40 Wellington St, Central · เปิด 11:00 น. เข้าได้เลยไม่ต้องรอ!</div>
+        <div class="event-note">🚌 <strong>บัส 15C</strong> จาก Peak Tower → Exchange Square (Central) ~15 นาที แล้วเดิน ~5 นาที · หรือ 🚕 <strong>แท็กซี่ ~HK$55</strong> ตรงถึงร้าน · ❌ ห้ามเดิน ชันมากลงเขาไม่ไหว</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=The+Peak+Tower,+128+Peak+Road,+Hong+Kong&destination=Yung+Kee+Restaurant,+32+Wellington+Street,+Central,+Hong+Kong&travelmode=transit" target="_blank">🗺️ เส้นทาง The Peak → Yung Kee</a>
+      </div></div>
+      <div class="event"><span class="event-time">13:00</span><div class="event-dot dot-pink"></div><div class="event-content">
+        <div class="event-name">⛴️ Star Ferry — Central → TST</div>
+        <div class="event-note">เดินจาก Yung Kee ไป Central Pier 7 ~10 นาที · ข้ามกลับ Kowloon · ~3 HKD · วิว Skyline สวยมาก</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Yung+Kee+Restaurant,+32+Wellington+Street,+Central,+Hong+Kong&destination=Central+Ferry+Pier+7,+Central,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Yung Kee → Star Ferry Pier</a>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Central+Ferry+Pier+7,+Central,+Hong+Kong&destination=Tsim+Sha+Tsui+Ferry+Pier,+Kowloon,+Hong+Kong&travelmode=transit" target="_blank">🗺️ Star Ferry: Central → TST</a>
+      </div></div>
+      <div class="event"><span class="event-time">13:45</span><div class="event-dot dot-gray"></div><div class="event-content">
+        <div class="event-name">เช็คเอาท์ Nathan Hotel · รับกระเป๋า 🧳</div>
+        <div class="event-note">ฝากกระเป๋าไว้ตั้งแต่เช้า · รับคืนแล้วออกช้อปปิ้ง · เดินจาก TST Pier ~10 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Tsim+Sha+Tsui+Ferry+Pier,+Kowloon,+Hong+Kong&destination=Nathan+Hotel,+378+Nathan+Rd,+Yau+Ma+Tei,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน TST Pier → Nathan Hotel</a>
+      </div></div>
+      <div class="event"><span class="event-time">14:00</span><div class="event-dot dot-orange"></div><div class="event-content">
+        <div class="event-name">ช้อปปิ้งสุดท้าย + ของฝาก 🛍️</div>
+        <div class="event-note">Jenny Bakery คุกกี้เนย · Harbour City · K11 Musea · แถว TST</div>
+        <div class="event-note">🚶 <strong>เดินได้สบาย ~10 นาที</strong> · ไม่ต้องนั่งรถ ประหยัดเวลากว่าด้วย (รอแท็กซี่ + ติดไฟแดง = เท่ากัน)</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Nathan+Hotel,+378+Nathan+Rd,+Yau+Ma+Tei,+Hong+Kong&destination=Harbour+City,+3-27+Canton+Rd,+Tsim+Sha+Tsui,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Nathan Hotel → Harbour City</a>
+      </div></div>
+      <div class="event"><span class="event-time">15:15</span><div class="event-dot dot-teal"></div><div class="event-content">
+        <div class="event-name">🎨 M+ Museum</div>
+        <div class="event-note">พิพิธภัณฑ์ศิลปะระดับโลก · West Kowloon · เดินจาก Harbour City ~15 นาที · วิว Skyline · เปิด 10:00–18:00 · ⚠️ ตัดได้ถ้าเหนื่อย</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Harbour+City,+3-27+Canton+Rd,+Tsim+Sha+Tsui,+Hong+Kong&destination=M%2B+Museum,+38+Museum+Drive,+West+Kowloon,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน Harbour City → M+ Museum</a>
+      </div></div>
+      <div class="event"><span class="event-time">17:00</span><div class="event-dot dot-gray"></div><div class="event-content">
+        <div class="event-name">มุ่งหน้า Kowloon Station · In-Town Check-in ✈️</div>
+        <div class="event-note">เช็คอินกระเป๋าที่ Kowloon Station ก่อน · เดินจาก M+ ~5 นาที · Airport Express รอบถัดไปทุก 10 นาที</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=M%2B+Museum,+38+Museum+Drive,+West+Kowloon,+Hong+Kong&destination=Kowloon+Station,+Austin+Road+West,+West+Kowloon,+Hong+Kong&travelmode=walking" target="_blank">🗺️ เดิน M+ Museum → Kowloon Station</a>
+      </div></div>
+      <div class="event"><span class="event-time">17:30</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">Airport Express ออกจาก Kowloon Station</div>
+        <div class="event-note">~24 นาที ถึงสนามบิน · เดิน Duty Free ก่อนขึ้นเครื่อง</div>
+        <a class="map-link" href="https://www.google.com/maps/dir/?api=1&origin=Kowloon+Station,+Austin+Road+West,+West+Kowloon,+Hong+Kong&destination=Hong+Kong+International+Airport&travelmode=transit" target="_blank">🗺️ เส้นทาง Kowloon Station → สนามบิน</a>
+      </div></div>
+      <div class="event"><span class="event-time">21:00</span><div class="event-dot dot-blue"></div><div class="event-content">
+        <div class="event-name">✈️ Emirates EK ออกจาก HKG กลับ BKK</div>
+        <div class="event-note">เที่ยวบินตรง · ถึงสุวรรณภูมิ 23:15 น.</div>
+      </div></div>
+    </div>
+    <div class="tip-box"><span>⭐</span><span class="tip-text">วันนี้แน่นมาก ตัดได้ตามสบาย · Jenny Bakery เปิด 11:00 น. คิวยาว · Peak Tram จองล่วงหน้าผ่าน Klook ถูกกว่า</span></div>
+  </div>
+
+  <!-- Budget -->
+  <div class="budget-section">
+    <div class="section-title">💰 งบประมาณ (ต่อคน)</div>
+    <div class="budget-grid">
+      <div class="budget-card">
+        <div class="budget-label">✈️ Emirates + Nathan Hotel<br><span style="font-size:11px;color:#888;">(แพ็กเกจจริง 2 คน ฿24,045)</span></div>
+        <div class="budget-amount">12,023 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">Disneyland (ค่าเข้า)</div>
+        <div class="budget-amount">≈2,800 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">Disney Premier Access<br><span style="font-size:11px;color:#888;">Fast Pass 3 ไรด์</span></div>
+        <div class="budget-amount">≈880 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">Peak Tram (ไป-กลับ)<br><span style="font-size:11px;color:#888;">ซื้อ Klook ถูกกว่า</span></div>
+        <div class="budget-amount">≈675 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">Airport Express (ไป-กลับ)<br><span style="font-size:11px;color:#888;">HKG↔Kowloon × 2</span></div>
+        <div class="budget-amount">≈1,040 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">MTR + Ding Ding + Star Ferry<br><span style="font-size:11px;color:#888;">ตลอดทริป</span></div>
+        <div class="budget-amount">≈362 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">Sky Terrace 428<br><span style="font-size:11px;color:#888;">The Peak · optional</span></div>
+        <div class="budget-amount">≈450 ฿</div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-label">อาหาร 3 วัน</div>
+        <div class="budget-amount">≈4,000 ฿</div>
+      </div>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:12px; border-top:2px solid #e5e3dc;">
+      <span style="font-size:14px; color:#666;">รวมทั้งหมด (ไม่รวมช้อปปิ้ง)</span>
+      <span style="font-size:20px; font-weight:700; color:#c8512b;">≈ 22,230 ฿</span>
+    </div>
+  </div>
+
+  <!-- Tips -->
+  <div class="tips-section">
+    <div class="section-title">💡 เคล็ดลับเที่ยวฮ่องกง 2027</div>
+    <div class="tips-grid">
+      <div class="tip-item"><span class="tip-icon">🎟️</span><span class="tip-text">จอง Peak Tram + Ngong Ping ล่วงหน้าผ่าน Klook ถูกกว่า 20–30%</span></div>
+      <div class="tip-item"><span class="tip-icon">🐙</span><span class="tip-text">ซื้อ Octopus Card วันแรก ใช้ได้ทั้ง MTR, บัส, เรือ และบางร้านอาหาร</span></div>
+      <div class="tip-item"><span class="tip-icon">🧧</span><span class="tip-text">ปลาย ม.ค. ของขวัญตรุษจีนเริ่มวางขาย · ตลาดดอกไม้ปีใหม่ที่ Victoria Park เป็นไฮไลต์ · ตรุษจีน 2027 ตรงกับ 6 ก.พ.</span></div>
+      <div class="tip-item"><span class="tip-icon">🧥</span><span class="tip-text">มกราคมอากาศ 14–20°C เย็นยามค่ำคืน · ตอนกลางคืนอาจถึง 10°C · เตรียมเสื้อกันหนาวบางๆ หรือ Jacket ไว้ด้วย</span></div>
+      <div class="tip-item"><span class="tip-icon">🌫️</span><span class="tip-text">ม.ค. บางวันอาจมีหมอก (Sea Fog) โดยเฉพาะตอนเช้า · วิว Victoria Peak อาจถูกบัง · เช็คสภาพอากาศก่อนขึ้น Peak</span></div>
+      <div class="tip-item"><span class="tip-icon">✈️</span><span class="tip-text">In-Town Check-in ที่ Kowloon Station เช็คอินกระเป๋าก่อน · แล้วเที่ยวต่อได้สบาย</span></div>
+      <div class="tip-item"><span class="tip-icon">📱</span><span class="tip-text">แอปแนะนำ: MTR Mobile, Google Maps, Klook, Foodpanda HK</span></div>
+    </div>
+  </div>
+
+  <!-- Packing -->
+  <div class="packing-section">
+    <div class="section-title">🎒 สิ่งที่ต้องเตรียม</div>
+    <div class="packing-grid">
+      <div class="packing-item"><span>📱</span><span>ซิมต่างประเทศ / Pocket WiFi</span></div>
+      <div class="packing-item"><span>💳</span><span>Octopus Card</span></div>
+      <div class="packing-item"><span>🛂</span><span>Passport + สำเนา</span></div>
+      <div class="packing-item"><span>🔋</span><span>Power Bank ≤30,000 mAh</span></div>
+      <div class="packing-item"><span>💊</span><span>ยาแก้แพ้ / แก้ปวด</span></div>
+      <div class="packing-item"><span>🔌</span><span>หัวแปลงปลั๊กไฟ (Type G)</span></div>
+      <div class="packing-item"><span>☂️</span><span>ร่ม + รองเท้าเดินสบาย</span></div>
+      <div class="packing-item"><span>📄</span><span>ปริ้น Booking ทั้งหมด</span></div>
+      <div class="packing-item"><span>🥢</span><span>ช้อน-ส้อม (HK ไม่แจกพลาสติก)</span></div>
+      <div class="packing-item"><span>💊</span><span>ยาแก้ท้องเสีย</span></div>
+      <div class="packing-item"><span>🧥</span><span>เสื้อกันหนาว / Jacket (กลางคืน ~10°C)</span></div>
+      <div class="packing-item"><span>👜</span><span>ถุงผ้าพับเก็บ (HK ไม่แจกถุงพลาสติก)</span></div>
+      <div class="packing-item"><span>💄</span><span>ลิปมัน + ครีมบำรุง (อากาศแห้ง)</span></div>
+      <div class="packing-item"><span>😷</span><span>หน้ากากอนามัย (MTR ช่วงเช้าแออัด)</span></div>
+      <div class="packing-item"><span>💊</span><span>ยาแก้เมารถ (Peak Tram ชันมาก)</span></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
