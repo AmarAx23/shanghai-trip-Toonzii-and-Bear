@@ -6,6 +6,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1D5C82">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 6 คืน ธันวาคม 2026</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -127,13 +129,14 @@
     .event-photo-frame { float: none; width: 100%; height: 90px; margin: 6px 0 8px; }
   }
   .tag-new { font-size: 10px; background: var(--xmas-red); color: #fff; padding: 1px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+  .tips-section .tag-new { font-size: 7px; font-weight: 700; padding: 0px 4px; border-radius: 6px; letter-spacing: 0; line-height: 1.6; }
   .tag-food { font-size: 10px; background: var(--xmas-red-light); color: var(--xmas-red); padding: 1px 6px; border-radius: 10px; font-weight: 600; }
   .tag-disney { font-size: 10px; background: #EAF0FF; color: #2E5CE6; padding: 1px 6px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
   .map-link { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--xmas-maroon); text-decoration: none; background: var(--xmas-gold-light); padding: 2px 8px; border-radius: 20px; margin-top: 3px; }
   .map-link:hover { background: #F0DFAF; }
   .tip-box { margin: 4px 18px 14px; background: var(--xmas-gold-light); border: 1px solid #EFDFB0; border-radius: 10px; padding: 10px 14px; display: flex; gap: 8px; }
   .tip-text { font-size: 12px; color: #7a5f1f; }
-  .budget-section, .tips-section, .packing-section, .flight-section {
+  .budget-section, .tips-section, .packing-section, .flight-section, .currency-section {
     background: #fff; border: 1px solid #ecebe4; border-radius: 14px; padding: 18px; margin-bottom: 16px;
     box-shadow: 0 2px 8px rgba(15,58,84,0.05);
   }
@@ -298,6 +301,17 @@
     .day-panel { display: block !important; page-break-inside: avoid; }
     .container { max-width: 100% !important; }
   }
+
+  .currency-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .currency-input { flex: 1; min-width: 130px; padding: 10px 12px; border: 1px solid #E6DCC2; border-radius: 10px; font-size: 14px; font-family: inherit; }
+  .currency-input:focus { outline: 2px solid var(--xmas-gold); }
+  .currency-result { font-size: 17px; font-weight: 800; color: var(--xmas-red); white-space: nowrap; }
+  .currency-meta { font-size: 11px; color: #888; margin-top: 8px; }
+  .lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); display: none; align-items: center; justify-content: center; z-index: 999; padding: 24px; cursor: zoom-out; }
+  .lightbox-overlay.active { display: flex; }
+  .lightbox-overlay img { max-width: 100%; max-height: 88vh; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); cursor: default; }
+  .lightbox-close { position: absolute; top: 14px; right: 20px; font-size: 34px; color: #fff; cursor: pointer; line-height: 1; font-weight: 300; }
+  .event-photo-frame img { cursor: zoom-in; }
 </style>
 </head>
 <body>
@@ -356,7 +370,7 @@
     <button class="day-nav-btn" data-day="7" style="--accent:#B0242E"><span class="nav-lbl">Day</span><span class="nav-num">7</span></button>
   </div>
   <div class="progress-wrap">
-    <div class="progress-runner" id="trip-progress-runner">🎅</div>
+    <div class="progress-runner" id="trip-progress-runner">🧑🏻‍🎄</div>
     <div class="progress-track"><div class="progress-fill" id="trip-progress-fill"></div></div>
     <div class="progress-label" id="trip-progress-label">วันที่ 1 จาก 7</div>
   </div>
@@ -678,6 +692,15 @@
       <span class="budget-total-amount">29,277.26 ฿</span>
     </div>
   </div>
+  <!-- Currency Converter -->
+  <div class="currency-section">
+    <div class="section-title">💱 แปลงเงินหยวน → บาท</div>
+    <div class="currency-row">
+      <input type="number" inputmode="decimal" class="currency-input" id="cny-input" placeholder="จำนวนหยวน (¥)">
+      <div class="currency-result" id="thb-result">= 0.00 ฿</div>
+    </div>
+    <div class="currency-meta" id="currency-meta">กำลังโหลดเรทล่าสุด...</div>
+  </div>
   <!-- Packing -->
   <div class="packing-section">
     <div class="section-title">🎒 สิ่งที่ต้องเตรียม</div>
@@ -692,6 +715,10 @@
       <div class="packing-item" id="pack-booking"><label><input type="checkbox" data-key="booking"> <span class="packing-txt">📄 ปริ้น Booking ทั้งหมด</span></label></div>
       <div class="packing-item" id="pack-vpn"><label><input type="checkbox" data-key="vpn"> <span class="packing-txt">🌐 VPN (Google/LINE ใช้ไม่ได้)</span></label></div>
       <div class="packing-item" id="pack-shoes"><label><input type="checkbox" data-key="shoes"> <span class="packing-txt">👟 รองเท้าเดินสบาย (เดินเยอะ)</span></label></div>
+      <div class="packing-item" id="pack-cash"><label><input type="checkbox" data-key="cash"> <span class="packing-txt">💴 เงินสดหยวนสำรอง</span></label></div>
+      <div class="packing-item" id="pack-lipbalm"><label><input type="checkbox" data-key="lipbalm"> <span class="packing-txt">💧 ลิปมัน/โลชั่นกันผิวแห้ง</span></label></div>
+      <div class="packing-item" id="pack-motionsick"><label><input type="checkbox" data-key="motionsick"> <span class="packing-txt">🤢 ยาแก้เมารถ/เมาเครื่องบิน</span></label></div>
+      <div class="packing-item" id="pack-umbrella"><label><input type="checkbox" data-key="umbrella"> <span class="packing-txt">☂️ ร่มพับ/เสื้อกันลม</span></label></div>
     </div>
   </div>
   <div class="snow-row small">❆ ❅ ❄ ❅ ❆ ❅ ❄</div>
@@ -712,6 +739,10 @@
   <div class="snow-row small">❄ ❅ ❆ ❄ ❅ ❆ ❄</div>
   <div class="snow-row">❆ ❅ ❄ ❅ ❆</div>
   <footer class="trip-footer">🦌🛷 Merry Christmas & Happy Shanghai Trip 🎄 ❆</footer>
+</div>
+<div class="lightbox-overlay" id="lightbox-overlay">
+  <span class="lightbox-close" id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="">
 </div>
 <script>
   function showDay(n) {
@@ -735,6 +766,92 @@
     });
   });
   showDay(1);
+
+  // --- Lightbox for event photos ---
+  (function () {
+    var overlay = document.getElementById('lightbox-overlay');
+    var imgEl = document.getElementById('lightbox-img');
+    var closeBtn = document.getElementById('lightbox-close');
+    if (!overlay || !imgEl) return;
+    document.querySelectorAll('.event-photo-frame img').forEach(function (img) {
+      img.addEventListener('click', function () {
+        imgEl.src = img.src;
+        imgEl.alt = img.alt;
+        overlay.classList.add('active');
+      });
+    });
+    function closeLightbox() { overlay.classList.remove('active'); imgEl.src = ''; }
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeLightbox(); });
+    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+  })();
+
+  // --- Currency converter (CNY -> THB), live rate via Frankfurter API ---
+  (function () {
+    var input = document.getElementById('cny-input');
+    var result = document.getElementById('thb-result');
+    var meta = document.getElementById('currency-meta');
+    if (!input || !result || !meta) return;
+    var RATE_KEY = 'hkTripCnyThbRate';
+    var rate = null;
+
+    function render() {
+      var v = parseFloat(input.value);
+      if (isNaN(v) || rate === null) { result.textContent = '= 0.00 ฿'; return; }
+      result.textContent = '= ' + (v * rate).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿';
+    }
+
+    function applyRate(r, sourceLabel, dateLabel) {
+      rate = r;
+      meta.textContent = '1 ¥ ≈ ' + r.toFixed(3) + ' ฿ · ' + sourceLabel + (dateLabel ? ' (' + dateLabel + ')' : '');
+      render();
+    }
+
+    try {
+      var cached = JSON.parse(localStorage.getItem(RATE_KEY) || 'null');
+      if (cached && cached.rate) applyRate(cached.rate, 'เรทล่าสุดที่บันทึกไว้', cached.date);
+    } catch (e) {}
+
+    function fromFrankfurter() {
+      return fetch('https://api.frankfurter.app/latest?from=CNY&to=THB')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data && data.rates && data.rates.THB) {
+            applyRate(data.rates.THB, 'อัปเดตล่าสุด', data.date);
+            try { localStorage.setItem(RATE_KEY, JSON.stringify({ rate: data.rates.THB, date: data.date })); } catch (e) {}
+            return true;
+          }
+          throw new Error('no rate');
+        });
+    }
+
+    function fromOpenErApi() {
+      return fetch('https://open.er-api.com/v6/latest/CNY')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data && data.rates && data.rates.THB) {
+            var d = data.time_last_update_utc || '';
+            applyRate(data.rates.THB, 'อัปเดตล่าสุด', d);
+            try { localStorage.setItem(RATE_KEY, JSON.stringify({ rate: data.rates.THB, date: d })); } catch (e) {}
+            return true;
+          }
+          throw new Error('no rate');
+        });
+    }
+
+    fromFrankfurter().catch(fromOpenErApi).catch(function () {
+      if (rate === null) meta.textContent = 'โหลดเรทไม่ได้ ลองใหม่เมื่อมีอินเทอร์เน็ต';
+    });
+
+    input.addEventListener('input', render);
+  })();
+
+  // --- PWA: register service worker ---
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
 
   // --- Countdown to departure ---
   (function () {
