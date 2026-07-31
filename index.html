@@ -253,6 +253,37 @@
     .overview-strip { grid-template-columns: repeat(2, 1fr); }
     .trip-title { font-size: 20px; }
   }
+
+  .countdown-badge {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 19px; font-weight: 800; letter-spacing: 0.3px;
+    background: linear-gradient(135deg, var(--xmas-red), #8f1c24 100%);
+    color: #fff; padding: 12px 22px; border-radius: 18px; margin-top: 14px;
+    border: 2px solid rgba(255,255,255,0.55);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px rgba(176,36,46,0.25);
+    animation: countdown-pulse 2.2s ease-in-out infinite;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+  }
+  @keyframes countdown-pulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px rgba(176,36,46,0.25); transform: scale(1); }
+    50% { box-shadow: 0 6px 24px rgba(0,0,0,0.34), 0 0 0 7px rgba(176,36,46,0.15); transform: scale(1.025); }
+  }
+  @media (max-width: 480px) {
+    .countdown-badge { font-size: 14.5px; padding: 10px 16px; border-radius: 14px; }
+  }
+  .action-bar { display: flex; gap: 10px; justify-content: center; margin: 4px 0 18px; flex-wrap: wrap; }
+  .action-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; background: #fff; color: var(--xmas-maroon); border: 1px solid #E6DCC2; padding: 8px 16px; border-radius: 20px; cursor: pointer; box-shadow: 0 2px 6px rgba(15,58,84,0.08); }
+  .action-btn:active { transform: scale(0.97); }
+  .packing-item { position: relative; }
+  .packing-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .packing-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--xmas-maroon); flex-shrink: 0; cursor: pointer; }
+  .packing-item.checked label span.packing-txt { text-decoration: line-through; color: #b7b0a0; }
+  @media print {
+    body { background: #fff !important; padding: 0 !important; }
+    .day-nav, .action-bar, .progress-wrap, .day-nav-btn { display: none !important; }
+    .day-panel { display: block !important; page-break-inside: avoid; }
+    .container { max-width: 100% !important; }
+  }
 </style>
 </head>
 <body>
@@ -262,6 +293,7 @@
     <div class="badge-new">🎄 อัปเดต ธันวาคม 2026</div>
     <div class="trip-title">🎅 เซี่ยงไฮ้ 8 วัน 6 คืน</div>
     <div class="trip-sub">4–11 ธ.ค. 2026 · ไฟคริสต์มาส The Bund 🎄 · Disneyland · อากาศหนาวสบาย ❄️</div>
+    <div class="countdown-badge" id="countdown-badge">⏳ กำลังคำนวณ...</div>
   </div>
   <div class="overview-strip">
     <div class="ov-item"><div class="ov-icon">🗓️</div><div class="ov-label">ระยะเวลา</div><div class="ov-val">8 วัน 6 คืน</div></div>
@@ -296,6 +328,10 @@
     <div class="tip-box" style="margin:8px 0 0;"><span>📱</span><span class="tip-text"><strong>เช็กไฟลท์ผ่าน iPhone ได้เลยไม่ต้องลงแอป:</strong> เปิดแอป Notes หรือ iMessage แล้วพิมพ์ "Fly" ตามด้วยรหัสเที่ยวบิน เช่น <strong>Fly MU???</strong> จากนั้นกดเว้นวรรคหรือ Enter จะมีเส้นใต้ขึ้นที่รหัส ให้แตะหรือกดค้างไว้ แล้วเลือก Preview Flight เพื่อดูสถานะ เวลาบิน และสายพานรับกระเป๋าได้ทันที</span></div>
   </div>
   <!-- Day navigation -->
+  <div class="action-bar">
+    <button class="action-btn" id="share-btn">🔗 แชร์แผนนี้</button>
+    <button class="action-btn" id="print-btn">🖨️ พิมพ์ / PDF</button>
+  </div>
   <div class="day-nav">
     <button class="day-nav-btn" data-day="1" style="--accent:#185FA5"><span class="nav-lbl">Day</span><span class="nav-num">1</span></button>
     <button class="day-nav-btn" data-day="2" style="--accent:#B0242E"><span class="nav-lbl">Day</span><span class="nav-num">2</span></button>
@@ -632,16 +668,16 @@
   <div class="packing-section">
     <div class="section-title">🎒 สิ่งที่ต้องเตรียม</div>
     <div class="packing-grid">
-      <div class="packing-item">📱 ซิมต่างประเทศ / eSIM จีน</div>
-      <div class="packing-item">💳 Alipay / WeChat Pay ผูกบัตร</div>
-      <div class="packing-item">🛂 Passport + สำเนา</div>
-      <div class="packing-item">🔋 Power Bank ≤100Wh</div>
-      <div class="packing-item">💊 ยาแก้แพ้ / แก้ปวด</div>
-      <div class="packing-item">🔌 หัวแปลงปลั๊กไฟ (Type A/I)</div>
-      <div class="packing-item">🧣 เสื้อกันหนาว + ผ้าพันคอ + ถุงมือ</div>
-      <div class="packing-item">📄 ปริ้น Booking ทั้งหมด</div>
-      <div class="packing-item">🌐 VPN (Google/LINE ใช้ไม่ได้)</div>
-      <div class="packing-item">👟 รองเท้าเดินสบาย (เดินเยอะ)</div>
+      <div class="packing-item" id="pack-sim"><label><input type="checkbox" data-key="sim"> <span class="packing-txt">📱 ซิมต่างประเทศ / eSIM จีน</span></label></div>
+      <div class="packing-item" id="pack-pay"><label><input type="checkbox" data-key="pay"> <span class="packing-txt">💳 Alipay / WeChat Pay ผูกบัตร</span></label></div>
+      <div class="packing-item" id="pack-passport"><label><input type="checkbox" data-key="passport"> <span class="packing-txt">🛂 Passport + สำเนา</span></label></div>
+      <div class="packing-item" id="pack-powerbank"><label><input type="checkbox" data-key="powerbank"> <span class="packing-txt">🔋 Power Bank ≤100Wh</span></label></div>
+      <div class="packing-item" id="pack-meds"><label><input type="checkbox" data-key="meds"> <span class="packing-txt">💊 ยาแก้แพ้ / แก้ปวด</span></label></div>
+      <div class="packing-item" id="pack-plug"><label><input type="checkbox" data-key="plug"> <span class="packing-txt">🔌 หัวแปลงปลั๊กไฟ (Type A/I)</span></label></div>
+      <div class="packing-item" id="pack-coat"><label><input type="checkbox" data-key="coat"> <span class="packing-txt">🧣 เสื้อกันหนาว + ผ้าพันคอ + ถุงมือ</span></label></div>
+      <div class="packing-item" id="pack-booking"><label><input type="checkbox" data-key="booking"> <span class="packing-txt">📄 ปริ้น Booking ทั้งหมด</span></label></div>
+      <div class="packing-item" id="pack-vpn"><label><input type="checkbox" data-key="vpn"> <span class="packing-txt">🌐 VPN (Google/LINE ใช้ไม่ได้)</span></label></div>
+      <div class="packing-item" id="pack-shoes"><label><input type="checkbox" data-key="shoes"> <span class="packing-txt">👟 รองเท้าเดินสบาย (เดินเยอะ)</span></label></div>
     </div>
   </div>
   <div class="snow-row small">❆ ❅ ❄ ❅ ❆ ❅ ❄</div>
@@ -685,6 +721,100 @@
     });
   });
   showDay(1);
+
+  // --- Countdown to departure ---
+  (function () {
+    var badge = document.getElementById('countdown-badge');
+    if (!badge) return;
+    var target = new Date('2026-12-04T19:05:00+07:00');
+    function tick() {
+      var now = new Date();
+      var diff = target - now;
+      if (diff <= 0) { badge.textContent = '🎉 ถึงวันเดินทางแล้ว!'; return; }
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor((diff % 86400000) / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      badge.textContent = '⏳ เหลืออีก ' + d + ' วัน ' + h + ' ชม. ' + m + ' นาที ถึงวันเดินทาง';
+    }
+    tick();
+    setInterval(tick, 60000);
+  })();
+
+  // --- Auto-jump to today's day panel ---
+  (function () {
+    try {
+      var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+      var y = now.getFullYear(), mo = now.getMonth() + 1, d = now.getDate();
+      var map = { '2026-12-4': 1, '2026-12-5': 2, '2026-12-6': 3, '2026-12-7': 4, '2026-12-8': 5, '2026-12-9': 6, '2026-12-10': 7 };
+      var key = y + '-' + mo + '-' + d;
+      if (map[key]) { showDay(map[key]); }
+    } catch (e) { /* ignore, keep default day 1 */ }
+  })();
+
+  // --- Packing checklist persistence ---
+  (function () {
+    var STORAGE_KEY = 'hkTripPackingChecklist';
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) { saved = {}; }
+    document.querySelectorAll('.packing-item input[type="checkbox"]').forEach(function (cb) {
+      var key = cb.getAttribute('data-key');
+      if (saved[key]) {
+        cb.checked = true;
+        cb.closest('.packing-item').classList.add('checked');
+      }
+      cb.addEventListener('change', function () {
+        saved[key] = cb.checked;
+        cb.closest('.packing-item').classList.toggle('checked', cb.checked);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      });
+    });
+  })();
+
+  // --- Keyboard arrow navigation ---
+  document.addEventListener('keydown', function (e) {
+    var current = document.querySelector('.day-nav-btn.active');
+    var n = current ? parseInt(current.getAttribute('data-day'), 10) : 1;
+    if (e.key === 'ArrowRight' && n < 7) { showDay(n + 1); }
+    else if (e.key === 'ArrowLeft' && n > 1) { showDay(n - 1); }
+  });
+
+  // --- Swipe navigation on day panels ---
+  (function () {
+    var touchStartX = 0, touchStartY = 0;
+    document.addEventListener('touchstart', function (e) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].screenX - touchStartX;
+      var dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      var current = document.querySelector('.day-nav-btn.active');
+      var n = current ? parseInt(current.getAttribute('data-day'), 10) : 1;
+      if (dx < 0 && n < 7) { showDay(n + 1); }
+      else if (dx > 0 && n > 1) { showDay(n - 1); }
+    }, { passive: true });
+  })();
+
+  // --- Share button ---
+  document.getElementById('share-btn').addEventListener('click', function () {
+    var shareData = { title: document.title, text: 'แผนเที่ยวเซี่ยงไฮ้ 8 วัน 6 คืน ธันวาคม 2026', url: location.href };
+    if (navigator.share) {
+      navigator.share(shareData).catch(function () {});
+    } else {
+      navigator.clipboard.writeText(location.href).then(function () {
+        var btn = document.getElementById('share-btn');
+        var oldText = btn.textContent;
+        btn.textContent = '✅ คัดลอกลิงก์แล้ว';
+        setTimeout(function () { btn.textContent = oldText; }, 1800);
+      });
+    }
+  });
+
+  // --- Print button ---
+  document.getElementById('print-btn').addEventListener('click', function () {
+    window.print();
+  });
 </script>
 </body>
 </html>
