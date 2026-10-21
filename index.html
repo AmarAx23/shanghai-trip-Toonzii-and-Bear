@@ -462,34 +462,32 @@
     .day-nav .day-nav-btn .nav-num { font-size: 14px !important; }
   }
   /* 6. Glow-frame cards (from Uiverse.io by Tiagoadag, cuddly-catfish-6, MIT) */
-  .ov-item, .budget-item, .emergency-card { --face: #fff; transition: transform .2s, box-shadow .3s, border-color .3s; }
+  .ov-item, .budget-item { --face: #fff; transition: transform .2s, box-shadow .3s, border-color .3s; }
   .ov-item { border-width: 2px 2px 3px; border-top-width: 3px; }
   .budget-item { --face: var(--xmas-gold-light); border: 2px solid transparent; }
-  .emergency-card { --face: #FDECEA; border-width: 2px; }
   html[data-theme="dark"] .ov-item { --face: #111; }
   html[data-theme="dark"] .budget-item { --face: #272117; }
-  html[data-theme="dark"] .emergency-card { --face: #291415; }
   @media (hover: hover) {
-    html:root .ov-item:hover, html:root .budget-item:hover, html:root .emergency-card:hover {
+    html:root .ov-item:hover, html:root .budget-item:hover {
       transform: scale(0.98); box-shadow: 0 0 30px 1px rgba(0, 255, 117, 0.30) !important; border-color: transparent !important;
       background: linear-gradient(var(--face), var(--face)) padding-box, linear-gradient(163deg, #00ff75 0%, #3700ff 100%) border-box !important;
     }
   }
-  html:root .ov-item:active, html:root .budget-item:active, html:root .emergency-card:active, html:root .emergency-card:focus-visible {
+  html:root .ov-item:active, html:root .budget-item:active {
     outline: none; transform: scale(0.98); box-shadow: 0 0 30px 1px rgba(0, 255, 117, 0.30) !important; border-color: transparent !important;
     background: linear-gradient(var(--face), var(--face)) padding-box, linear-gradient(163deg, #00ff75 0%, #3700ff 100%) border-box !important;
   }
   /* 7. Same glow frame on the large cards */
-  .day-card, .flight-section, .budget-section, .currency-section, .packing-section, .emergency-section, .tips-section { --face: #fff; border-width: 2px; transition: transform .2s, box-shadow .3s, border-color .3s; }
-  html[data-theme="dark"] .day-card, html[data-theme="dark"] .flight-section, html[data-theme="dark"] .budget-section, html[data-theme="dark"] .currency-section, html[data-theme="dark"] .packing-section, html[data-theme="dark"] .emergency-section, html[data-theme="dark"] .tips-section { --face: #111; }
+  .day-card, .flight-section, .budget-section, .currency-section, .packing-section, .tips-section { --face: #fff; border-width: 2px; transition: transform .2s, box-shadow .3s, border-color .3s; }
+  html[data-theme="dark"] .day-card, html[data-theme="dark"] .flight-section, html[data-theme="dark"] .budget-section, html[data-theme="dark"] .currency-section, html[data-theme="dark"] .packing-section, html[data-theme="dark"] .tips-section { --face: #111; }
   @media (hover: hover) {
-    html:root .day-card:hover, html:root .flight-section:hover, html:root .budget-section:hover, html:root .currency-section:hover, html:root .packing-section:hover, html:root .emergency-section:hover, html:root .tips-section:hover {
+    html:root .day-card:hover, html:root .flight-section:hover, html:root .budget-section:hover, html:root .currency-section:hover, html:root .packing-section:hover, html:root .tips-section:hover {
       transform: scale(0.99); box-shadow: 0 0 30px 1px rgba(0, 255, 117, 0.30) !important; border-color: transparent !important;
       background: linear-gradient(var(--face), var(--face)) padding-box, linear-gradient(163deg, #00ff75 0%, #3700ff 100%) border-box !important;
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .day-nav .day-pill, .pack-bar i, .packing-item .pack-box, .packing-item .pack-box svg, .theme-toggle-btn .tt-knob, .action-btn > span, .ov-item, .budget-item, .emergency-card { transition: none !important; }
+    .day-nav .day-pill, .pack-bar i, .packing-item .pack-box, .packing-item .pack-box svg, .theme-toggle-btn .tt-knob, .action-btn > span, .ov-item, .budget-item { transition: none !important; }
   }
 </style>
 </head>
