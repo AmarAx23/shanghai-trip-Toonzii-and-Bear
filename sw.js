@@ -1,6 +1,6 @@
 // Bump this version string whenever index.html changes, so returning
 // offline visitors get the fresh copy instead of a stale cached one.
-const CACHE_NAME = 'hk-trip-cache-v1';
+const CACHE_NAME = 'hk-trip-cache-v2';
 const URLS_TO_CACHE = [
   './',
   './index.html',

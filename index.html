@@ -395,10 +395,76 @@
   html[data-theme="dark"] .qr-modal-sub,
   html[data-theme="dark"] .qr-modal-url { color: #999 !important; }
   html[data-theme="dark"] .qr-modal-img { background: #fff; }
+
+  /* ===== UI refresh (uiverse-inspired) ===== */
+  /* 1. Currency floating label */
+  .fl-field { position: relative; flex: 1; min-width: 200px; }
+  .fl-field .fl-yen { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--xmas-gold); font-size: 18px; pointer-events: none; }
+  .fl-field .currency-input { width: 100%; font-size: 18px; padding: 22px 14px 8px 38px; border: 1.5px solid #E6DCC2; border-radius: 12px; background: #fff; outline: none; transition: border-color .2s, box-shadow .2s; }
+  .fl-field .currency-input:focus { outline: none; border-color: var(--xmas-gold); box-shadow: 0 0 0 4px rgba(199,154,63,.18); }
+  .fl-field label { position: absolute; left: 38px; top: 50%; transform: translateY(-50%); color: #999; font-size: 15px; pointer-events: none; transition: all .2s; }
+  .fl-field .currency-input:focus + label, .fl-field .currency-input:not(:placeholder-shown) + label { top: 13px; font-size: 11.5px; color: var(--xmas-gold); font-weight: 700; }
+  .currency-result { font-size: 24px; }
+  .cny-chips { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .cny-chip { font: inherit; font-size: 13px; font-weight: 700; border: 1px solid #E6DCC2; background: #fff; color: var(--xmas-maroon); padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: background .15s, border-color .15s; }
+  .cny-chip:hover, .cny-chip:active { background: var(--xmas-gold-light); border-color: var(--xmas-gold); }
+  html[data-theme="dark"] .fl-field .currency-input { background: #161616 !important; }
+  html[data-theme="dark"] .cny-chip { background: #161616; border-color: #333; color: #e8c877; }
+  /* 2. Animated packing checklist */
+  .pack-progress { display: flex; align-items: center; gap: 10px; margin: 4px 0 14px; font-size: 13px; color: #888; font-weight: 700; }
+  .pack-bar { flex: 1; height: 10px; background: var(--xmas-gold-light); border-radius: 10px; overflow: hidden; }
+  .pack-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--xmas-red), var(--xmas-gold)); border-radius: 10px; transition: width .45s cubic-bezier(.3,1.4,.5,1); }
+  html[data-theme="dark"] .pack-bar { background: rgba(255,255,255,0.12); }
+  .packing-item input[type="checkbox"] { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+  .packing-item .pack-box { width: 22px; height: 22px; flex: none; border: 2px solid #D9CDB0; border-radius: 7px; display: grid; place-items: center; background: #fff; transition: all .25s; }
+  .packing-item .pack-box svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 20; stroke-dashoffset: 20; transition: stroke-dashoffset .3s .1s; }
+  .packing-item input:checked + .pack-box { background: var(--xmas-red); border-color: var(--xmas-red); transform: scale(1.08); }
+  .packing-item input:checked + .pack-box svg { stroke-dashoffset: 0; }
+  .packing-item input:focus-visible + .pack-box { box-shadow: 0 0 0 3px rgba(199,154,63,.4); }
+  .packing-item span.packing-txt { position: relative; transition: color .3s; }
+  .packing-item span.packing-txt::after { content: ""; position: absolute; left: 0; top: 52%; height: 2px; width: 0; background: #b7b0a0; transition: width .3s; }
+  .packing-item.checked label span.packing-txt { text-decoration: none; }
+  .packing-item.checked label span.packing-txt::after { width: 100%; }
+  html[data-theme="dark"] .packing-item .pack-box { background: #161616; border-color: #444; }
+  html[data-theme="dark"] .packing-item input:checked + .pack-box { background: var(--xmas-red); border-color: var(--xmas-red); }
+  /* 3. 3D pushable action buttons */
+  .action-btn { --face: var(--xmas-red); --edge: #7d1820; border: none !important; background: var(--edge) !important; padding: 0 !important; border-radius: 14px; box-shadow: none !important; color: #fff !important; }
+  .action-btn > span { display: block; padding: 10px 18px; border-radius: 14px; background: var(--face); color: #fff; transform: translateY(-5px); transition: transform .12s; }
+  .action-btn:hover > span { transform: translateY(-7px); }
+  .action-btn:active { transform: none; }
+  .action-btn:active > span { transform: translateY(-1px); }
+  .action-btn.btn-gold { --face: var(--xmas-gold); --edge: #8e6a22; }
+  .action-btn.btn-navy { --face: var(--xmas-maroon); --edge: #082536; }
+  .action-bar { margin-top: 10px; }
+  /* 4. Day/night theme switch */
+  .theme-toggle-btn { width: 68px !important; height: 34px !important; border-radius: 40px !important; background: #87c3ec !important; overflow: hidden; padding: 0; transition: background .4s; }
+  .theme-toggle-btn .tt-knob { position: absolute; top: 4px; left: 4px; width: 26px; height: 26px; border-radius: 50%; background: #ffd34d; box-shadow: 0 0 0 4px rgba(255,255,255,.25); transition: all .4s cubic-bezier(.5,1.6,.4,1); }
+  .theme-toggle-btn .tt-cloud { position: absolute; right: 7px; top: 9px; font-size: 13px; line-height: 1; transition: opacity .3s; }
+  .theme-toggle-btn .tt-stars { position: absolute; left: 9px; top: 7px; font-size: 9px; color: #fff; letter-spacing: 3px; line-height: 1; opacity: 0; transition: opacity .3s; }
+  .theme-toggle-btn.on, html[data-theme="dark"] .theme-toggle-btn { background: #1b2440 !important; }
+  .theme-toggle-btn.on .tt-knob { left: 38px; background: #e8e8f0; box-shadow: inset -6px -3px 0 #c8c8d6; }
+  .theme-toggle-btn.on .tt-cloud { opacity: 0; }
+  .theme-toggle-btn.on .tt-stars { opacity: 1; }
+  /* 5. Sliding pill day nav */
+  .day-nav { position: sticky; flex-wrap: nowrap; gap: 0; padding: 5px; border-radius: 16px; overflow-x: auto; scrollbar-width: none; }
+  .day-nav::-webkit-scrollbar { display: none; }
+  .day-nav .day-pill { position: absolute; z-index: 0; top: 5px; bottom: 5px; left: 5px; width: 0; border-radius: 12px; background: var(--accent, var(--xmas-red)); box-shadow: 0 4px 10px rgba(0,0,0,0.18); transition: left .35s cubic-bezier(.4,1.3,.5,1), width .35s cubic-bezier(.4,1.3,.5,1), background .35s; }
+  .day-nav .day-nav-btn, html[data-theme="dark"] .day-nav .day-nav-btn { position: relative; z-index: 1; flex: 1 1 0; min-width: 44px; width: auto !important; height: 50px !important; border: none !important; border-radius: 12px; background: transparent !important; box-shadow: none !important; color: #8a8270 !important; }
+  .day-nav .day-nav-btn:hover { transform: none; color: var(--xmas-maroon) !important; }
+  .day-nav .day-nav-btn.active, html[data-theme="dark"] .day-nav .day-nav-btn.active { background: transparent !important; color: #fff !important; box-shadow: none; }
+  .day-nav .day-nav-btn .nav-lbl { font-size: 9px !important; }
+  .day-nav .day-nav-btn .nav-num { font-size: 16px !important; }
+  @media (max-width: 480px) {
+    .day-nav .day-nav-btn { min-width: 38px; height: 44px !important; }
+    .day-nav .day-nav-btn .nav-num { font-size: 14px !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .day-nav .day-pill, .pack-bar i, .packing-item .pack-box, .packing-item .pack-box svg, .theme-toggle-btn .tt-knob, .action-btn > span { transition: none !important; }
+  }
 </style>
 </head>
 <body>
-<button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="สลับโหมดมืด">🌙</button>
+<button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="สลับโหมดมืด"><span class="tt-stars">✦ ✧ ✦</span><span class="tt-cloud">☁️</span><span class="tt-knob"></span></button>
 <div class="container">
   <div class="snow-row">❆ ❅ ❄ ❅ ❆</div>
   <div class="trip-header">
@@ -441,11 +507,12 @@
   </div>
   <!-- Day navigation -->
   <div class="action-bar">
-    <button class="action-btn" id="share-btn">🔗 แชร์แผนนี้</button>
-    <button class="action-btn" id="print-btn">🖨️ พิมพ์ / PDF</button>
-    <button class="action-btn" id="qr-btn">📱 QR สำหรับเพื่อน</button>
+    <button class="action-btn" id="share-btn"><span>🔗 แชร์แผนนี้</span></button>
+    <button class="action-btn btn-gold" id="print-btn"><span>🖨️ พิมพ์ / PDF</span></button>
+    <button class="action-btn btn-navy" id="qr-btn"><span>📱 QR สำหรับเพื่อน</span></button>
   </div>
   <div class="day-nav">
+    <span class="day-pill" aria-hidden="true"></span>
     <button class="day-nav-btn" data-day="1" style="--accent:#185FA5"><span class="nav-lbl">Day</span><span class="nav-num">1</span></button>
     <button class="day-nav-btn" data-day="2" style="--accent:#B0242E"><span class="nav-lbl">Day</span><span class="nav-num">2</span></button>
     <button class="day-nav-btn" data-day="3" style="--accent:#2B6E8C"><span class="nav-lbl">Day</span><span class="nav-num">3</span></button>
@@ -786,29 +853,31 @@
   <div class="currency-section">
     <div class="section-title">💱 แปลงเงินหยวน → บาท</div>
     <div class="currency-row">
-      <input type="number" inputmode="decimal" class="currency-input" id="cny-input" placeholder="จำนวนหยวน (¥)">
+      <div class="fl-field"><span class="fl-yen">¥</span><input type="number" inputmode="decimal" class="currency-input" id="cny-input" placeholder=" "><label for="cny-input">จำนวนหยวน</label></div>
       <div class="currency-result" id="thb-result">= 0.00 ฿</div>
     </div>
+    <div class="cny-chips"><button type="button" class="cny-chip" data-v="50">¥50</button><button type="button" class="cny-chip" data-v="100">¥100</button><button type="button" class="cny-chip" data-v="500">¥500</button><button type="button" class="cny-chip" data-v="1000">¥1,000</button></div>
     <div class="currency-meta" id="currency-meta">กำลังโหลดเรทล่าสุด...</div>
   </div>
   <!-- Packing -->
   <div class="packing-section">
     <div class="section-title">🎒 สิ่งที่ต้องเตรียม</div>
+    <div class="pack-progress"><div class="pack-bar"><i id="pack-bar-fill"></i></div><span id="pack-count">0/0</span></div>
     <div class="packing-grid">
-      <div class="packing-item" id="pack-sim"><label><input type="checkbox" data-key="sim"> <span class="packing-txt">📱 ซิมต่างประเทศ / eSIM จีน</span></label></div>
-      <div class="packing-item" id="pack-pay"><label><input type="checkbox" data-key="pay"> <span class="packing-txt">💳 Alipay / WeChat Pay ผูกบัตร</span></label></div>
-      <div class="packing-item" id="pack-passport"><label><input type="checkbox" data-key="passport"> <span class="packing-txt">🛂 Passport + สำเนา</span></label></div>
-      <div class="packing-item" id="pack-powerbank"><label><input type="checkbox" data-key="powerbank"> <span class="packing-txt">🔋 Power Bank ≤100Wh</span></label></div>
-      <div class="packing-item" id="pack-meds"><label><input type="checkbox" data-key="meds"> <span class="packing-txt">💊 ยาแก้แพ้ / แก้ปวด</span></label></div>
-      <div class="packing-item" id="pack-plug"><label><input type="checkbox" data-key="plug"> <span class="packing-txt">🔌 หัวแปลงปลั๊กไฟ (Type A/I)</span></label></div>
-      <div class="packing-item" id="pack-coat"><label><input type="checkbox" data-key="coat"> <span class="packing-txt">🧣 เสื้อกันหนาว + ผ้าพันคอ + ถุงมือ</span></label></div>
-      <div class="packing-item" id="pack-booking"><label><input type="checkbox" data-key="booking"> <span class="packing-txt">📄 ปริ้น Booking ทั้งหมด</span></label></div>
-      <div class="packing-item" id="pack-vpn"><label><input type="checkbox" data-key="vpn"> <span class="packing-txt">🌐 VPN (Google/LINE ใช้ไม่ได้)</span></label></div>
-      <div class="packing-item" id="pack-shoes"><label><input type="checkbox" data-key="shoes"> <span class="packing-txt">👟 รองเท้าเดินสบาย (เดินเยอะ)</span></label></div>
-      <div class="packing-item" id="pack-cash"><label><input type="checkbox" data-key="cash"> <span class="packing-txt">💴 เงินสดหยวนสำรอง</span></label></div>
-      <div class="packing-item" id="pack-lipbalm"><label><input type="checkbox" data-key="lipbalm"> <span class="packing-txt">💧 ลิปมัน/โลชั่นกันผิวแห้ง</span></label></div>
-      <div class="packing-item" id="pack-motionsick"><label><input type="checkbox" data-key="motionsick"> <span class="packing-txt">🤢 ยาแก้เมารถ/เมาเครื่องบิน</span></label></div>
-      <div class="packing-item" id="pack-umbrella"><label><input type="checkbox" data-key="umbrella"> <span class="packing-txt">☂️ ร่มพับ/เสื้อกันลม</span></label></div>
+      <div class="packing-item" id="pack-sim"><label><input type="checkbox" data-key="sim"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">📱 ซิมต่างประเทศ / eSIM จีน</span></label></div>
+      <div class="packing-item" id="pack-pay"><label><input type="checkbox" data-key="pay"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">💳 Alipay / WeChat Pay ผูกบัตร</span></label></div>
+      <div class="packing-item" id="pack-passport"><label><input type="checkbox" data-key="passport"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">🛂 Passport + สำเนา</span></label></div>
+      <div class="packing-item" id="pack-powerbank"><label><input type="checkbox" data-key="powerbank"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">🔋 Power Bank ≤100Wh</span></label></div>
+      <div class="packing-item" id="pack-meds"><label><input type="checkbox" data-key="meds"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">💊 ยาแก้แพ้ / แก้ปวด</span></label></div>
+      <div class="packing-item" id="pack-plug"><label><input type="checkbox" data-key="plug"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">🔌 หัวแปลงปลั๊กไฟ (Type A/I)</span></label></div>
+      <div class="packing-item" id="pack-coat"><label><input type="checkbox" data-key="coat"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">🧣 เสื้อกันหนาว + ผ้าพันคอ + ถุงมือ</span></label></div>
+      <div class="packing-item" id="pack-booking"><label><input type="checkbox" data-key="booking"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">📄 ปริ้น Booking ทั้งหมด</span></label></div>
+      <div class="packing-item" id="pack-vpn"><label><input type="checkbox" data-key="vpn"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">🌐 VPN (Google/LINE ใช้ไม่ได้)</span></label></div>
+      <div class="packing-item" id="pack-shoes"><label><input type="checkbox" data-key="shoes"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">👟 รองเท้าเดินสบาย (เดินเยอะ)</span></label></div>
+      <div class="packing-item" id="pack-cash"><label><input type="checkbox" data-key="cash"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">💴 เงินสดหยวนสำรอง</span></label></div>
+      <div class="packing-item" id="pack-lipbalm"><label><input type="checkbox" data-key="lipbalm"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">💧 ลิปมัน/โลชั่นกันผิวแห้ง</span></label></div>
+      <div class="packing-item" id="pack-motionsick"><label><input type="checkbox" data-key="motionsick"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">🤢 ยาแก้เมารถ/เมาเครื่องบิน</span></label></div>
+      <div class="packing-item" id="pack-umbrella"><label><input type="checkbox" data-key="umbrella"><span class="pack-box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="packing-txt">☂️ ร่มพับ/เสื้อกันลม</span></label></div>
     </div>
   </div>
   <div class="snow-row small">❆ ❅ ❄ ❅ ❆ ❅ ❄</div>
@@ -1124,10 +1193,10 @@
     function apply(theme) {
       if (theme === 'dark') {
         root.setAttribute('data-theme', 'dark');
-        btn.textContent = '☀️';
+        btn.classList.add('on');
       } else {
         root.removeAttribute('data-theme');
-        btn.textContent = '🌙';
+        btn.classList.remove('on');
       }
     }
 
@@ -1141,6 +1210,47 @@
       apply(next);
       try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
     });
+  })();
+
+  // --- UI refresh helpers ---
+  (function () {
+    // currency quick chips
+    var input = document.getElementById('cny-input');
+    document.querySelectorAll('.cny-chip').forEach(function (c) {
+      c.addEventListener('click', function () {
+        if (!input) return;
+        input.value = c.getAttribute('data-v');
+        input.dispatchEvent(new Event('input'));
+      });
+    });
+    // packing progress
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.packing-item input[type="checkbox"]'));
+    var fill = document.getElementById('pack-bar-fill'), count = document.getElementById('pack-count');
+    function upd() {
+      var n = boxes.filter(function (b) { return b.checked; }).length;
+      if (fill) fill.style.width = (boxes.length ? n / boxes.length * 100 : 0) + '%';
+      if (count) count.textContent = n + '/' + boxes.length;
+    }
+    boxes.forEach(function (b) { b.addEventListener('change', upd); });
+    upd(); setTimeout(upd, 0);
+    // sliding day pill
+    var nav = document.querySelector('.day-nav'), pill = nav && nav.querySelector('.day-pill');
+    if (!nav || !pill) return;
+    function move() {
+      var b = nav.querySelector('.day-nav-btn.active');
+      if (!b) return;
+      pill.style.left = b.offsetLeft + 'px';
+      pill.style.width = b.offsetWidth + 'px';
+      pill.style.setProperty('--accent', getComputedStyle(b).getPropertyValue('--accent'));
+      if (b.scrollIntoView && nav.scrollWidth > nav.clientWidth) {
+        nav.scrollTo({ left: b.offsetLeft - (nav.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' });
+      }
+    }
+    var mo = new MutationObserver(move);
+    nav.querySelectorAll('.day-nav-btn').forEach(function (b) { mo.observe(b, { attributes: true, attributeFilter: ['class'] }); });
+    window.addEventListener('resize', move);
+    window.addEventListener('load', move);
+    move();
   })();
 </script>
 </body>
