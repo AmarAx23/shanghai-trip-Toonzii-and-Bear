@@ -87,14 +87,18 @@
   .cd .unit { text-align: center; }
   .cd .digits { display: flex; gap: 3px; justify-content: center; }
   .cd .unit > span { display: block; font-size: 11px; opacity: .78; margin-top: 5px; }
-  .fc { position: relative; width: 30px; height: 44px; perspective: 300px; font-family: var(--head); font-weight: 600; font-size: 28px; line-height: 44px; text-align: center; color: #fff; font-variant-numeric: tabular-nums; }
-  .fc i { position: absolute; inset: 0; font-style: normal; border-radius: 7px; background: rgba(255,255,255,.13); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .fc .t, .fc .f { clip-path: inset(0 0 50% 0); }
-  .fc .b { clip-path: inset(50% 0 0 0); }
-  .fc .f { background: rgba(255,255,255,.2); transform-origin: 50% 50%; }
-  .fc.go .f { animation: fcflip .45s ease-in forwards; }
-  .fc::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.35); }
-  @keyframes fcflip { to { transform: rotateX(-180deg); } }
+  .fc { position: relative; width: 30px; height: 44px; perspective: 220px; font-family: var(--head); font-weight: 600; font-size: 28px; line-height: 44px; text-align: center; color: #fff; font-variant-numeric: tabular-nums; border-radius: 7px; box-shadow: 0 3px 8px rgba(0,0,0,.28); }
+  .fc i { position: absolute; inset: 0; font-style: normal; border-radius: 7px; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform-origin: 50% 50%; }
+  .fc .t, .fc .ft { clip-path: inset(0 0 50% 0); background: linear-gradient(#35566F, #2C4B62); }
+  .fc .b, .fc .fb { clip-path: inset(50% 0 0 0); background: linear-gradient(#26435A, #213C51); }
+  .fc .ft, .fc .fb { visibility: hidden; will-change: transform, filter; }
+  .fc.go .ft { visibility: visible; animation: fcTop .3s cubic-bezier(.55,.05,.75,.3) forwards; }
+  .fc.go .fb { visibility: visible; animation: fcBot .34s cubic-bezier(.2,.75,.3,1.04) .28s both; }
+  .fc::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.4); z-index: 3; }
+  .fc .ft { z-index: 2; }
+  .fc .fb { z-index: 2; }
+  @keyframes fcTop { from { transform: rotateX(0); filter: brightness(1); } to { transform: rotateX(-90deg); filter: brightness(.6); } }
+  @keyframes fcBot { from { transform: rotateX(90deg); filter: brightness(1.35); } to { transform: rotateX(0); filter: brightness(1); } }
   @media (min-width: 400px) { .fc { width: 34px; height: 48px; line-height: 48px; font-size: 30px; } }
   .cd-msg { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: #F3DDA2; min-height: 0; }
   .cd-msg:empty { display: none; }
@@ -573,18 +577,19 @@
   (function () {
     var msg = $('#cd-msg'), cd = $('#cd'), names = ['วัน', 'ชม.', 'นาที', 'วินาที'];
     cd.innerHTML = names.map(function (n) {
-      return '<div class="unit"><div class="digits"><div class="fc"><i class="t"></i><i class="b"></i><i class="f"></i></div><div class="fc"><i class="t"></i><i class="b"></i><i class="f"></i></div></div><span>' + n + '</span></div>';
+      return '<div class="unit"><div class="digits"><div class="fc"><i class="t"></i><i class="b"></i><i class="ft"></i><i class="fb"></i></div><div class="fc"><i class="t"></i><i class="b"></i><i class="ft"></i><i class="fb"></i></div></div><span>' + n + '</span></div>';
     }).join('');
     var cards = $$('.fc', cd);
     function setDigit(card, v) {
-      var t = card.children[0], b = card.children[1], f = card.children[2];
+      // Classic split-flap: top half (old) folds down, then bottom half (new) falls into place.
+      var t = card.children[0], b = card.children[1], ft = card.children[2], fb = card.children[3];
       if (t.textContent === v) return;
       var old = t.textContent;
-      t.textContent = v;
-      if (!old || REDUCE) { b.textContent = v; f.textContent = ''; return; }
-      f.textContent = old; b.textContent = old;
+      clearTimeout(card._done);
+      if (!old || REDUCE || document.hidden) { t.textContent = b.textContent = v; card.classList.remove('go'); return; }
+      t.textContent = v; ft.textContent = old; fb.textContent = v; b.textContent = old;
       card.classList.remove('go'); void card.offsetWidth; card.classList.add('go');
-      setTimeout(function () { b.textContent = v; }, 230);
+      card._done = setTimeout(function () { b.textContent = v; card.classList.remove('go'); }, 640);
     }
     function tick() {
       var diff = DEPART - new Date();
@@ -599,7 +604,8 @@
       cards.forEach(function (c, i) { setDigit(c, s[i]); });
       cd.setAttribute('aria-label', 'อีก ' + v[0] + ' วัน ' + v[1] + ' ชั่วโมง ' + v[2] + ' นาที ถึงวันเดินทาง');
     }
-    tick(); setInterval(tick, 1000);
+    // Tick exactly on each second boundary so every flip starts at the same moment.
+    (function loop() { tick(); setTimeout(loop, 1000 - (Date.now() % 1000) + 5); })();
   })();
 
   // ---- Plane flying along each boarding-pass route ----
