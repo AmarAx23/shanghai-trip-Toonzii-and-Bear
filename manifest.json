@@ -1,13 +1,21 @@
 {
-  "name": "แผนเที่ยวเซี่ยงไฮ้ 8 วัน 6 คืน ธันวาคม 2026",
-  "short_name": "SH Trip 2026",
+  "name": "แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026",
+  "short_name": "เซี่ยงไฮ้ 2026",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#1D5C82",
-  "theme_color": "#1D5C82",
+  "background_color": "#0F3A54",
+  "theme_color": "#0F3A54",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
