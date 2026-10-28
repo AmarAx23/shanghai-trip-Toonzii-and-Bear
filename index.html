@@ -183,7 +183,9 @@
   .ev.flash .evb { animation: flash 1.4s ease; border-radius: 14px; }
   @keyframes flash { 0%, 40% { background: var(--gold-soft); box-shadow: 0 0 0 6px var(--gold-soft); } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
 
-  /* Real map (Leaflet + CARTO); the schematic svg stays as fallback */
+  /* Real map (Leaflet + OpenStreetMap); the schematic svg stays as fallback */
+  .dmap .leaflet-tile-pane { filter: saturate(.7) sepia(.1) brightness(1.03); }
+  :root[data-theme="dark"] .dmap .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.85) saturate(.55); }
   .dmap .lmap { height: 220px; display: none; background: var(--bg); z-index: 0; }
   .dmap.real .lmap { display: block; }
   .dmap.real .msvg { display: none; }
@@ -751,13 +753,11 @@
   }
   $$('.mleg').forEach(function (b) { b.addEventListener('click', function () { goTo(b.getAttribute('data-go')); }); });
 
-  // ---- Real maps: Leaflet + CARTO tiles, falling back to the schematic when tiles can't load ----
+  // ---- Real maps: Leaflet + OpenStreetMap tiles, falling back to the schematic when tiles can't load ----
   var realMap = (function () {
     var state = 'idle', waiters = [], failed = false;
-    function tileUrl() {
-      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-      return 'https://{s}.basemaps.cartocdn.com/rastertiles/' + (dark ? 'dark_all' : 'voyager') + '/{z}/{x}/{y}{r}.png';
-    }
+    // OpenStreetMap tiles (no key needed); colours are softened / inverted with CSS to match the theme
+    function tileUrl() { return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'; }
     function loadLeaflet(cb) {
       if (window.L) return cb(true);
       waiters.push(cb);
@@ -788,8 +788,8 @@
       fig.classList.add('real');
       var map = L.map(box, { zoomControl: true, attributionControl: true, scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, zoomSnap: 1 });
       map.attributionControl.setPrefix(false);
-      var layer = L.tileLayer(tileUrl(), { subdomains: 'abcd', maxZoom: 19, detectRetina: false,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>' });
+      var layer = L.tileLayer(tileUrl(), { maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors' });
       var loaded = false, errors = 0;
       layer.on('tileload', function () { loaded = true; });
       layer.on('tileerror', function () { if (!loaded && ++errors >= 3) { failed = true; map.remove(); fig._map = null; fallback(fig, 'โหลดแผนที่ไม่ได้'); } });
@@ -830,7 +830,7 @@
         if (fig._map) { fig.classList.add('real'); fig._map.invalidateSize(); fig._map.fitBounds(fig._bounds, { padding: [24, 24], maxZoom: 15 }); animateRoute(fig); return; }
         loadLeaflet(function (ok) { if (!ok) { failed = true; return fallback(fig, 'โหลดแผนที่ไม่ได้'); } build(fig); });
       },
-      retheme: function () { $$('.dmap').forEach(function (f) { if (f._layer) f._layer.setUrl(tileUrl()); }); }
+      retheme: function () {}
     };
   })();
   new MutationObserver(function () { realMap.retheme(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
