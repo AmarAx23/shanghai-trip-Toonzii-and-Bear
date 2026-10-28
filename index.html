@@ -63,6 +63,11 @@
     .card:hover, .pass:hover { border-color: transparent; background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(163deg, var(--red), var(--gold)) border-box; box-shadow: 0 0 0 1px transparent, 0 10px 30px rgba(176,36,46,.14); }
   }
 
+  /* Background: auspicious clouds (xiangyun) pattern, drawn for this site */
+  body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background: var(--gold); opacity: .13;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22160%22%20height%3D%22120%22%20viewBox%3D%220%200%20160%20120%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%3Cg%20transform%3D%22translate%2814%2022%29%22%3E%3Cpath%20d%3D%22M4%2030c0-9%207-16%2016-16%203-8%2010-13%2019-13%2010%200%2018%207%2019%2017%206%200%2011%205%2011%2011s-5%2011-11%2011H15C9%2040%204%2036%204%2030z%22/%3E%3Cpath%20d%3D%22M22%2030c0-5%204-8%208-8s7%203%207%207-3%206-6%206-5-2-5-5%202-4%204-4%22/%3E%3Cpath%20d%3D%22M44%2024c0-4%203-7%207-7s6%203%206%206-2%205-5%205%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%2886%2072%29%22%3E%3Cpath%20d%3D%22M2%2022c0-7%205-12%2012-12%202-6%208-10%2014-10%208%200%2014%206%2014%2013%205%200%208%204%208%208s-3%208-8%208H10C5%2029%202%2026%202%2022z%22/%3E%3Cpath%20d%3D%22M18%2022c0-4%203-6%206-6s5%202%205%205-2%204-4%204-3-1-3-3%22/%3E%3C/g%3E%3Cpath%20d%3D%22M120%2020c6%200%2010%204%2010%209M8%2096c5%200%209%203%209%208%22%20opacity%3D%22.7%22/%3E%3C/svg%3E") 0 0 / 160px 120px repeat; mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22160%22%20height%3D%22120%22%20viewBox%3D%220%200%20160%20120%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%3Cg%20transform%3D%22translate%2814%2022%29%22%3E%3Cpath%20d%3D%22M4%2030c0-9%207-16%2016-16%203-8%2010-13%2019-13%2010%200%2018%207%2019%2017%206%200%2011%205%2011%2011s-5%2011-11%2011H15C9%2040%204%2036%204%2030z%22/%3E%3Cpath%20d%3D%22M22%2030c0-5%204-8%208-8s7%203%207%207-3%206-6%206-5-2-5-5%202-4%204-4%22/%3E%3Cpath%20d%3D%22M44%2024c0-4%203-7%207-7s6%203%206%206-2%205-5%205%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%2886%2072%29%22%3E%3Cpath%20d%3D%22M2%2022c0-7%205-12%2012-12%202-6%208-10%2014-10%208%200%2014%206%2014%2013%205%200%208%204%208%208s-3%208-8%208H10C5%2029%202%2026%202%2022z%22/%3E%3Cpath%20d%3D%22M18%2022c0-4%203-6%206-6s5%202%205%205-2%204-4%204-3-1-3-3%22/%3E%3C/g%3E%3Cpath%20d%3D%22M120%2020c6%200%2010%204%2010%209M8%2096c5%200%209%203%209%208%22%20opacity%3D%22.7%22/%3E%3C/svg%3E") 0 0 / 160px 120px repeat; }
+  :root[data-theme="dark"] body::before { opacity: .07; }
+
   /* Snow */
   #snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
   .wrap { position: relative; z-index: 1; }
@@ -356,7 +361,7 @@
   }
   @media print {
     body { background: #fff; color: #000; }
-    #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk { display: none !important; }
+    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk { display: none !important; }
     .day { display: block !important; page-break-inside: avoid; margin-bottom: 18px; }
     .rv .reveal { opacity: 1 !important; transform: none !important; }
     .msvg .draw, .msvg .pin { animation: none !important; }
