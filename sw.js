@@ -1,6 +1,6 @@
 // Bump this version string whenever index.html changes, so returning
 // offline visitors get the fresh copy instead of a stale cached one.
-const CACHE_NAME = 'hk-trip-cache-v20';
+const CACHE_NAME = 'hk-trip-cache-v21';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -11,14 +11,10 @@ const URLS_TO_CACHE = [
   './vendor/leaflet/leaflet.css',
   './img/canton8.jpg',
   './img/chef-fei.jpg',
-  './img/fireworks.jpg',
   './img/grandmas-home.jpg',
-  './img/huaihai-road.jpg',
   './img/lailai.jpg',
   './img/long-time-ago.jpg',
   './img/new-sukiyaki.jpg',
-  './img/pvg.jpg',
-  './img/superbrand.jpg',
   './img/hd/adventure-1280.webp',
   './img/hd/adventure-640.webp',
   './img/hd/bkk-1280.webp',
@@ -31,8 +27,12 @@ const URLS_TO_CACHE = [
   './img/hd/citygod-640.webp',
   './img/hd/disney-1280.webp',
   './img/hd/disney-640.webp',
+  './img/hd/fireworks-1280.webp',
+  './img/hd/fireworks-640.webp',
   './img/hd/hero-1920.webp',
   './img/hd/hero-960.webp',
+  './img/hd/huaihai-1280.webp',
+  './img/hd/huaihai-640.webp',
   './img/hd/jade-1280.webp',
   './img/hd/jade-640.webp',
   './img/hd/m50-1280.webp',
@@ -41,6 +41,10 @@ const URLS_TO_CACHE = [
   './img/hd/nanjing-640.webp',
   './img/hd/peoples-1280.webp',
   './img/hd/peoples-640.webp',
+  './img/hd/pvg-1280.webp',
+  './img/hd/pvg-640.webp',
+  './img/hd/superbrand-1280.webp',
+  './img/hd/superbrand-640.webp',
   './img/hd/tianzifang-1280.webp',
   './img/hd/tianzifang-640.webp',
   './img/hd/treasure-1280.webp',
