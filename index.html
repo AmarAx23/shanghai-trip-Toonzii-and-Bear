@@ -9,12 +9,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0F3A54">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="build" content="20261028114653">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <title>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026</title>
 <script>try{var t=localStorage.getItem('hkTripTheme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
+<script>if(navigator.standalone)document.documentElement.classList.add('ios-app')</script>
 <style>
   @font-face { font-family: 'Noto Sans Thai'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/noto-sans-thai-thai-400-normal.woff2) format('woff2'); unicode-range: U+02D7,U+0303,U+0331,U+0E01-0E5B,U+200C-200D,U+25CC; }
   @font-face { font-family: 'Noto Sans Thai'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/noto-sans-thai-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
@@ -330,6 +332,23 @@
   .tip p { margin: 8px 0 0; font-size: 13.5px; color: var(--muted); }
   .foot { text-align: center; font-size: 13px; color: var(--muted); margin-top: 32px; }
 
+  /* Toast */
+  .toast { position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom)); transform: translate(-50%, 24px); opacity: 0; z-index: 60; pointer-events: none;
+    background: var(--navy); color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.25); transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s; white-space: nowrap; }
+  :root[data-theme="dark"] .toast { background: #1D5C82; }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+  .foot .ver { opacity: .8; }
+
+  /* Installed app on iPhone: content starts below the status bar / Dynamic Island */
+  @media (display-mode: standalone) {
+    .wrap { padding-top: calc(12px + env(safe-area-inset-top)); }
+    .dtabs { top: env(safe-area-inset-top); padding-top: 8px; }
+  }
+  html.ios-app .wrap { padding-top: calc(12px + env(safe-area-inset-top)); }
+  html.ios-app .dtabs { top: env(safe-area-inset-top); }
+  body { -webkit-tap-highlight-color: transparent; }
+  button, .hbtn, .dtab, .bnav a { -webkit-touch-callout: none; touch-action: manipulation; }
+
   /* Bottom nav */
   .bnav { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(12px + env(safe-area-inset-bottom)); width: calc(100% - 24px); max-width: 560px; z-index: 40;
     display: grid; grid-template-columns: repeat(5, 1fr); background: rgba(15,58,84,.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 22px; padding: 6px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
@@ -575,8 +594,10 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
+    <small class="ver">อัปเดตล่าสุด 28 ต.ค. 2026 11:46</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <nav class="bnav" aria-label="เมนูหลัก">
   <a href="#plan" data-sec="plan"><i aria-hidden="true">🗓️</i>แผน</a>
@@ -1062,7 +1083,7 @@
   })();
 
   // ---- Share / print / QR ----
-  function flash(btn, txt) { var old = btn.innerHTML; btn.textContent = txt; setTimeout(function () { btn.innerHTML = old; }, 1800); }
+  function flash(btn, txt) { toast(txt, null, 1800); }
   function copy(btn) { if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(function () { flash(btn, '✅ คัดลอกแล้ว'); }); }
   $('#share-btn').addEventListener('click', function () {
     var b = this, data = { title: document.title, text: 'แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026', url: location.href };
@@ -1088,8 +1109,32 @@
     btn.addEventListener('click', function () { var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; apply(next); store('hkTripTheme', next); });
   })();
 
-  // ---- Offline (PWA) ----
-  if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  // ---- Toast ----
+  function toast(html, onTap, ms) {
+    var t = $('#toast'); if (!t) return;
+    t.innerHTML = html; t.classList.add('show'); t.onclick = onTap || null; t.style.cursor = onTap ? 'pointer' : '';
+    clearTimeout(t._h); if (ms) t._h = setTimeout(function () { t.classList.remove('show'); }, ms);
+  }
+
+  // ---- Offline + auto-update (matters most for the app installed on the iPhone home screen) ----
+  var BUILD = (document.querySelector('meta[name="build"]') || {}).content || '';
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) {
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) reg.update().catch(function () {}); });
+      }).catch(function () {});
+    });
+  }
+  // iOS keeps a home-screen app alive in the background, so check for a newer page whenever it comes back.
+  function checkNewer() {
+    if (!BUILD || navigator.onLine === false) return;
+    fetch('index.html?check=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
+      var m = html.match(/<meta name="build" content="(\d+)"/);
+      if (m && m[1] > BUILD) toast('✨ มีเวอร์ชันใหม่ <b>แตะเพื่ออัปเดต</b>', function () { location.reload(); });
+    }).catch(function () {});
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) checkNewer(); });
+  setTimeout(checkNewer, 4000);
 })();
 
 </script>

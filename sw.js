@@ -1,10 +1,12 @@
-// Bump this version string whenever index.html changes, so returning
-// offline visitors get the fresh copy instead of a stale cached one.
-const CACHE_NAME = 'hk-trip-cache-v21';
+// Offline support for the trip page.
+// The page itself is fetched network-first, so an installed iPhone/Android app always shows the newest
+// version when online and falls back to the saved copy when offline. Photos, fonts and Leaflet are cache-first.
+const CACHE_NAME = 'sh-trip-v22';
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
+  './icon-180.png',
   './icon-192.png',
   './icon-512.png',
   './vendor/leaflet/leaflet.js',
@@ -66,34 +68,46 @@ const URLS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS_TO_CACHE))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS_TO_CACHE)));
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
+function isPage(req) {
+  const path = new URL(req.url).pathname;
+  return req.mode === 'navigate' || path.endsWith('/') || path.endsWith('/index.html') ||
+    (req.headers.get('accept') || '').includes('text/html');
+}
+
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && event.request.method === 'GET') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return; // map tiles, weather, rates: straight to network
+
+  if (isPage(req)) {
+    event.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .then((res) => {
+          if (res && res.ok) { const copy = res.clone(); caches.open(CACHE_NAME).then((c) => c.put('./index.html', copy)); }
+          return res;
         })
-        .catch(() => cached || caches.match('./index.html'));
-      return cached || network;
-    })
+        .catch(() => caches.match('./index.html').then((r) => r || caches.match('./')))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(req, { ignoreSearch: true }).then((cached) => cached || fetch(req).then((res) => {
+      if (res && res.ok) { const copy = res.clone(); caches.open(CACHE_NAME).then((c) => c.put(req, copy)); }
+      return res;
+    }))
   );
 });
