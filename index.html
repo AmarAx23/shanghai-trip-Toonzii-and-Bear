@@ -60,6 +60,12 @@
     .card:hover, .pass:hover { border-color: transparent; background: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(163deg, var(--red), var(--gold)) border-box; box-shadow: 0 0 0 1px transparent, 0 10px 30px rgba(176,36,46,.14); }
   }
 
+  /* Snow */
+  #snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .wrap { position: relative; z-index: 1; }
+  .snow-btn { position: fixed; top: 12px; right: 80px; z-index: 30; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); font-size: 14px; line-height: 1; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.15); padding: 0; transition: opacity .2s; }
+  .snow-btn[aria-pressed="false"] { opacity: .5; filter: grayscale(1); }
+
   /* Theme switch */
   .theme-toggle-btn { position: fixed; top: 12px; right: 12px; z-index: 30; width: 60px; height: 30px; border-radius: 40px; border: none; padding: 0; overflow: hidden; cursor: pointer; background: #87c3ec; box-shadow: 0 2px 10px rgba(0,0,0,.2); transition: background .4s; }
   .theme-toggle-btn .tt-knob { position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; background: #ffd34d; transition: all .4s cubic-bezier(.5,1.6,.4,1); }
@@ -76,10 +82,20 @@
   .hero .eyebrow { font-size: 11.5px; letter-spacing: 1.6px; color: #EBCB82; font-weight: 700; }
   .hero h1 { font-size: 31px; margin: 4px 0 2px; }
   .hero .sub { margin: 0; opacity: .88; font-size: 14px; }
+  /* Flip-board countdown */
   .cd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 18px; }
-  .cd div { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); border-radius: 14px; padding: 10px 4px 8px; text-align: center; }
-  .cd b { display: block; font-family: var(--head); font-size: 26px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .cd span { font-size: 11px; opacity: .78; }
+  .cd .unit { text-align: center; }
+  .cd .digits { display: flex; gap: 3px; justify-content: center; }
+  .cd .unit > span { display: block; font-size: 11px; opacity: .78; margin-top: 5px; }
+  .fc { position: relative; width: 30px; height: 44px; perspective: 300px; font-family: var(--head); font-weight: 600; font-size: 28px; line-height: 44px; text-align: center; color: #fff; font-variant-numeric: tabular-nums; }
+  .fc i { position: absolute; inset: 0; font-style: normal; border-radius: 7px; background: rgba(255,255,255,.13); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .fc .t, .fc .f { clip-path: inset(0 0 50% 0); }
+  .fc .b { clip-path: inset(50% 0 0 0); }
+  .fc .f { background: rgba(255,255,255,.2); transform-origin: 50% 50%; }
+  .fc.go .f { animation: fcflip .45s ease-in forwards; }
+  .fc::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,.35); }
+  @keyframes fcflip { to { transform: rotateX(-180deg); } }
+  @media (min-width: 400px) { .fc { width: 34px; height: 48px; line-height: 48px; font-size: 30px; } }
   .cd-msg { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: #F3DDA2; min-height: 0; }
   .cd-msg:empty { display: none; }
   .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
@@ -139,6 +155,7 @@
   .stub { width: 82px; flex: none; background: var(--red); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
   .pass.back .stub { background: #1D5C82; }
   :root[data-theme="dark"] .stub { background: #8F1E26; }
+  :root[data-theme="dark"] .pass.back .stub { background: #17496A; }
   .stub::before { content: ""; position: absolute; left: -1px; top: 10px; bottom: 10px; border-left: 2px dashed rgba(255,255,255,.55); }
   .stub small { font-size: 10px; opacity: .8; letter-spacing: 1px; }
   .stub b { font-family: var(--head); font-size: 15px; font-weight: 600; }
@@ -147,9 +164,13 @@
   .route .ap b { font-family: var(--head); font-weight: 600; font-size: 28px; line-height: 1.05; display: block; color: var(--navy); }
   .route .ap span { font-size: 12px; color: var(--muted); }
   .route .ap.r { text-align: right; }
-  .route .mid { flex: 1; text-align: center; font-size: 11.5px; color: var(--muted); position: relative; }
-  .route .mid::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1.5px dashed var(--line); }
-  .route .mid span { position: relative; background: var(--card); padding: 0 6px; white-space: nowrap; }
+  /* Plane flying along the route */
+  .route .mid { flex: 1; min-width: 60px; position: relative; height: 54px; align-self: stretch; }
+  .route .mid svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .route .mid path { fill: none; stroke: var(--line); stroke-width: 2; stroke-dasharray: 5 6; }
+  .route .mid .dur { position: absolute; left: 0; right: 0; bottom: -2px; text-align: center; font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+  .route .plane { position: absolute; left: 0; top: 0; font-size: 18px; line-height: 1; offset-rotate: auto 45deg; offset-distance: 0%; transition: offset-distance 2.4s cubic-bezier(.5,0,.3,1); }
+  .route .mid.landed .plane { offset-distance: 100%; }
   .times { display: flex; justify-content: space-between; font-family: var(--head); font-weight: 600; font-size: 21px; }
   details.more summary, details.tip summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; align-items: center; gap: 8px; }
   details summary::-webkit-details-marker { display: none; }
@@ -261,7 +282,7 @@
   }
   @media print {
     body { background: #fff; color: #000; }
-    .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk { display: none !important; }
+    #snow, .snow-btn, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk { display: none !important; }
     .day { display: block !important; page-break-inside: avoid; margin-bottom: 18px; }
     .hero { color: #000; background: none; border: 1px solid #ccc; }
     .card, .pass { box-shadow: none; }
@@ -272,6 +293,8 @@
 </style>
 </head>
 <body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<button class="snow-btn" id="snow-btn" type="button" aria-pressed="true" aria-label="ปิดเปิดหิมะ">❄️</button>
 <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="สลับโหมดมืด"><span class="tt-stars">✦ ✧ ✦</span><span class="tt-cloud">☁️</span><span class="tt-knob"></span></button>
 <main class="wrap">
 
@@ -279,7 +302,7 @@
     <div class="eyebrow">SHANGHAI · DECEMBER 2026</div>
     <h1>เซี่ยงไฮ้ 8 วัน 7 คืน</h1>
     <p class="sub">5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland</p>
-    <div class="cd" id="cd" aria-live="polite"><div><b>--</b><span>วัน</span></div><div><b>--</b><span>ชม.</span></div><div><b>--</b><span>นาที</span></div><div><b>--</b><span>วินาที</span></div></div>
+    <div class="cd" id="cd" role="timer" aria-label="นับถอยหลังถึงวันเดินทาง"></div>
     <p class="cd-msg" id="cd-msg"></p>
     <div class="chips"><span class="chip">🏨 Atour X Huaihai Rd</span><span class="chip">💰 29,860 ฿/คน</span><span class="chip">🚇 Metro + Didi</span></div>
     <div class="hero-actions">
@@ -378,7 +401,7 @@
     <div class="pass">
       <div class="pm">
         <span class="tag">ขาไป · เสาร์ 5 ธ.ค. 2026</span>
-        <div class="route"><div class="ap"><b>BKK</b><span>สุวรรณภูมิ</span></div><div class="mid"><span>✈ 4 ชม. 20 น.</span></div><div class="ap r"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div></div>
+        <div class="route"><div class="ap"><b>BKK</b><span>สุวรรณภูมิ</span></div><div class="mid fly" data-dep="2026-12-05T16:45:00+07:00" data-arr="2026-12-05T22:05:00+08:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 20 น.</span></div><div class="ap r"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div></div>
         <div class="times"><span>16:45</span><span>22:05</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a></div>
       </div>
@@ -387,7 +410,7 @@
     <div class="pass back">
       <div class="pm">
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
-        <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid"><span>✈ 4 ชม. 45 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
+        <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T17:00:00+08:00" data-arr="2026-12-12T20:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 45 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
         <div class="times"><span>17:00</span><span>20:45</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a></div>
       </div>
@@ -544,9 +567,25 @@
   showDay(tn || 1, false);
   setInterval(todayMode, 60000);
 
-  // ---- Countdown ----
+  var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Countdown (flip board) ----
   (function () {
-    var boxes = $$('#cd b'), msg = $('#cd-msg'), cd = $('#cd');
+    var msg = $('#cd-msg'), cd = $('#cd'), names = ['วัน', 'ชม.', 'นาที', 'วินาที'];
+    cd.innerHTML = names.map(function (n) {
+      return '<div class="unit"><div class="digits"><div class="fc"><i class="t"></i><i class="b"></i><i class="f"></i></div><div class="fc"><i class="t"></i><i class="b"></i><i class="f"></i></div></div><span>' + n + '</span></div>';
+    }).join('');
+    var cards = $$('.fc', cd);
+    function setDigit(card, v) {
+      var t = card.children[0], b = card.children[1], f = card.children[2];
+      if (t.textContent === v) return;
+      var old = t.textContent;
+      t.textContent = v;
+      if (!old || REDUCE) { b.textContent = v; f.textContent = ''; return; }
+      f.textContent = old; b.textContent = old;
+      card.classList.remove('go'); void card.offsetWidth; card.classList.add('go');
+      setTimeout(function () { b.textContent = v; }, 230);
+    }
     function tick() {
       var diff = DEPART - new Date();
       if (diff <= 0) {
@@ -555,10 +594,79 @@
         msg.textContent = n ? '🎄 วันที่ ' + n + ' ของทริป ขอให้เที่ยวสนุก!' : (new Date() < new Date(TRIP_END + 'T23:59:00+08:00') ? '✈️ ออกเดินทางแล้ว ขอให้เที่ยวสนุก!' : '🎉 จบทริปแล้ว ขอบคุณที่เที่ยวด้วยกัน');
         return;
       }
-      var v = [Math.floor(diff / 864e5), Math.floor(diff % 864e5 / 36e5), Math.floor(diff % 36e5 / 6e4), Math.floor(diff % 6e4 / 1e3)];
-      boxes.forEach(function (b, i) { b.textContent = String(v[i]).padStart(2, '0'); });
+      var v = [Math.min(99, Math.floor(diff / 864e5)), Math.floor(diff % 864e5 / 36e5), Math.floor(diff % 36e5 / 6e4), Math.floor(diff % 6e4 / 1e3)];
+      var s = v.map(function (n) { return String(n).padStart(2, '0'); }).join('');
+      cards.forEach(function (c, i) { setDigit(c, s[i]); });
+      cd.setAttribute('aria-label', 'อีก ' + v[0] + ' วัน ' + v[1] + ' ชั่วโมง ' + v[2] + ' นาที ถึงวันเดินทาง');
     }
     tick(); setInterval(tick, 1000);
+  })();
+
+  // ---- Plane flying along each boarding-pass route ----
+  (function () {
+    var routes = $$('.mid.fly');
+    function fit(m) {
+      var w = m.clientWidth, h = m.clientHeight, d = 'M 6 ' + (h - 18) + ' Q ' + (w / 2) + ' ' + (-h * 0.55) + ' ' + (w - 6) + ' ' + (h - 18);
+      m.querySelector('svg').setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      m.querySelector('path').setAttribute('d', d);
+      m.querySelector('.plane').style.offsetPath = 'path("' + d + '")';
+    }
+    function progress(m) {
+      var now = Date.now(), dep = Date.parse(m.getAttribute('data-dep')), arr = Date.parse(m.getAttribute('data-arr'));
+      if (now <= dep) return null;
+      return Math.min(1, (now - dep) / (arr - dep));
+    }
+    function fly(m) {
+      var p = progress(m), plane = m.querySelector('.plane');
+      if (p === null) { m.classList.add('landed'); plane.style.offsetDistance = ''; }
+      else { m.classList.remove('landed'); plane.style.offsetDistance = (p * 100).toFixed(1) + '%'; }
+    }
+    routes.forEach(fit);
+    window.addEventListener('resize', function () { routes.forEach(fit); });
+    if (REDUCE || !('IntersectionObserver' in window)) { routes.forEach(function (m) { m.querySelector('.plane').style.transition = 'none'; fly(m); }); return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { fly(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    routes.forEach(function (m) { io.observe(m); m.addEventListener('click', function () {
+      var plane = m.querySelector('.plane'); m.classList.remove('landed'); plane.style.offsetDistance = '0%';
+      void plane.offsetWidth; setTimeout(function () { plane.style.offsetDistance = ''; fly(m); }, 60);
+    }); });
+    setInterval(function () { routes.forEach(function (m) { if (progress(m) !== null) fly(m); }); }, 60000);
+  })();
+
+  // ---- Snow ----
+  (function () {
+    var c = $('#snow'), btn = $('#snow-btn'), x = c.getContext && c.getContext('2d');
+    if (!x) return;
+    var saved = store('hkTripSnow'), on = saved ? saved === 'on' : !REDUCE, flakes = [], w = 0, h = 0, running = false;
+    function size() {
+      var r = window.devicePixelRatio || 1; w = innerWidth; h = innerHeight;
+      c.width = w * r; c.height = h * r; x.setTransform(r, 0, 0, r, 0, 0);
+    }
+    function make() {
+      flakes = [];
+      var n = Math.round(Math.min(70, w * h / 12000));
+      for (var i = 0; i < n; i++) flakes.push({ x: Math.random() * w, y: Math.random() * h, r: 1 + Math.random() * 2.4, s: 0.3 + Math.random() * 0.8, p: Math.random() * 6 });
+    }
+    function frame() {
+      x.clearRect(0, 0, w, h);
+      if (!on) { running = false; return; }
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      x.fillStyle = dark ? 'rgba(255,255,255,.4)' : 'rgba(110,145,175,.45)';
+      for (var i = 0; i < flakes.length; i++) {
+        var f = flakes[i]; f.y += f.s; f.p += 0.01; f.x += Math.sin(f.p) * 0.3;
+        if (f.y > h + 4) { f.y = -4; f.x = Math.random() * w; }
+        x.beginPath(); x.arc(f.x, f.y, f.r, 0, 6.283); x.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+    function start() { if (!running && on) { running = true; requestAnimationFrame(frame); } }
+    function setOn(v) { on = v; btn.setAttribute('aria-pressed', v ? 'true' : 'false'); btn.title = v ? 'ปิดหิมะ' : 'เปิดหิมะ'; store('hkTripSnow', v ? 'on' : 'off'); start(); }
+    size(); make();
+    window.addEventListener('resize', function () { size(); make(); });
+    btn.addEventListener('click', function () { setOn(!on); });
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.title = on ? 'ปิดหิมะ' : 'เปิดหิมะ';
+    start();
   })();
 
   // ---- Weather (Open-Meteo, falls back to December averages) ----
