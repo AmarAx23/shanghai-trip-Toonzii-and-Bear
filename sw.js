@@ -1,10 +1,12 @@
 // Bump this version string whenever index.html changes, so returning
 // offline visitors get the fresh copy instead of a stale cached one.
-const CACHE_NAME = 'hk-trip-cache-v15';
+const CACHE_NAME = 'hk-trip-cache-v16';
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
+  './vendor/leaflet/leaflet.js',
+  './vendor/leaflet/leaflet.css',
   './icon-192.png',
   './icon-512.png',
   './img/adventure-isle.jpg',
