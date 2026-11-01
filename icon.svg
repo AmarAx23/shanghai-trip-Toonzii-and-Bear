@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>
+<linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D5C82"/><stop offset="1" stop-color="#0F3A54"/></linearGradient></defs>
+<rect width="512" height="512" fill="url(#g5)"/>
+<g fill="#13466A"><rect x="400" y="200" width="10" height="200"/><circle cx="405" cy="230" r="22"/><circle cx="405" cy="330" r="30"/><rect x="60" y="250" width="40" height="160"/><rect x="104" y="290" width="30" height="120"/></g>
+<g fill="#fff" opacity=".75"><circle cx="80" cy="90" r="5"/><circle cx="450" cy="110" r="4"/><circle cx="130" cy="170" r="3"/><circle cx="470" cy="420" r="4"/><circle cx="40" cy="330" r="3"/></g>
+<!-- bear -->
+<circle cx="132" cy="238" r="40" fill="#9A6A45"/><circle cx="380" cy="238" r="40" fill="#9A6A45"/>
+<circle cx="132" cy="238" r="21" fill="#E7C7A2"/><circle cx="380" cy="238" r="21" fill="#E7C7A2"/>
+<ellipse cx="256" cy="300" rx="140" ry="128" fill="#B07D52"/>
+<ellipse cx="256" cy="346" rx="62" ry="48" fill="#F1DCC2"/>
+<ellipse cx="256" cy="322" rx="20" ry="14" fill="#3B2416"/>
+<path d="M256 336 v14 M256 350 q-14 12 -26 4 M256 350 q14 12 26 4" fill="none" stroke="#3B2416" stroke-width="5" stroke-linecap="round"/>
+<circle cx="206" cy="282" r="12" fill="#2A1A10"/><circle cx="306" cy="282" r="12" fill="#2A1A10"/>
+<circle cx="210" cy="278" r="4" fill="#fff"/><circle cx="310" cy="278" r="4" fill="#fff"/>
+<ellipse cx="180" cy="324" rx="18" ry="10" fill="#E8838A" opacity=".55"/><ellipse cx="332" cy="324" rx="18" ry="10" fill="#E8838A" opacity=".55"/>
+<!-- santa hat -->
+<path d="M150 214 Q240 70 360 120 Q330 150 352 214 Z" fill="#B0242E"/>
+<circle cx="372" cy="118" r="24" fill="#F7F1E3"/>
+<rect x="136" y="196" width="232" height="38" rx="19" fill="#F7F1E3"/>
+<!-- scarf -->
+<path d="M140 404 Q256 446 372 404 L372 438 Q256 480 140 438 Z" fill="#C79A3F"/>
+<rect x="300" y="420" width="38" height="70" rx="8" fill="#C79A3F"/>
+<g stroke="#9C7A1F" stroke-width="4"><line x1="306" y1="478" x2="306" y2="490"/><line x1="319" y1="478" x2="319" y2="490"/><line x1="332" y1="478" x2="332" y2="490"/></g>
+</svg>
