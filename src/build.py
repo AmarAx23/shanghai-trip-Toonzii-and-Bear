@@ -440,6 +440,21 @@ page = f'''<!DOCTYPE html>
       <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7289 ออก 17:00</div>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
+    <h3 class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></h3>
+    <div class="card tr" id="tr">
+      <div class="tr-mics">
+        <button type="button" class="tr-mic th" data-lang="th"><i aria-hidden="true">🎙️</i><b>พูดไทย</b><small>แปลเป็นจีนให้พนักงาน</small></button>
+        <button type="button" class="tr-mic zh" data-lang="zh"><i aria-hidden="true">🎙️</i><b>说中文</b><small>ให้พนักงานพูด แปลเป็นไทย</small></button>
+      </div>
+      <div class="tr-status" id="tr-status" aria-live="polite"></div>
+      <form class="tr-form" id="tr-form">
+        <button type="button" class="tr-dir" id="tr-dir" aria-label="สลับทิศทางการแปล">ไทย → 中文</button>
+        <textarea id="tr-in" rows="2" placeholder="หรือพิมพ์ตรงนี้ (กดไมค์บนคีย์บอร์ดก็ได้)" enterkeyhint="send"></textarea>
+        <button type="submit" class="btn tr-go">แปล</button>
+      </form>
+      <div class="tr-log" id="tr-log"></div>
+      <div class="tr-foot"><small id="tr-eng">ต้องต่ออินเทอร์เน็ต · ถ้าไม่มีเน็ตใช้ประโยคสำเร็จรูปด้านล่าง</small><button type="button" class="tr-clear" id="tr-clear" hidden>ล้างประวัติ</button></div>
+    </div>
     <h3 class="sub-h">ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></h3>
     <div class="phrases">{phr_rows}</div>
     <h3 class="sub-h">เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></h3>
@@ -463,6 +478,11 @@ page = f'''<!DOCTYPE html>
   <a href="#sos" data-sec="sos"><i aria-hidden="true">🆘</i>ช่วยเหลือ</a>
 </nav>
 
+<div class="tr-big" id="tr-big" role="dialog" aria-label="ข้อความภาษาจีนสำหรับยื่นให้พนักงานดู" hidden>
+  <div class="tb-top"><span>请看 · ยื่นให้พนักงานดู</span><button type="button" class="tb-x" id="tb-x" aria-label="ปิด">&times;</button></div>
+  <div class="tb-zh" id="tb-zh" lang="zh-CN"></div><div class="tb-py" id="tb-py"></div><div class="tb-th" id="tb-th"></div>
+  <div class="tb-acts"><button type="button" class="btn" id="tb-say">🔊 播放 ฟังอีกครั้ง</button><button type="button" class="btn alt" id="tb-reply">🎙️ 请用中文回答 ให้พนักงานตอบ</button></div>
+</div>
 <div class="lightbox-overlay" id="lightbox-overlay"><span class="lightbox-close" id="lightbox-close" aria-label="ปิด">&times;</span><img id="lightbox-img" src="" alt=""></div>
 <div class="qr-modal-overlay" id="qr-modal-overlay"></div>
 <div class="qr-modal" id="qr-modal" role="dialog" aria-label="QR Code">

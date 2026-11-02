@@ -312,6 +312,53 @@
   .phr .zh { display: block; font-size: 18px; font-weight: 700; font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
   .phr .th { display: block; font-size: 12.5px; color: var(--muted); }
   .spk { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--red-soft); display: grid; place-items: center; font-size: 15px; }
+
+  /* Translator */
+  .tr { padding: 14px; }
+  .tr-mics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tr-mic { font: inherit; border: none; border-radius: 18px; padding: 14px 8px 12px; color: #fff; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; -webkit-tap-highlight-color: transparent; transition: transform .15s; }
+  .tr-mic.th { background: linear-gradient(160deg, #C9343F, #9A1E27); }
+  .tr-mic.zh { background: linear-gradient(160deg, #22688F, #0F3A54); }
+  .tr-mic i { font-style: normal; font-size: 26px; width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.16); display: grid; place-items: center; margin-bottom: 4px; }
+  .tr-mic b { font-size: 16px; } .tr-mic small { font-size: 11px; opacity: .85; line-height: 1.3; }
+  .tr-mic.zh b { font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
+  .tr-mic:active { transform: scale(.97); }
+  .tr-mic.rec i { background: #fff; animation: trPulse 1.1s ease-out infinite; }
+  .tr-mic.rec small::before { content: "● กำลังฟัง แตะเพื่อหยุด"; display: block; font-weight: 700; }
+  .tr-mic.rec small { font-size: 0; } .tr-mic.rec small::before { font-size: 11px; }
+  @keyframes trPulse { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,.7); } 100% { box-shadow: 0 0 0 16px rgba(255,255,255,0); } }
+  .tr-status { min-height: 20px; font-size: 13px; color: var(--muted); text-align: center; margin: 8px 0 2px; }
+  .tr-status.err { color: var(--red); }
+  .tr-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+  .tr-dir { grid-column: 1 / -1; justify-self: start; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--navy-2); background: var(--gold-soft); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+  .tr-form textarea { font: inherit; font-size: 16px; color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 10px 12px; resize: none; min-height: 48px; outline: none; }
+  .tr-form textarea:focus { border-color: var(--gold); }
+  .tr-go { padding: 12px 18px; }
+  .tr-log { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .tb { max-width: 92%; border-radius: 16px; padding: 10px 12px; border: 1px solid var(--line); animation: trIn .35s cubic-bezier(.2,.8,.2,1); }
+  @keyframes trIn { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+  .tb.me { align-self: flex-end; background: var(--red-soft); border-bottom-right-radius: 4px; }
+  .tb.them { align-self: flex-start; background: var(--gold-soft); border-bottom-left-radius: 4px; }
+  .tb .src { font-size: 12.5px; color: var(--muted); }
+  .tb .dst { font-size: 18px; font-weight: 700; line-height: 1.4; margin-top: 2px; }
+  .tb .dst[lang="zh-CN"] { font-size: 21px; font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
+  .tb .py { font-size: 12px; color: var(--navy-2); font-style: italic; }
+  .tb .acts { display: flex; gap: 6px; margin-top: 6px; }
+  .tb .acts button { font: inherit; font-size: 12px; font-weight: 700; border: 1px solid var(--line); background: var(--card); color: var(--navy-2); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+  .tb.wait .dst::after { content: "กำลังแปล…"; font-size: 13px; font-weight: 400; color: var(--muted); }
+  .tr-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; }
+  .tr-foot small { font-size: 11px; color: var(--muted); }
+  .tr-clear { font: inherit; font-size: 12px; color: var(--muted); background: none; border: none; text-decoration: underline; cursor: pointer; flex: none; }
+  .tr-big { position: fixed; inset: 0; z-index: 1000; background: #FFFDF7; color: #1B2730; display: flex; flex-direction: column; padding: calc(14px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom)); animation: trIn .3s ease; }
+  .tr-big[hidden] { display: none; }
+  .tb-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #6B7680; }
+  .tb-x { font-size: 34px; line-height: 1; background: none; border: none; color: #1B2730; cursor: pointer; padding: 0 4px; }
+  .tb-zh { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; line-height: 1.35; font-size: clamp(30px, 9vw, 64px); font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif; overflow: auto; word-break: break-all; }
+  .tb-py { text-align: center; color: #1D5C82; font-style: italic; font-size: 15px; }
+  .tb-th { text-align: center; color: #6B7680; font-size: 14px; margin: 4px 0 14px; }
+  .tb-acts { display: grid; gap: 8px; }
+  .tb-acts .btn { width: 100%; padding: 14px; font-size: 15px; }
+  .tb-acts .btn.alt { background: #1D5C82; color: #fff; }
   .sos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; }
   .sos { display: flex; align-items: center; gap: 12px; text-decoration: none; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
   .sos:active { transform: scale(.98); }
@@ -428,7 +475,7 @@
   }
   @media print {
     body { background: #fff; color: #000; }
-    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk { display: none !important; }
+    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk, .tr, #tr-h, .tr-big { display: none !important; }
     .day { display: block !important; page-break-inside: avoid; margin-bottom: 18px; }
     .rv .reveal { opacity: 1 !important; transform: none !important; }
     .msvg .draw, .msvg .pin { animation: none !important; }

@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261102145712">
+<meta name="build" content="20261102150804">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -335,6 +335,53 @@
   .phr .zh { display: block; font-size: 18px; font-weight: 700; font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
   .phr .th { display: block; font-size: 12.5px; color: var(--muted); }
   .spk { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--red-soft); display: grid; place-items: center; font-size: 15px; }
+
+  /* Translator */
+  .tr { padding: 14px; }
+  .tr-mics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tr-mic { font: inherit; border: none; border-radius: 18px; padding: 14px 8px 12px; color: #fff; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; -webkit-tap-highlight-color: transparent; transition: transform .15s; }
+  .tr-mic.th { background: linear-gradient(160deg, #C9343F, #9A1E27); }
+  .tr-mic.zh { background: linear-gradient(160deg, #22688F, #0F3A54); }
+  .tr-mic i { font-style: normal; font-size: 26px; width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.16); display: grid; place-items: center; margin-bottom: 4px; }
+  .tr-mic b { font-size: 16px; } .tr-mic small { font-size: 11px; opacity: .85; line-height: 1.3; }
+  .tr-mic.zh b { font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
+  .tr-mic:active { transform: scale(.97); }
+  .tr-mic.rec i { background: #fff; animation: trPulse 1.1s ease-out infinite; }
+  .tr-mic.rec small::before { content: "● กำลังฟัง แตะเพื่อหยุด"; display: block; font-weight: 700; }
+  .tr-mic.rec small { font-size: 0; } .tr-mic.rec small::before { font-size: 11px; }
+  @keyframes trPulse { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,.7); } 100% { box-shadow: 0 0 0 16px rgba(255,255,255,0); } }
+  .tr-status { min-height: 20px; font-size: 13px; color: var(--muted); text-align: center; margin: 8px 0 2px; }
+  .tr-status.err { color: var(--red); }
+  .tr-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+  .tr-dir { grid-column: 1 / -1; justify-self: start; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--navy-2); background: var(--gold-soft); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+  .tr-form textarea { font: inherit; font-size: 16px; color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 10px 12px; resize: none; min-height: 48px; outline: none; }
+  .tr-form textarea:focus { border-color: var(--gold); }
+  .tr-go { padding: 12px 18px; }
+  .tr-log { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .tb { max-width: 92%; border-radius: 16px; padding: 10px 12px; border: 1px solid var(--line); animation: trIn .35s cubic-bezier(.2,.8,.2,1); }
+  @keyframes trIn { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+  .tb.me { align-self: flex-end; background: var(--red-soft); border-bottom-right-radius: 4px; }
+  .tb.them { align-self: flex-start; background: var(--gold-soft); border-bottom-left-radius: 4px; }
+  .tb .src { font-size: 12.5px; color: var(--muted); }
+  .tb .dst { font-size: 18px; font-weight: 700; line-height: 1.4; margin-top: 2px; }
+  .tb .dst[lang="zh-CN"] { font-size: 21px; font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
+  .tb .py { font-size: 12px; color: var(--navy-2); font-style: italic; }
+  .tb .acts { display: flex; gap: 6px; margin-top: 6px; }
+  .tb .acts button { font: inherit; font-size: 12px; font-weight: 700; border: 1px solid var(--line); background: var(--card); color: var(--navy-2); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+  .tb.wait .dst::after { content: "กำลังแปล…"; font-size: 13px; font-weight: 400; color: var(--muted); }
+  .tr-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; }
+  .tr-foot small { font-size: 11px; color: var(--muted); }
+  .tr-clear { font: inherit; font-size: 12px; color: var(--muted); background: none; border: none; text-decoration: underline; cursor: pointer; flex: none; }
+  .tr-big { position: fixed; inset: 0; z-index: 1000; background: #FFFDF7; color: #1B2730; display: flex; flex-direction: column; padding: calc(14px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom)); animation: trIn .3s ease; }
+  .tr-big[hidden] { display: none; }
+  .tb-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #6B7680; }
+  .tb-x { font-size: 34px; line-height: 1; background: none; border: none; color: #1B2730; cursor: pointer; padding: 0 4px; }
+  .tb-zh { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; line-height: 1.35; font-size: clamp(30px, 9vw, 64px); font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif; overflow: auto; word-break: break-all; }
+  .tb-py { text-align: center; color: #1D5C82; font-style: italic; font-size: 15px; }
+  .tb-th { text-align: center; color: #6B7680; font-size: 14px; margin: 4px 0 14px; }
+  .tb-acts { display: grid; gap: 8px; }
+  .tb-acts .btn { width: 100%; padding: 14px; font-size: 15px; }
+  .tb-acts .btn.alt { background: #1D5C82; color: #fff; }
   .sos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; }
   .sos { display: flex; align-items: center; gap: 12px; text-decoration: none; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; }
   .sos:active { transform: scale(.98); }
@@ -451,7 +498,7 @@
   }
   @media print {
     body { background: #fff; color: #000; }
-    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk { display: none !important; }
+    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk, .tr, #tr-h, .tr-big { display: none !important; }
     .day { display: block !important; page-break-inside: avoid; margin-bottom: 18px; }
     .rv .reveal { opacity: 1 !important; transform: none !important; }
     .msvg .draw, .msvg .pin { animation: none !important; }
@@ -672,6 +719,21 @@
       <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7289 ออก 17:00</div>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
+    <h3 class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></h3>
+    <div class="card tr" id="tr">
+      <div class="tr-mics">
+        <button type="button" class="tr-mic th" data-lang="th"><i aria-hidden="true">🎙️</i><b>พูดไทย</b><small>แปลเป็นจีนให้พนักงาน</small></button>
+        <button type="button" class="tr-mic zh" data-lang="zh"><i aria-hidden="true">🎙️</i><b>说中文</b><small>ให้พนักงานพูด แปลเป็นไทย</small></button>
+      </div>
+      <div class="tr-status" id="tr-status" aria-live="polite"></div>
+      <form class="tr-form" id="tr-form">
+        <button type="button" class="tr-dir" id="tr-dir" aria-label="สลับทิศทางการแปล">ไทย → 中文</button>
+        <textarea id="tr-in" rows="2" placeholder="หรือพิมพ์ตรงนี้ (กดไมค์บนคีย์บอร์ดก็ได้)" enterkeyhint="send"></textarea>
+        <button type="submit" class="btn tr-go">แปล</button>
+      </form>
+      <div class="tr-log" id="tr-log"></div>
+      <div class="tr-foot"><small id="tr-eng">ต้องต่ออินเทอร์เน็ต · ถ้าไม่มีเน็ตใช้ประโยคสำเร็จรูปด้านล่าง</small><button type="button" class="tr-clear" id="tr-clear" hidden>ล้างประวัติ</button></div>
+    </div>
     <h3 class="sub-h">ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></h3>
     <div class="phrases"><button type="button" class="phr" data-say="多少钱？"><span><span class="zh">多少钱？</span><span class="th">เท่าไหร่ครับ/คะ · duō shǎo qián</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="不要辣"><span><span class="zh">不要辣</span><span class="th">ไม่เอาเผ็ด · bú yào là</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="少辣"><span><span class="zh">少辣</span><span class="th">เผ็ดน้อย · shǎo là</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="洗手间在哪里？"><span><span class="zh">洗手间在哪里？</span><span class="th">ห้องน้ำอยู่ไหน · xǐ shǒu jiān zài nǎ lǐ</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="可以用支付宝吗？"><span><span class="zh">可以用支付宝吗？</span><span class="th">จ่าย Alipay ได้ไหม · kě yǐ yòng zhī fù bǎo ma</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="这个"><span><span class="zh">这个</span><span class="th">อันนี้ (ชี้ที่เมนู) · zhè ge</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="买单"><span><span class="zh">买单</span><span class="th">เช็กบิล · mǎi dān</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="谢谢"><span><span class="zh">谢谢</span><span class="th">ขอบคุณ · xiè xie</span></span><span class="spk" aria-hidden="true">🔊</span></button></div>
     <h3 class="sub-h">เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></h3>
@@ -682,7 +744,7 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 14:57</small>
+    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 15:08</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -695,6 +757,11 @@
   <a href="#sos" data-sec="sos"><i aria-hidden="true">🆘</i>ช่วยเหลือ</a>
 </nav>
 
+<div class="tr-big" id="tr-big" role="dialog" aria-label="ข้อความภาษาจีนสำหรับยื่นให้พนักงานดู" hidden>
+  <div class="tb-top"><span>请看 · ยื่นให้พนักงานดู</span><button type="button" class="tb-x" id="tb-x" aria-label="ปิด">&times;</button></div>
+  <div class="tb-zh" id="tb-zh" lang="zh-CN"></div><div class="tb-py" id="tb-py"></div><div class="tb-th" id="tb-th"></div>
+  <div class="tb-acts"><button type="button" class="btn" id="tb-say">🔊 播放 ฟังอีกครั้ง</button><button type="button" class="btn alt" id="tb-reply">🎙️ 请用中文回答 ให้พนักงานตอบ</button></div>
+</div>
 <div class="lightbox-overlay" id="lightbox-overlay"><span class="lightbox-close" id="lightbox-close" aria-label="ปิด">&times;</span><img id="lightbox-img" src="" alt=""></div>
 <div class="qr-modal-overlay" id="qr-modal-overlay"></div>
 <div class="qr-modal" id="qr-modal" role="dialog" aria-label="QR Code">
@@ -1229,10 +1296,127 @@
   })();
 
   // ---- Speak Chinese ----
-  function say(t) {
-    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(t); u.lang = 'zh-CN'; u.rate = 0.85; speechSynthesis.speak(u); } catch (e) {}
+  function say(t, lang) {
+    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(t); u.lang = lang || 'zh-CN'; u.rate = lang === 'th-TH' ? 0.95 : 0.85; speechSynthesis.speak(u); } catch (e) {}
   }
   $$('[data-say]').forEach(function (b) { b.addEventListener('click', function () { say(b.getAttribute('data-say')); }); });
+
+  // ---- Translator Thai <-> Chinese ----
+  (function () {
+    var box = $('#tr'); if (!box) return;
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var st = $('#tr-status'), log = $('#tr-log'), form = $('#tr-form'), inp = $('#tr-in'), dirB = $('#tr-dir'), clr = $('#tr-clear');
+    var big = $('#tr-big'), KEY = 'hkTripTrLog', from = 'th', rec = null, items = [];
+    var LANG = { th: { sr: 'th-TH', tts: 'th-TH', g: 'th', mm: 'th-TH' }, zh: { sr: 'zh-CN', tts: 'zh-CN', g: 'zh-CN', mm: 'zh-CN' } };
+    function other(l) { return l === 'th' ? 'zh' : 'th'; }
+    function status(t, err) { st.textContent = t || ''; st.classList.toggle('err', !!err); }
+    function setDir(l) { from = l; dirB.textContent = l === 'th' ? 'ไทย → 中文' : '中文 → ไทย'; inp.placeholder = l === 'th' ? 'หรือพิมพ์ไทยตรงนี้ (กดไมค์บนคีย์บอร์ดก็ได้)' : '请在这里输入中文'; inp.lang = LANG[l].sr; }
+    dirB.addEventListener('click', function () { setDir(other(from)); });
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+    function withTimeout(url, ms) {
+      var ac = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ac) ac.abort(); }, ms);
+      return fetch(url, ac ? { signal: ac.signal } : {}).then(function (r) { clearTimeout(tm); if (!r.ok) throw new Error(r.status); return r.json(); });
+    }
+    // Google first (best quality, but blocked on Chinese networks) → MyMemory (works in China)
+    function translate(text, f) {
+      var t = other(f);
+      var g = 'https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=rm&sl=' + LANG[f].g + '&tl=' + LANG[t].g + '&q=' + encodeURIComponent(text);
+      return withTimeout(g, 3500).then(function (j) {
+        var rows = j[0] || [], out = '', py = '';
+        rows.forEach(function (r) { if (r[0]) out += r[0]; else if (r[2]) py = r[2]; });
+        if (!out) throw new Error('empty');
+        return { text: out, py: t === 'zh' ? py : '' };
+      }).catch(function () {
+        var m = 'https://api.mymemory.translated.net/get?langpair=' + LANG[f].mm + '|' + LANG[t].mm + '&q=' + encodeURIComponent(text.slice(0, 480));
+        return withTimeout(m, 9000).then(function (j) {
+          var out = j && j.responseData && j.responseData.translatedText;
+          if (!out || /MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(out)) throw new Error('mm');
+          return { text: out, py: '' };
+        });
+      });
+    }
+
+    function save() { store(KEY, JSON.stringify(items.slice(-30))); clr.hidden = !items.length; }
+    function bubble(it, i) {
+      var t = other(it.f);
+      return '<div class="tb ' + (it.f === 'th' ? 'me' : 'them') + (it.wait ? ' wait' : '') + '" data-i="' + i + '">'
+        + '<div class="src" lang="' + LANG[it.f].sr + '">' + (it.f === 'th' ? '🇹🇭 ' : '🇨🇳 ') + esc(it.src) + '</div>'
+        + '<div class="dst" lang="' + LANG[t].sr + '">' + esc(it.dst || '') + '</div>'
+        + (it.py ? '<div class="py">' + esc(it.py) + '</div>' : '')
+        + (it.dst ? '<div class="acts"><button type="button" data-a="say">🔊 ฟัง</button>' + (t === 'zh' ? '<button type="button" data-a="big">⛶ ยื่นให้ดู</button>' : '') + '</div>' : '')
+        + '</div>';
+    }
+    function render() { log.innerHTML = items.map(bubble).reverse().join(''); }
+    log.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-a]'); if (!b) return;
+      var it = items[+b.closest('.tb').getAttribute('data-i')]; if (!it) return;
+      if (b.getAttribute('data-a') === 'say') say(it.dst, LANG[other(it.f)].tts); else showBig(it);
+    });
+    clr.addEventListener('click', function () { items = []; save(); render(); status(''); });
+
+    function run(text, f) {
+      text = (text || '').trim(); if (!text) return;
+      if (navigator.onLine === false) { status('ตอนนี้ไม่มีเน็ต ใช้ประโยคสำเร็จรูปด้านล่างแทนก่อนนะ', true); return; }
+      var it = { f: f, src: text, dst: '', py: '', wait: true }; items.push(it); render(); status('');
+      translate(text, f).then(function (r) {
+        it.dst = r.text; it.py = r.py; delete it.wait; save(); render();
+        say(r.text, LANG[other(f)].tts);
+      }).catch(function () {
+        items.splice(items.indexOf(it), 1); render();
+        status('แปลไม่สำเร็จ ลองอีกครั้ง หรือเช็กอินเทอร์เน็ต', true);
+      });
+    }
+    form.addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value; inp.value = ''; inp.blur(); run(v, from); });
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit')); } });
+
+    // Voice input
+    function unlockTTS() { try { var u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {} }
+    function stop() { if (rec) { try { rec.stop(); } catch (e) {} } }
+    function listen(l, btn) {
+      unlockTTS();
+      if (rec) { stop(); return; }
+      if (!SR) {
+        setDir(l); inp.focus();
+        status(l === 'th' ? 'เครื่องนี้ใช้ไมค์ในเว็บไม่ได้ กดปุ่มไมค์ 🎤 บนคีย์บอร์ดแล้วพูดแทนได้เลย' : '请点键盘上的 🎤 说中文 · ให้พนักงานกดไมค์บนคีย์บอร์ด');
+        return;
+      }
+      var r = new SR(), finalT = '', interim = '';
+      r.lang = LANG[l].sr; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
+      r.onresult = function (e) {
+        interim = '';
+        for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) finalT += e.results[i][0].transcript; else interim += e.results[i][0].transcript; }
+        status('“' + (finalT + interim) + '”');
+      };
+      r.onerror = function (e) {
+        var m = { 'not-allowed': 'ยังไม่ได้อนุญาตให้ใช้ไมค์ ไปที่ตั้งค่าเพื่ออนุญาต หรือพิมพ์แทน', 'service-not-allowed': 'เครื่องนี้ใช้ไมค์ในเว็บไม่ได้ กดไมค์บนคีย์บอร์ดแทน', 'no-speech': 'ไม่ได้ยินเสียง ลองกดแล้วพูดใหม่อีกครั้ง', 'network': 'ระบบฟังเสียงต่อเน็ตไม่ได้ ลองกดไมค์บนคีย์บอร์ดแทน' }[e.error];
+        if (m) status(m, true);
+      };
+      r.onend = function () {
+        btn.classList.remove('rec'); rec = null;
+        var t = (finalT || interim).trim();
+        if (t) run(t, l); else if (!st.classList.contains('err')) status('');
+      };
+      try { r.start(); rec = r; btn.classList.add('rec'); status(l === 'th' ? 'พูดภาษาไทยได้เลย…' : '请说中文…'); }
+      catch (e) { status('เริ่มฟังไม่ได้ ลองอีกครั้ง', true); }
+    }
+    $$('.tr-mic', box).forEach(function (b) { b.addEventListener('click', function () { listen(b.getAttribute('data-lang'), b); }); });
+
+    // Big "show the staff" view
+    var cur = null;
+    function showBig(it) {
+      cur = it; $('#tb-zh').textContent = it.dst; $('#tb-py').textContent = it.py || ''; $('#tb-th').textContent = it.src;
+      big.hidden = false; document.documentElement.style.overflow = 'hidden';
+    }
+    function hideBig() { big.hidden = true; document.documentElement.style.overflow = ''; }
+    $('#tb-x').addEventListener('click', hideBig);
+    $('#tb-say').addEventListener('click', function () { if (cur) say(cur.dst, 'zh-CN'); });
+    $('#tb-reply').addEventListener('click', function () { hideBig(); box.scrollIntoView({ block: 'start' }); listen('zh', $('.tr-mic.zh', box)); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !big.hidden) hideBig(); });
+
+    try { items = JSON.parse(store(KEY) || '[]').filter(function (x) { return x && x.dst; }); } catch (e) { items = []; }
+    setDir('th'); render(); clr.hidden = !items.length;
+  })();
 
   // ---- Currency (CNY -> THB) ----
   (function () {

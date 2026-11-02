@@ -520,10 +520,127 @@
   })();
 
   // ---- Speak Chinese ----
-  function say(t) {
-    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(t); u.lang = 'zh-CN'; u.rate = 0.85; speechSynthesis.speak(u); } catch (e) {}
+  function say(t, lang) {
+    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(t); u.lang = lang || 'zh-CN'; u.rate = lang === 'th-TH' ? 0.95 : 0.85; speechSynthesis.speak(u); } catch (e) {}
   }
   $$('[data-say]').forEach(function (b) { b.addEventListener('click', function () { say(b.getAttribute('data-say')); }); });
+
+  // ---- Translator Thai <-> Chinese ----
+  (function () {
+    var box = $('#tr'); if (!box) return;
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var st = $('#tr-status'), log = $('#tr-log'), form = $('#tr-form'), inp = $('#tr-in'), dirB = $('#tr-dir'), clr = $('#tr-clear');
+    var big = $('#tr-big'), KEY = 'hkTripTrLog', from = 'th', rec = null, items = [];
+    var LANG = { th: { sr: 'th-TH', tts: 'th-TH', g: 'th', mm: 'th-TH' }, zh: { sr: 'zh-CN', tts: 'zh-CN', g: 'zh-CN', mm: 'zh-CN' } };
+    function other(l) { return l === 'th' ? 'zh' : 'th'; }
+    function status(t, err) { st.textContent = t || ''; st.classList.toggle('err', !!err); }
+    function setDir(l) { from = l; dirB.textContent = l === 'th' ? 'ไทย → 中文' : '中文 → ไทย'; inp.placeholder = l === 'th' ? 'หรือพิมพ์ไทยตรงนี้ (กดไมค์บนคีย์บอร์ดก็ได้)' : '请在这里输入中文'; inp.lang = LANG[l].sr; }
+    dirB.addEventListener('click', function () { setDir(other(from)); });
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+    function withTimeout(url, ms) {
+      var ac = window.AbortController ? new AbortController() : null, tm = setTimeout(function () { if (ac) ac.abort(); }, ms);
+      return fetch(url, ac ? { signal: ac.signal } : {}).then(function (r) { clearTimeout(tm); if (!r.ok) throw new Error(r.status); return r.json(); });
+    }
+    // Google first (best quality, but blocked on Chinese networks) → MyMemory (works in China)
+    function translate(text, f) {
+      var t = other(f);
+      var g = 'https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=rm&sl=' + LANG[f].g + '&tl=' + LANG[t].g + '&q=' + encodeURIComponent(text);
+      return withTimeout(g, 3500).then(function (j) {
+        var rows = j[0] || [], out = '', py = '';
+        rows.forEach(function (r) { if (r[0]) out += r[0]; else if (r[2]) py = r[2]; });
+        if (!out) throw new Error('empty');
+        return { text: out, py: t === 'zh' ? py : '' };
+      }).catch(function () {
+        var m = 'https://api.mymemory.translated.net/get?langpair=' + LANG[f].mm + '|' + LANG[t].mm + '&q=' + encodeURIComponent(text.slice(0, 480));
+        return withTimeout(m, 9000).then(function (j) {
+          var out = j && j.responseData && j.responseData.translatedText;
+          if (!out || /MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(out)) throw new Error('mm');
+          return { text: out, py: '' };
+        });
+      });
+    }
+
+    function save() { store(KEY, JSON.stringify(items.slice(-30))); clr.hidden = !items.length; }
+    function bubble(it, i) {
+      var t = other(it.f);
+      return '<div class="tb ' + (it.f === 'th' ? 'me' : 'them') + (it.wait ? ' wait' : '') + '" data-i="' + i + '">'
+        + '<div class="src" lang="' + LANG[it.f].sr + '">' + (it.f === 'th' ? '🇹🇭 ' : '🇨🇳 ') + esc(it.src) + '</div>'
+        + '<div class="dst" lang="' + LANG[t].sr + '">' + esc(it.dst || '') + '</div>'
+        + (it.py ? '<div class="py">' + esc(it.py) + '</div>' : '')
+        + (it.dst ? '<div class="acts"><button type="button" data-a="say">🔊 ฟัง</button>' + (t === 'zh' ? '<button type="button" data-a="big">⛶ ยื่นให้ดู</button>' : '') + '</div>' : '')
+        + '</div>';
+    }
+    function render() { log.innerHTML = items.map(bubble).reverse().join(''); }
+    log.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-a]'); if (!b) return;
+      var it = items[+b.closest('.tb').getAttribute('data-i')]; if (!it) return;
+      if (b.getAttribute('data-a') === 'say') say(it.dst, LANG[other(it.f)].tts); else showBig(it);
+    });
+    clr.addEventListener('click', function () { items = []; save(); render(); status(''); });
+
+    function run(text, f) {
+      text = (text || '').trim(); if (!text) return;
+      if (navigator.onLine === false) { status('ตอนนี้ไม่มีเน็ต ใช้ประโยคสำเร็จรูปด้านล่างแทนก่อนนะ', true); return; }
+      var it = { f: f, src: text, dst: '', py: '', wait: true }; items.push(it); render(); status('');
+      translate(text, f).then(function (r) {
+        it.dst = r.text; it.py = r.py; delete it.wait; save(); render();
+        say(r.text, LANG[other(f)].tts);
+      }).catch(function () {
+        items.splice(items.indexOf(it), 1); render();
+        status('แปลไม่สำเร็จ ลองอีกครั้ง หรือเช็กอินเทอร์เน็ต', true);
+      });
+    }
+    form.addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value; inp.value = ''; inp.blur(); run(v, from); });
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit')); } });
+
+    // Voice input
+    function unlockTTS() { try { var u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {} }
+    function stop() { if (rec) { try { rec.stop(); } catch (e) {} } }
+    function listen(l, btn) {
+      unlockTTS();
+      if (rec) { stop(); return; }
+      if (!SR) {
+        setDir(l); inp.focus();
+        status(l === 'th' ? 'เครื่องนี้ใช้ไมค์ในเว็บไม่ได้ กดปุ่มไมค์ 🎤 บนคีย์บอร์ดแล้วพูดแทนได้เลย' : '请点键盘上的 🎤 说中文 · ให้พนักงานกดไมค์บนคีย์บอร์ด');
+        return;
+      }
+      var r = new SR(), finalT = '', interim = '';
+      r.lang = LANG[l].sr; r.interimResults = true; r.continuous = false; r.maxAlternatives = 1;
+      r.onresult = function (e) {
+        interim = '';
+        for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) finalT += e.results[i][0].transcript; else interim += e.results[i][0].transcript; }
+        status('“' + (finalT + interim) + '”');
+      };
+      r.onerror = function (e) {
+        var m = { 'not-allowed': 'ยังไม่ได้อนุญาตให้ใช้ไมค์ ไปที่ตั้งค่าเพื่ออนุญาต หรือพิมพ์แทน', 'service-not-allowed': 'เครื่องนี้ใช้ไมค์ในเว็บไม่ได้ กดไมค์บนคีย์บอร์ดแทน', 'no-speech': 'ไม่ได้ยินเสียง ลองกดแล้วพูดใหม่อีกครั้ง', 'network': 'ระบบฟังเสียงต่อเน็ตไม่ได้ ลองกดไมค์บนคีย์บอร์ดแทน' }[e.error];
+        if (m) status(m, true);
+      };
+      r.onend = function () {
+        btn.classList.remove('rec'); rec = null;
+        var t = (finalT || interim).trim();
+        if (t) run(t, l); else if (!st.classList.contains('err')) status('');
+      };
+      try { r.start(); rec = r; btn.classList.add('rec'); status(l === 'th' ? 'พูดภาษาไทยได้เลย…' : '请说中文…'); }
+      catch (e) { status('เริ่มฟังไม่ได้ ลองอีกครั้ง', true); }
+    }
+    $$('.tr-mic', box).forEach(function (b) { b.addEventListener('click', function () { listen(b.getAttribute('data-lang'), b); }); });
+
+    // Big "show the staff" view
+    var cur = null;
+    function showBig(it) {
+      cur = it; $('#tb-zh').textContent = it.dst; $('#tb-py').textContent = it.py || ''; $('#tb-th').textContent = it.src;
+      big.hidden = false; document.documentElement.style.overflow = 'hidden';
+    }
+    function hideBig() { big.hidden = true; document.documentElement.style.overflow = ''; }
+    $('#tb-x').addEventListener('click', hideBig);
+    $('#tb-say').addEventListener('click', function () { if (cur) say(cur.dst, 'zh-CN'); });
+    $('#tb-reply').addEventListener('click', function () { hideBig(); box.scrollIntoView({ block: 'start' }); listen('zh', $('.tr-mic.zh', box)); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !big.hidden) hideBig(); });
+
+    try { items = JSON.parse(store(KEY) || '[]').filter(function (x) { return x && x.dst; }); } catch (e) { items = []; }
+    setDir('th'); render(); clr.hidden = !items.length;
+  })();
 
   // ---- Currency (CNY -> THB) ----
   (function () {
