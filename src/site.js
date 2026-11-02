@@ -476,7 +476,7 @@
         if (trip) $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.textContent = ic + ' ' + lo + '–' + hi + '°C (พยากรณ์)'; });
         return '<div' + (trip ? ' class="trip"' : '') + '><div class="d">' + label(t) + '</div><div class="i">' + ic + '</div><div class="t">' + hi + '° <small>' + lo + '°</small></div></div>';
       }).join('');
-      note.textContent = inRange ? 'พยากรณ์จริงช่วงทริป' : 'พยากรณ์ 7 วันข้างหน้า · ใกล้วันเดินทางจะเปลี่ยนเป็นช่วงทริปเอง';
+      note.innerHTML = inRange ? 'พยากรณ์จริงช่วงทริป' : 'พยากรณ์ 7 วันข้างหน้า<small>ใกล้ทริปจะเปลี่ยนเป็นวันเที่ยวเอง</small>';
     }).catch(function () {});
   })();
 
