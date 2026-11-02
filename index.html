@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261102110308">
+<meta name="build" content="20261102145712">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -390,6 +390,61 @@
     .hero { padding: 40px 32px 22px; }
     .hero h1 { font-size: 38px; }
   }
+
+  /* ---- Motion set 2 ---- */
+  /* 1 Lanterns */
+  .hero { padding-top: 64px; }
+  .lanterns { position: absolute; top: 0; right: 122px; display: flex; gap: 10px; z-index: 2; pointer-events: none; }
+  .lan { display: block; width: 26px; transform-origin: 50% 0; animation: sway 3.2s ease-in-out infinite alternate; filter: drop-shadow(0 4px 8px rgba(255,140,60,.35)); }
+  .lan svg { display: block; width: 100%; height: auto; }
+  .lan.l1 { width: 32px; animation-duration: 2.7s; animation-delay: -1s; }
+  .lan.l2 { width: 23px; animation-duration: 3.6s; animation-delay: -2s; }
+  .lan .glow { animation: flick 2.2s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+  @keyframes flick { from { opacity: .35; } to { opacity: .75; } }
+  .hero > *:not(.fw):not(.lanterns):not(.snow-btn):not(.theme-toggle-btn) { position: relative; z-index: 3; }
+  /* 9 Fireworks */
+  .hero .fw { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  #hero-title { cursor: default; -webkit-tap-highlight-color: transparent; }
+  /* 4 Flip boarding pass */
+  .passw { perspective: 1000px; margin-bottom: 12px; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+  .pass-in { position: relative; transition: transform .7s cubic-bezier(.3,1.25,.5,1); transform-style: preserve-3d; }
+  .passw.on .pass-in { transform: rotateY(180deg); }
+  .passw .pass, .pass-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .passw .pass { margin-bottom: 0; }
+  .pass-back { position: absolute; inset: 0; transform: rotateY(180deg); background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: auto; display: flex; }
+  .passw.back .pass-back { border-left: 6px solid #1D5C82; } .passw:not(.back) .pass-back { border-left: 6px solid var(--red); }
+  .pbk { padding: 12px 16px; align-self: center; width: 100%; }
+  .pbk ul { list-style: none; padding: 0; margin: 6px 0 4px; display: grid; gap: 3px; font-size: 12.5px; line-height: 1.45; }
+  .pbk ul b { display: inline; margin-right: 6px; color: var(--navy); }
+  .pbk small { color: var(--muted); font-size: 11px; }
+  .flip-hint { font-size: 9.5px; opacity: .75; margin-top: 4px; letter-spacing: .3px; }
+  .passw:focus-visible .pass-in { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: var(--r); }
+  /* 5 Timeline fill */
+  .tl::after { content: ""; position: absolute; left: 53px; top: 10px; width: 2px; height: calc((100% - 20px) * var(--tlp, 0)); background: linear-gradient(var(--red), var(--gold)); border-radius: 2px; transition: height .15s linear; }
+  .ev .dot { transition: transform .35s cubic-bezier(.3,1.6,.5,1), box-shadow .35s; }
+  .ev.lit .dot { transform: scale(1.2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--dot) 22%, transparent); }
+  /* 6 Budget bars grow */
+  .bgrow .bbar i { transform: scaleX(0); transform-origin: left; transition: transform 1s cubic-bezier(.2,.8,.2,1); transition-delay: var(--bd, 0s); }
+  .bgrow.go .bbar i { transform: none; }
+  .btotal b { font-variant-numeric: tabular-nums; }
+  /* 7 Odometer */
+  .odo { display: inline-flex; vertical-align: bottom; height: 1.25em; line-height: 1.25em; overflow: hidden; font-variant-numeric: tabular-nums; }
+  .odo .col { display: inline-flex; flex-direction: column; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+  .odo .col > span, .odo > span { height: 1.25em; display: block; text-align: center; }
+  /* 8 Lightbox zoom */
+  .lightbox-overlay { transition: background-color .35s; }
+  .lightbox-overlay.zoom { background-color: rgba(0,0,0,0); }
+  .lightbox-overlay.zoom.open { background-color: rgba(0,0,0,.9); }
+  .lightbox-overlay img { transition: transform .45s cubic-bezier(.2,.8,.2,1), clip-path .45s cubic-bezier(.2,.8,.2,1); will-change: transform; }
+  .lightbox-close { transition: opacity .3s; } .lightbox-overlay.zoom:not(.open) .lightbox-close { opacity: 0; }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* 10 Photo curtain */
+  .ph { overflow: hidden; border-radius: 14px; }
+  .rv .ph.cur .thumb { transform: scale(1.14); transition: transform 1.3s cubic-bezier(.2,.8,.2,1); }
+  .rv .ph.cur::after { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(100deg, var(--gold-soft), color-mix(in srgb, var(--gold) 35%, var(--gold-soft))); transform-origin: right; transition: transform .85s cubic-bezier(.7,0,.2,1) .05s; pointer-events: none; }
+  .rv .ph.cur.open .thumb { transform: none; }
+  .rv .ph.cur.open::after { transform: scaleX(0); }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
@@ -402,6 +457,9 @@
     .msvg .draw, .msvg .pin { animation: none !important; }
     .hero { color: #000; background: none; border: 1px solid #ccc; }
     .card, .pass { box-shadow: none; }
+    .lanterns, .fw, .flip-hint { display: none !important; }
+    .pass-back { position: static; transform: none; margin-top: 8px; }
+    .pass-in { transform: none !important; }
     details > *:not(summary) { display: block; }
     .wrap { padding-bottom: 0; }
   }
@@ -413,10 +471,12 @@
 <main class="wrap">
 
   <header class="hero" id="top">
+    <canvas class="fw" id="fw" aria-hidden="true"></canvas>
+    <div class="lanterns" aria-hidden="true"><span class="lan l0"><svg viewBox="0 0 40 92" aria-hidden="true"><line x1="20" y1="0" x2="20" y2="18" stroke="#E8C877" stroke-width="2"/><rect x="12" y="16" width="16" height="6" rx="2" fill="#E8C877"/><ellipse cx="20" cy="44" rx="17" ry="22" fill="#C2303A"/><ellipse class="glow" cx="20" cy="44" rx="12" ry="16" fill="#FFB36B"/><g stroke="#8A1A22" stroke-width="1.4" fill="none" opacity=".6"><ellipse cx="20" cy="44" rx="10" ry="22"/><ellipse cx="20" cy="44" rx="4" ry="22"/></g><rect x="12" y="64" width="16" height="5" rx="2" fill="#E8C877"/><g stroke="#E8C877" stroke-width="1.6"><line x1="17" y1="69" x2="16" y2="86"/><line x1="20" y1="69" x2="20" y2="89"/><line x1="23" y1="69" x2="24" y2="86"/></g></svg></span><span class="lan l1"><svg viewBox="0 0 40 92" aria-hidden="true"><line x1="20" y1="0" x2="20" y2="18" stroke="#E8C877" stroke-width="2"/><rect x="12" y="16" width="16" height="6" rx="2" fill="#E8C877"/><ellipse cx="20" cy="44" rx="17" ry="22" fill="#C2303A"/><ellipse class="glow" cx="20" cy="44" rx="12" ry="16" fill="#FFB36B"/><g stroke="#8A1A22" stroke-width="1.4" fill="none" opacity=".6"><ellipse cx="20" cy="44" rx="10" ry="22"/><ellipse cx="20" cy="44" rx="4" ry="22"/></g><rect x="12" y="64" width="16" height="5" rx="2" fill="#E8C877"/><g stroke="#E8C877" stroke-width="1.6"><line x1="17" y1="69" x2="16" y2="86"/><line x1="20" y1="69" x2="20" y2="89"/><line x1="23" y1="69" x2="24" y2="86"/></g></svg></span><span class="lan l2"><svg viewBox="0 0 40 92" aria-hidden="true"><line x1="20" y1="0" x2="20" y2="18" stroke="#E8C877" stroke-width="2"/><rect x="12" y="16" width="16" height="6" rx="2" fill="#E8C877"/><ellipse cx="20" cy="44" rx="17" ry="22" fill="#C2303A"/><ellipse class="glow" cx="20" cy="44" rx="12" ry="16" fill="#FFB36B"/><g stroke="#8A1A22" stroke-width="1.4" fill="none" opacity=".6"><ellipse cx="20" cy="44" rx="10" ry="22"/><ellipse cx="20" cy="44" rx="4" ry="22"/></g><rect x="12" y="64" width="16" height="5" rx="2" fill="#E8C877"/><g stroke="#E8C877" stroke-width="1.6"><line x1="17" y1="69" x2="16" y2="86"/><line x1="20" y1="69" x2="20" y2="89"/><line x1="23" y1="69" x2="24" y2="86"/></g></svg></span></div>
     <button class="snow-btn" id="snow-btn" type="button" aria-pressed="true" aria-label="ปิดเปิดหิมะ">❄️</button>
     <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="สลับโหมดมืด"><span class="tt-stars">✦ ✧ ✦</span><span class="tt-cloud">☁️</span><span class="tt-knob"></span></button>
     <div class="eyebrow">SHANGHAI · DECEMBER 2026</div>
-    <h1>เซี่ยงไฮ้ 8 วัน 7 คืน</h1>
+    <h1 id="hero-title">เซี่ยงไฮ้ 8 วัน 7 คืน</h1>
     <p class="sub">5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland</p>
     <div class="cd" id="cd" role="timer" aria-label="นับถอยหลังถึงวันเดินทาง"></div>
     <p class="cd-msg" id="cd-msg"></p>
@@ -465,7 +525,7 @@
         <div class="dicon" aria-hidden="true">🌉</div>
       </div>
       <figure class="dmap" data-geo="{&quot;hotel&quot;: {&quot;lat&quot;: 31.2162, &quot;lng&quot;: 121.4458}, &quot;route&quot;: [{&quot;hotel&quot;: 1}, {&quot;id&quot;: &quot;e2-1&quot;, &quot;lat&quot;: 31.2381, &quot;lng&quot;: 121.4726, &quot;name&quot;: &quot;Lai Lai&quot;, &quot;t&quot;: &quot;11:30&quot;}, {&quot;id&quot;: &quot;e2-2&quot;, &quot;lat&quot;: 31.2339, &quot;lng&quot;: 121.471, &quot;name&quot;: &quot;People&#x27;s Square&quot;, &quot;t&quot;: &quot;13:30&quot;}, {&quot;id&quot;: &quot;e2-3&quot;, &quot;lat&quot;: 31.2375, &quot;lng&quot;: 121.479, &quot;name&quot;: &quot;Nanjing Road&quot;, &quot;t&quot;: &quot;17:00&quot;}, {&quot;id&quot;: &quot;e2-4&quot;, &quot;lat&quot;: 31.24, &quot;lng&quot;: 121.4905, &quot;name&quot;: &quot;The Bund&quot;, &quot;t&quot;: &quot;18:30&quot;}, {&quot;hotel&quot;: 1}], &quot;minZoom&quot;: 11, &quot;maxZoom&quot;: 14, &quot;view&quot;: [[31.213344, 121.440436], [31.242856, 121.495864]]}"><div class="lmap" aria-label="แผนที่เส้นทางวันที่ 2"></div><svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ 2"></svg><figcaption><span class="mlegs"><button type="button" class="mleg" data-go="e2-1"><b>1</b>Lai Lai</button><button type="button" class="mleg" data-go="e2-2"><b>2</b>People&#x27;s Square</button><button type="button" class="mleg" data-go="e2-3"><b>3</b>Nanjing Road</button><button type="button" class="mleg" data-go="e2-4"><b>4</b>The Bund</button></span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>
-      <ol class="tl"><li class="ev" data-t="11:00" style="--dot:var(--muted)"><time>11:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><h3>ออกจากที่พัก ไป People&#x27;s Square</h3><p>รถไฟฟ้าสาย 1 จาก Changshu Road ไป People&#x27;s Square ~15 นาที หรือเรียก Didi</p><div class="links"><a href="https://maps.apple.com/?saddr=Atour%20X%20Hotel%2C%201329%20Huaihai%20Middle%20Road%2C%20Shanghai&amp;daddr=People%27s%20Square%2C%20Shanghai&amp;dirflg=r" target="_blank" rel="noopener">🧭 เส้นทางจากที่พัก</a></div></div></li><li class="ev" id="e2-1" data-t="11:30" style="--dot:#D86A2B"><time>11:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><img class="thumb" src="img/lailai.jpg" alt="Lai Lai Xiao Long Bao (莱莱小笼)" loading="lazy" decoding="async"><h3>Lai Lai Xiao Long Bao (莱莱小笼) <span class="tag">มื้อกลางวัน</span></h3><p>เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People&#x27;s Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing&#x27;an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)</p><div class="links"><a href="https://maps.apple.com/?q=Lai%20Lai%20Xiao%20Long%20Bao%2C%20506%20Tianjin%20Road%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%8E%B1%E8%8E%B1%E5%B0%8F%E7%AC%BC%20%E5%A4%A9%E6%B4%A5%E8%B7%AF&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e2-2" data-t="13:30" style="--dot:var(--navy-2)"><time>13:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/peoples-640.webp" srcset="img/hd/peoples-640.webp 640w, img/hd/peoples-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="People&#x27;s Square" loading="lazy" decoding="async"><small class="credit">ภาพ: Gary Todd · <a href="https://commons.wikimedia.org/wiki/File:2008_Shanghai_People%27s_Square-_Shanghai_Museum_1.jpg" target="_blank" rel="noopener">CC0</a></small></figure><h3>People&#x27;s Square</h3><p>แวะคาเฟ่หรือห้างแถวนี้ หลบหนาว ปรับตัวก่อนเดินต่อ</p><div class="links"><a href="https://maps.apple.com/?q=People%27s%20Square%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%BA%BA%E6%B0%91%E5%B9%BF%E5%9C%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e2-3" data-t="17:00" style="--dot:#7F77DD"><time>17:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/nanjing-640.webp" srcset="img/hd/nanjing-640.webp 640w, img/hd/nanjing-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Nanjing Road Pedestrian Street" loading="lazy" decoding="async"><small class="credit">ภาพ: Chainwit. · <a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Shanghai_East_Nanjing_Road_morning_01.jpg" target="_blank" rel="noopener">CC BY 4.0</a></small></figure><h3>Nanjing Road Pedestrian Street</h3><p>ถนนช้อปปิ้งหลัก ไฟคริสต์มาสตามห้าง · เดินต่อไป The Bund ได้เลย</p><div class="links"><a href="https://maps.apple.com/?q=Nanjing%20Road%20Pedestrian%20Street%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8D%97%E4%BA%AC%E8%B7%AF%E6%AD%A5%E8%A1%8C%E8%A1%97&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e2-4" data-t="18:30" style="--dot:var(--navy-2)"><time>18:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/bund-640.webp" srcset="img/hd/bund-640.webp 640w, img/hd/bund-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="The Bund ชมวิวแม่น้ำหวงผู่" loading="lazy" decoding="async"><small class="credit">ภาพ: Lloyd Tudor · <a href="https://commons.wikimedia.org/wiki/File:The_Bund%2C_Shanghai_at_night.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>The Bund ชมวิวแม่น้ำหวงผู่</h3><p>ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า</p><div class="links"><a href="https://maps.apple.com/?q=The%20Bund%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%96%E6%BB%A9&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li></ol>
+      <ol class="tl"><li class="ev" data-t="11:00" style="--dot:var(--muted)"><time>11:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><h3>ออกจากที่พัก ไป People&#x27;s Square</h3><p>รถไฟฟ้าสาย 1 จาก Changshu Road ไป People&#x27;s Square ~15 นาที หรือเรียก Didi</p><div class="links"><a href="https://maps.apple.com/?saddr=Atour%20X%20Hotel%2C%201329%20Huaihai%20Middle%20Road%2C%20Shanghai&amp;daddr=People%27s%20Square%2C%20Shanghai&amp;dirflg=r" target="_blank" rel="noopener">🧭 เส้นทางจากที่พัก</a></div></div></li><li class="ev" id="e2-1" data-t="11:30" style="--dot:#D86A2B"><time>11:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/lailai.jpg" alt="Lai Lai Xiao Long Bao (莱莱小笼)" loading="lazy" decoding="async"></figure><h3>Lai Lai Xiao Long Bao (莱莱小笼) <span class="tag">มื้อกลางวัน</span></h3><p>เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People&#x27;s Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing&#x27;an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)</p><div class="links"><a href="https://maps.apple.com/?q=Lai%20Lai%20Xiao%20Long%20Bao%2C%20506%20Tianjin%20Road%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%8E%B1%E8%8E%B1%E5%B0%8F%E7%AC%BC%20%E5%A4%A9%E6%B4%A5%E8%B7%AF&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e2-2" data-t="13:30" style="--dot:var(--navy-2)"><time>13:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/peoples-640.webp" srcset="img/hd/peoples-640.webp 640w, img/hd/peoples-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="People&#x27;s Square" loading="lazy" decoding="async"><small class="credit">ภาพ: Gary Todd · <a href="https://commons.wikimedia.org/wiki/File:2008_Shanghai_People%27s_Square-_Shanghai_Museum_1.jpg" target="_blank" rel="noopener">CC0</a></small></figure><h3>People&#x27;s Square</h3><p>แวะคาเฟ่หรือห้างแถวนี้ หลบหนาว ปรับตัวก่อนเดินต่อ</p><div class="links"><a href="https://maps.apple.com/?q=People%27s%20Square%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%BA%BA%E6%B0%91%E5%B9%BF%E5%9C%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e2-3" data-t="17:00" style="--dot:#7F77DD"><time>17:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/nanjing-640.webp" srcset="img/hd/nanjing-640.webp 640w, img/hd/nanjing-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Nanjing Road Pedestrian Street" loading="lazy" decoding="async"><small class="credit">ภาพ: Chainwit. · <a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Shanghai_East_Nanjing_Road_morning_01.jpg" target="_blank" rel="noopener">CC BY 4.0</a></small></figure><h3>Nanjing Road Pedestrian Street</h3><p>ถนนช้อปปิ้งหลัก ไฟคริสต์มาสตามห้าง · เดินต่อไป The Bund ได้เลย</p><div class="links"><a href="https://maps.apple.com/?q=Nanjing%20Road%20Pedestrian%20Street%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%8D%97%E4%BA%AC%E8%B7%AF%E6%AD%A5%E8%A1%8C%E8%A1%97&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e2-4" data-t="18:30" style="--dot:var(--navy-2)"><time>18:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/bund-640.webp" srcset="img/hd/bund-640.webp 640w, img/hd/bund-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="The Bund ชมวิวแม่น้ำหวงผู่" loading="lazy" decoding="async"><small class="credit">ภาพ: Lloyd Tudor · <a href="https://commons.wikimedia.org/wiki/File:The_Bund%2C_Shanghai_at_night.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>The Bund ชมวิวแม่น้ำหวงผู่</h3><p>ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า</p><div class="links"><a href="https://maps.apple.com/?q=The%20Bund%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A4%96%E6%BB%A9&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li></ol>
       <div class="note"><span aria-hidden="true">⭐</span><span>ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ</span></div>
     </section>
     <section class="day" id="day-3" data-day="3" data-date="2026-12-07" aria-label="วันที่ 3">
@@ -475,7 +535,7 @@
         <div class="dicon" aria-hidden="true">🌳</div>
       </div>
       <figure class="dmap" data-geo="{&quot;hotel&quot;: {&quot;lat&quot;: 31.2162, &quot;lng&quot;: 121.4458}, &quot;route&quot;: [{&quot;hotel&quot;: 1}, {&quot;id&quot;: &quot;e3-0&quot;, &quot;lat&quot;: 31.2068, &quot;lng&quot;: 121.4352, &quot;name&quot;: &quot;Grandma&#x27;s Home&quot;, &quot;t&quot;: &quot;11:00&quot;}, {&quot;id&quot;: &quot;e3-1&quot;, &quot;lat&quot;: 31.2063, &quot;lng&quot;: 121.4337, &quot;name&quot;: &quot;Wukang Mansion&quot;, &quot;t&quot;: &quot;12:30&quot;}, {&quot;id&quot;: &quot;e3-2&quot;, &quot;lat&quot;: 31.2387, &quot;lng&quot;: 121.4947, &quot;name&quot;: &quot;Superbrand Mall&quot;, &quot;t&quot;: &quot;16:00&quot;}, {&quot;id&quot;: &quot;e3-3&quot;, &quot;lat&quot;: 31.2372, &quot;lng&quot;: 121.5, &quot;name&quot;: &quot;Chef Fei&quot;, &quot;t&quot;: &quot;18:30&quot;}, {&quot;id&quot;: &quot;e3-4&quot;, &quot;lat&quot;: 31.2163, &quot;lng&quot;: 121.4585, &quot;name&quot;: &quot;Huaihai Road&quot;, &quot;t&quot;: &quot;21:00&quot;}, {&quot;hotel&quot;: 1}], &quot;minZoom&quot;: 11, &quot;maxZoom&quot;: 14, &quot;view&quot;: [[31.202412, 121.42574400000001], [31.242588, 121.507956]]}"><div class="lmap" aria-label="แผนที่เส้นทางวันที่ 3"></div><svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ 3"></svg><figcaption><span class="mlegs"><button type="button" class="mleg" data-go="e3-0"><b>1</b>Grandma&#x27;s Home</button><button type="button" class="mleg" data-go="e3-1"><b>2</b>Wukang Mansion</button><button type="button" class="mleg" data-go="e3-2"><b>3</b>Superbrand Mall</button><button type="button" class="mleg" data-go="e3-3"><b>4</b>Chef Fei</button><button type="button" class="mleg" data-go="e3-4"><b>5</b>Huaihai Road</button></span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>
-      <ol class="tl"><li class="ev" id="e3-0" data-t="11:00" style="--dot:#D86A2B"><time>11:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><img class="thumb" src="img/grandmas-home.jpg" alt="Grandma&#x27;s Home (奶奶家) สาขา Wukang Road" loading="lazy" decoding="async"><h3>Grandma&#x27;s Home (奶奶家) สาขา Wukang Road <span class="tag">มื้อกลางวัน</span></h3><p>ร้านอาหารเซี่ยงไฮ้ชื่อดัง</p><div class="links"><a href="https://maps.apple.com/?q=Grandma%27s%20Home%20Wukang%20Road%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A5%B6%E5%A5%B6%E5%AE%B6%20%E6%AD%A6%E5%BA%B7%E8%B7%AF&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-1" data-t="12:30" style="--dot:var(--navy-2)"><time>12:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/wukang-640.webp" srcset="img/hd/wukang-640.webp 640w, img/hd/wukang-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="เดินเล่น Wukang Road" loading="lazy" decoding="async"><small class="credit">ภาพ: N509FZ · <a href="https://commons.wikimedia.org/wiki/File:Wukang_Mansion_%2820191114161507%29.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>เดินเล่น Wukang Road</h3><p>ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย</p><div class="links"><a href="https://maps.apple.com/?q=Wukang%20Mansion%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%AD%A6%E5%BA%B7%E5%A4%A7%E6%A5%BC&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-2" data-t="16:00" style="--dot:#7F77DD"><time>16:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/superbrand-640.webp" srcset="img/hd/superbrand-640.webp 640w, img/hd/superbrand-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Superbrand Mall (正大广场)" loading="lazy" decoding="async"><small class="credit">ภาพ: Hanahu55 · <a href="https://commons.wikimedia.org/wiki/File:%E6%AD%A3%E5%A4%A7%E5%B9%BF%E5%9C%BA%E7%99%BD%E5%A4%A9%E5%A4%96%E6%99%AF.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>Superbrand Mall (正大广场)</h3><p>ห้างใหญ่ฝั่ง Lujiazui ข้ามฝั่งด้วยรถไฟฟ้าสาย 2 ลงสถานี Lujiazui · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้</p><div class="links"><a href="https://maps.apple.com/?q=Superbrand%20Mall%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%AD%A3%E5%A4%A7%E5%B9%BF%E5%9C%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-3" data-t="18:30" style="--dot:#D86A2B"><time>18:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><img class="thumb" src="img/chef-fei.jpg" alt="Chef Fei (费大厨)" loading="lazy" decoding="async"><h3>Chef Fei (费大厨) <span class="tag">มื้อเย็น</span></h3><p>ร้านพริกผัดหมูชื่อดัง (辣椒炒肉) รสจัดจ้านสไตล์หูหนาน</p><div class="links"><a href="https://maps.apple.com/?q=Chef%20Fei%20Lujiazui%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%B4%B9%E5%A4%A7%E5%8E%A8%20%E9%99%86%E5%AE%B6%E5%98%B4&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-4" data-t="21:00" style="--dot:#7F77DD"><time>21:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/huaihai-640.webp" srcset="img/hd/huaihai-640.webp 640w, img/hd/huaihai-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="เดินถนน Huaihai Road แถวที่พัก" loading="lazy" decoding="async"><small class="credit">ภาพ: Jean-Pierre Dalbéra · <a href="https://commons.wikimedia.org/wiki/File:L%27avenue_Huaihai%2C_ancienne_avenue_Joffre_%28Shanghai%2C_Chine%29_%2825188411507%29.jpg" target="_blank" rel="noopener">CC BY 2.0</a></small></figure><h3>เดินถนน Huaihai Road แถวที่พัก</h3><p>ถนนช้อปปิ้งหน้าที่พัก ไฟประดับสวยตอนค่ำ · ไม่ไปก็ได้ถ้าเหนื่อย</p><div class="links"><a href="https://maps.apple.com/?q=Huaihai%20Middle%20Road%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%B7%AE%E6%B5%B7%E4%B8%AD%E8%B7%AF&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li></ol>
+      <ol class="tl"><li class="ev" id="e3-0" data-t="11:00" style="--dot:#D86A2B"><time>11:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/grandmas-home.jpg" alt="Grandma&#x27;s Home (奶奶家) สาขา Wukang Road" loading="lazy" decoding="async"></figure><h3>Grandma&#x27;s Home (奶奶家) สาขา Wukang Road <span class="tag">มื้อกลางวัน</span></h3><p>ร้านอาหารเซี่ยงไฮ้ชื่อดัง</p><div class="links"><a href="https://maps.apple.com/?q=Grandma%27s%20Home%20Wukang%20Road%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%A5%B6%E5%A5%B6%E5%AE%B6%20%E6%AD%A6%E5%BA%B7%E8%B7%AF&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-1" data-t="12:30" style="--dot:var(--navy-2)"><time>12:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/wukang-640.webp" srcset="img/hd/wukang-640.webp 640w, img/hd/wukang-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="เดินเล่น Wukang Road" loading="lazy" decoding="async"><small class="credit">ภาพ: N509FZ · <a href="https://commons.wikimedia.org/wiki/File:Wukang_Mansion_%2820191114161507%29.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>เดินเล่น Wukang Road</h3><p>ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย</p><div class="links"><a href="https://maps.apple.com/?q=Wukang%20Mansion%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%AD%A6%E5%BA%B7%E5%A4%A7%E6%A5%BC&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-2" data-t="16:00" style="--dot:#7F77DD"><time>16:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/superbrand-640.webp" srcset="img/hd/superbrand-640.webp 640w, img/hd/superbrand-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Superbrand Mall (正大广场)" loading="lazy" decoding="async"><small class="credit">ภาพ: Hanahu55 · <a href="https://commons.wikimedia.org/wiki/File:%E6%AD%A3%E5%A4%A7%E5%B9%BF%E5%9C%BA%E7%99%BD%E5%A4%A9%E5%A4%96%E6%99%AF.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>Superbrand Mall (正大广场)</h3><p>ห้างใหญ่ฝั่ง Lujiazui ข้ามฝั่งด้วยรถไฟฟ้าสาย 2 ลงสถานี Lujiazui · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้</p><div class="links"><a href="https://maps.apple.com/?q=Superbrand%20Mall%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%AD%A3%E5%A4%A7%E5%B9%BF%E5%9C%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-3" data-t="18:30" style="--dot:#D86A2B"><time>18:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/chef-fei.jpg" alt="Chef Fei (费大厨)" loading="lazy" decoding="async"></figure><h3>Chef Fei (费大厨) <span class="tag">มื้อเย็น</span></h3><p>ร้านพริกผัดหมูชื่อดัง (辣椒炒肉) รสจัดจ้านสไตล์หูหนาน</p><div class="links"><a href="https://maps.apple.com/?q=Chef%20Fei%20Lujiazui%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%B4%B9%E5%A4%A7%E5%8E%A8%20%E9%99%86%E5%AE%B6%E5%98%B4&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e3-4" data-t="21:00" style="--dot:#7F77DD"><time>21:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/huaihai-640.webp" srcset="img/hd/huaihai-640.webp 640w, img/hd/huaihai-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="เดินถนน Huaihai Road แถวที่พัก" loading="lazy" decoding="async"><small class="credit">ภาพ: Jean-Pierre Dalbéra · <a href="https://commons.wikimedia.org/wiki/File:L%27avenue_Huaihai%2C_ancienne_avenue_Joffre_%28Shanghai%2C_Chine%29_%2825188411507%29.jpg" target="_blank" rel="noopener">CC BY 2.0</a></small></figure><h3>เดินถนน Huaihai Road แถวที่พัก</h3><p>ถนนช้อปปิ้งหน้าที่พัก ไฟประดับสวยตอนค่ำ · ไม่ไปก็ได้ถ้าเหนื่อย</p><div class="links"><a href="https://maps.apple.com/?q=Huaihai%20Middle%20Road%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%B7%AE%E6%B5%B7%E4%B8%AD%E8%B7%AF&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li></ol>
       <div class="note"><span aria-hidden="true">⭐</span><span>Yu Garden ปิดทุกวันจันทร์ เลยย้ายไปพรุ่งนี้ ส่วนที่เที่ยววันนี้เปิดปกติ</span></div>
     </section>
     <section class="day" id="day-4" data-day="4" data-date="2026-12-08" aria-label="วันที่ 4">
@@ -485,7 +545,7 @@
         <div class="dicon" aria-hidden="true">🏮</div>
       </div>
       <figure class="dmap" data-geo="{&quot;hotel&quot;: {&quot;lat&quot;: 31.2162, &quot;lng&quot;: 121.4458}, &quot;route&quot;: [{&quot;hotel&quot;: 1}, {&quot;id&quot;: &quot;e4-0&quot;, &quot;lat&quot;: 31.2046, &quot;lng&quot;: 121.4793, &quot;name&quot;: &quot;Canton 8&quot;, &quot;t&quot;: &quot;11:00&quot;}, {&quot;id&quot;: &quot;e4-1&quot;, &quot;lat&quot;: 31.2219, &quot;lng&quot;: 121.4704, &quot;name&quot;: &quot;Xintiandi&quot;, &quot;t&quot;: &quot;12:45&quot;}, {&quot;id&quot;: &quot;e4-2&quot;, &quot;lat&quot;: 31.2289, &quot;lng&quot;: 121.488, &quot;name&quot;: &quot;Yu Garden&quot;, &quot;t&quot;: &quot;14:30&quot;}, {&quot;id&quot;: &quot;e4-3&quot;, &quot;lat&quot;: 31.228, &quot;lng&quot;: 121.488, &quot;name&quot;: &quot;City God Temple&quot;, &quot;t&quot;: &quot;17:00&quot;}, {&quot;id&quot;: &quot;e4-4&quot;, &quot;lat&quot;: 31.2272, &quot;lng&quot;: 121.49, &quot;name&quot;: &quot;New Sukiyaki&quot;, &quot;t&quot;: &quot;19:00&quot;}, {&quot;hotel&quot;: 1}], &quot;minZoom&quot;: 11, &quot;maxZoom&quot;: 14, &quot;view&quot;: [[31.201684, 121.44049600000001], [31.231816, 121.49530399999999]]}"><div class="lmap" aria-label="แผนที่เส้นทางวันที่ 4"></div><svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ 4"></svg><figcaption><span class="mlegs"><button type="button" class="mleg" data-go="e4-0"><b>1</b>Canton 8</button><button type="button" class="mleg" data-go="e4-1"><b>2</b>Xintiandi</button><button type="button" class="mleg" data-go="e4-2"><b>3</b>Yu Garden</button><button type="button" class="mleg" data-go="e4-3"><b>4</b>City God Temple</button><button type="button" class="mleg" data-go="e4-4"><b>5</b>New Sukiyaki</button></span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>
-      <ol class="tl"><li class="ev" id="e4-0" data-t="11:00" style="--dot:#D86A2B"><time>11:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><img class="thumb" src="img/canton8.jpg" alt="Canton 8 (喜粤8号) สาขา Runan Street" loading="lazy" decoding="async"><h3>Canton 8 (喜粤8号) สาขา Runan Street <span class="tag">มื้อกลางวัน</span></h3><p>ร้านอาหารกวางตุ้ง</p><div class="links"><a href="https://maps.apple.com/?q=Canton%208%20Runan%20Street%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%96%9C%E7%B2%A48%E5%8F%B7&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-1" data-t="12:45" style="--dot:var(--navy-2)"><time>12:45</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/xintiandi-640.webp" srcset="img/hd/xintiandi-640.webp 640w, img/hd/xintiandi-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Xintiandi (新天地)" loading="lazy" decoding="async"><small class="credit">ภาพ: Leynadmar · <a href="https://commons.wikimedia.org/wiki/File:Fountain_with_Sculptures_in_Xintiandi_Shanghai_20210329.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>Xintiandi (新天地)</h3><p>ตรอกอิฐแดงสไตล์ Shikumen ผสมจีน-ยุโรป · คาเฟ่ ร้านบูติก</p><div class="links"><a href="https://maps.apple.com/?q=Xintiandi%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%96%B0%E5%A4%A9%E5%9C%B0&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-2" data-t="14:30" style="--dot:var(--navy-2)"><time>14:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/yu-640.webp" srcset="img/hd/yu-640.webp 640w, img/hd/yu-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Yu Garden (豫园) เข้าชมในสวน" loading="lazy" decoding="async"><small class="credit">ภาพ: Chainwit. · <a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Shanghai_Yu_Yuan_Garden_%E8%B1%AB%E5%9B%AD_-_img_20.jpg" target="_blank" rel="noopener">CC BY 4.0</a></small></figure><h3>Yu Garden (豫园) เข้าชมในสวน</h3><p>สวนจีนโบราณกว่า 400 ปี · เปิด 8:45–16:45 ปิดวันจันทร์ ต้องเข้าก่อนบ่าย 4 · ซื้อตั๋วหน้างานหรือในแอป</p><div class="links"><a href="https://maps.apple.com/?q=Yu%20Garden%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%B1%AB%E5%9B%AD&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-3" data-t="17:00" style="--dot:#7F77DD"><time>17:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/citygod-640.webp" srcset="img/hd/citygod-640.webp 640w, img/hd/citygod-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Yuyuan Bazaar + City God Temple (城隍庙)" loading="lazy" decoding="async"><small class="credit">ภาพ: Chainwit. · <a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Shanghai_City_God_Temple_%E4%B8%8A%E6%B5%B7%E5%9F%8E%E9%9A%8D%E5%BB%9F_-_img_01.jpg" target="_blank" rel="noopener">CC BY 4.0</a></small></figure><h3>Yuyuan Bazaar + City God Temple (城隍庙)</h3><p>ร้านค้าและแผงขนมรอบสวน เปิดไฟสวยตอนค่ำ · ซื้อของฝาก</p><div class="links"><a href="https://maps.apple.com/?q=Shanghai%20City%20God%20Temple" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E5%9F%8E%E9%9A%8D%E5%BA%99&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-4" data-t="19:00" style="--dot:#D86A2B"><time>19:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><img class="thumb" src="img/new-sukiyaki.jpg" alt="New Sukiyaki (牛New寿喜烧) ใกล้ Yu Garden" loading="lazy" decoding="async"><h3>New Sukiyaki (牛New寿喜烧) ใกล้ Yu Garden <span class="tag">มื้อเย็น</span></h3><p>บุฟเฟต์สุกี้ยากี้ญี่ปุ่นชื่อดัง · เนื้อหลายเกรด ซีฟู้ด น้ำซุปหลายแบบ · เริ่ม ~149 หยวน</p><div class="links"><a href="https://maps.apple.com/?q=New%20Sukiyaki%20Yu%20Garden%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%89%9BNew%E5%AF%BF%E5%96%9C%E7%83%A7%20%E8%B1%AB%E5%9B%AD&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li></ol>
+      <ol class="tl"><li class="ev" id="e4-0" data-t="11:00" style="--dot:#D86A2B"><time>11:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/canton8.jpg" alt="Canton 8 (喜粤8号) สาขา Runan Street" loading="lazy" decoding="async"></figure><h3>Canton 8 (喜粤8号) สาขา Runan Street <span class="tag">มื้อกลางวัน</span></h3><p>ร้านอาหารกวางตุ้ง</p><div class="links"><a href="https://maps.apple.com/?q=Canton%208%20Runan%20Street%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%96%9C%E7%B2%A48%E5%8F%B7&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-1" data-t="12:45" style="--dot:var(--navy-2)"><time>12:45</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/xintiandi-640.webp" srcset="img/hd/xintiandi-640.webp 640w, img/hd/xintiandi-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Xintiandi (新天地)" loading="lazy" decoding="async"><small class="credit">ภาพ: Leynadmar · <a href="https://commons.wikimedia.org/wiki/File:Fountain_with_Sculptures_in_Xintiandi_Shanghai_20210329.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>Xintiandi (新天地)</h3><p>ตรอกอิฐแดงสไตล์ Shikumen ผสมจีน-ยุโรป · คาเฟ่ ร้านบูติก</p><div class="links"><a href="https://maps.apple.com/?q=Xintiandi%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E6%96%B0%E5%A4%A9%E5%9C%B0&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-2" data-t="14:30" style="--dot:var(--navy-2)"><time>14:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/yu-640.webp" srcset="img/hd/yu-640.webp 640w, img/hd/yu-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Yu Garden (豫园) เข้าชมในสวน" loading="lazy" decoding="async"><small class="credit">ภาพ: Chainwit. · <a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Shanghai_Yu_Yuan_Garden_%E8%B1%AB%E5%9B%AD_-_img_20.jpg" target="_blank" rel="noopener">CC BY 4.0</a></small></figure><h3>Yu Garden (豫园) เข้าชมในสวน</h3><p>สวนจีนโบราณกว่า 400 ปี · เปิด 8:45–16:45 ปิดวันจันทร์ ต้องเข้าก่อนบ่าย 4 · ซื้อตั๋วหน้างานหรือในแอป</p><div class="links"><a href="https://maps.apple.com/?q=Yu%20Garden%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E8%B1%AB%E5%9B%AD&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-3" data-t="17:00" style="--dot:#7F77DD"><time>17:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/citygod-640.webp" srcset="img/hd/citygod-640.webp 640w, img/hd/citygod-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Yuyuan Bazaar + City God Temple (城隍庙)" loading="lazy" decoding="async"><small class="credit">ภาพ: Chainwit. · <a href="https://commons.wikimedia.org/wiki/File:2024-Apr_Shanghai_City_God_Temple_%E4%B8%8A%E6%B5%B7%E5%9F%8E%E9%9A%8D%E5%BB%9F_-_img_01.jpg" target="_blank" rel="noopener">CC BY 4.0</a></small></figure><h3>Yuyuan Bazaar + City God Temple (城隍庙)</h3><p>ร้านค้าและแผงขนมรอบสวน เปิดไฟสวยตอนค่ำ · ซื้อของฝาก</p><div class="links"><a href="https://maps.apple.com/?q=Shanghai%20City%20God%20Temple" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E4%B8%8A%E6%B5%B7%E5%9F%8E%E9%9A%8D%E5%BA%99&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e4-4" data-t="19:00" style="--dot:#D86A2B"><time>19:00</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/new-sukiyaki.jpg" alt="New Sukiyaki (牛New寿喜烧) ใกล้ Yu Garden" loading="lazy" decoding="async"></figure><h3>New Sukiyaki (牛New寿喜烧) ใกล้ Yu Garden <span class="tag">มื้อเย็น</span></h3><p>บุฟเฟต์สุกี้ยากี้ญี่ปุ่นชื่อดัง · เนื้อหลายเกรด ซีฟู้ด น้ำซุปหลายแบบ · เริ่ม ~149 หยวน</p><div class="links"><a href="https://maps.apple.com/?q=New%20Sukiyaki%20Yu%20Garden%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%89%9BNew%E5%AF%BF%E5%96%9C%E7%83%A7%20%E8%B1%AB%E5%9B%AD&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li></ol>
       <div class="note"><span aria-hidden="true">⭐</span><span>Yu Garden ปิด 16:45 เลยเรียงให้เข้าชมในสวนตอนบ่าย แล้วค่อยเดินตลาดตอนเปิดไฟ</span></div>
     </section>
     <section class="day" id="day-5" data-day="5" data-date="2026-12-09" aria-label="วันที่ 5">
@@ -515,7 +575,7 @@
         <div class="dicon" aria-hidden="true">🙏</div>
       </div>
       <figure class="dmap" data-geo="{&quot;hotel&quot;: {&quot;lat&quot;: 31.2162, &quot;lng&quot;: 121.4458}, &quot;route&quot;: [{&quot;hotel&quot;: 1}, {&quot;id&quot;: &quot;e7-0&quot;, &quot;lat&quot;: 31.2437, &quot;lng&quot;: 121.4398, &quot;name&quot;: &quot;วัดพระหยก&quot;, &quot;t&quot;: &quot;09:30&quot;}, {&quot;id&quot;: &quot;e7-1&quot;, &quot;lat&quot;: 31.2499, &quot;lng&quot;: 121.4447, &quot;name&quot;: &quot;M50&quot;, &quot;t&quot;: &quot;11:30&quot;}, {&quot;id&quot;: &quot;e7-2&quot;, &quot;lat&quot;: 31.2103, &quot;lng&quot;: 121.4641, &quot;name&quot;: &quot;Tianzifang&quot;, &quot;t&quot;: &quot;14:30&quot;}, {&quot;hotel&quot;: 1}], &quot;minZoom&quot;: 11, &quot;maxZoom&quot;: 14, &quot;view&quot;: [[31.205548, 121.436884], [31.254652, 121.467016]]}"><div class="lmap" aria-label="แผนที่เส้นทางวันที่ 7"></div><svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ 7"></svg><figcaption><span class="mlegs"><button type="button" class="mleg" data-go="e7-0"><b>1</b>วัดพระหยก</button><button type="button" class="mleg" data-go="e7-1"><b>2</b>M50</button><button type="button" class="mleg" data-go="e7-2"><b>3</b>Tianzifang</button></span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>
-      <ol class="tl"><li class="ev" id="e7-0" data-t="09:30" style="--dot:var(--navy-2)"><time>09:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/jade-640.webp" srcset="img/hd/jade-640.webp 640w, img/hd/jade-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Jade Buddha Temple (玉佛禅寺)" loading="lazy" decoding="async"><small class="credit">ภาพ: Nikolamikovic82 · <a href="https://commons.wikimedia.org/wiki/File:Jade_Buddha_Temple%2C_Shanghai_2.jpg" target="_blank" rel="noopener">CC0</a></small></figure><h3>Jade Buddha Temple (玉佛禅寺)</h3><p>เปิด 8:00–16:30 · ไปเช้าคนน้อย</p><div class="links"><a href="https://maps.apple.com/?q=Jade%20Buddha%20Temple%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%8E%89%E4%BD%9B%E7%A6%85%E5%AF%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e7-1" data-t="11:30" style="--dot:var(--navy-2)"><time>11:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/m50-640.webp" srcset="img/hd/m50-640.webp 640w, img/hd/m50-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="M50 Art District (M50创意园)" loading="lazy" decoding="async"><small class="credit">ภาพ: MNXANL · <a href="https://commons.wikimedia.org/wiki/File:201703_M50_Creative_Park.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>M50 Art District (M50创意园)</h3><p>แกลเลอรีส่วนใหญ่เปิด 11:00–17:00 ปิดวันจันทร์</p><div class="links"><a href="https://maps.apple.com/?q=M50%20Art%20District%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=M50%E5%88%9B%E6%84%8F%E5%9B%AD&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e7-2" data-t="14:30" style="--dot:#7F77DD"><time>14:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/tianzifang-640.webp" srcset="img/hd/tianzifang-640.webp 640w, img/hd/tianzifang-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Tianzifang (田子坊) เก็บของฝาก" loading="lazy" decoding="async"><small class="credit">ภาพ: 钉钉 · <a href="https://commons.wikimedia.org/wiki/File:Tianzifang_3.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>Tianzifang (田子坊) เก็บของฝาก</h3><p>ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ใกล้ที่พัก</p><div class="links"><a href="https://maps.apple.com/?q=Tianzifang%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%94%B0%E5%AD%90%E5%9D%8A&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" data-t="18:30" style="--dot:#D86A2B"><time>18:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><img class="thumb" src="img/long-time-ago.jpg" alt="Long Time Ago Mutton Shashlik (很久以前羊肉串)" loading="lazy" decoding="async"><h3>Long Time Ago Mutton Shashlik (很久以前羊肉串) <span class="tag">มื้อเย็น</span></h3><p>ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) · ย้ายมาจากวัน Disney เพราะโชว์จบดึก</p><div class="links"><a href="https://maps.apple.com/?q=Long%20Time%20Ago%20Mutton%20Shashlik%20Guangyin%20Square%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%BE%88%E4%B9%85%E4%BB%A5%E5%89%8D%E7%BE%8A%E8%82%89%E4%B8%B2%20%E5%85%89%E9%9F%B3%E5%B9%BF%E5%9C%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" data-t="20:30" style="--dot:var(--gold)"><time>20:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><h3>เก็บกระเป๋า</h3><p>ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก.</p></div></li></ol>
+      <ol class="tl"><li class="ev" id="e7-0" data-t="09:30" style="--dot:var(--navy-2)"><time>09:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/jade-640.webp" srcset="img/hd/jade-640.webp 640w, img/hd/jade-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Jade Buddha Temple (玉佛禅寺)" loading="lazy" decoding="async"><small class="credit">ภาพ: Nikolamikovic82 · <a href="https://commons.wikimedia.org/wiki/File:Jade_Buddha_Temple%2C_Shanghai_2.jpg" target="_blank" rel="noopener">CC0</a></small></figure><h3>Jade Buddha Temple (玉佛禅寺)</h3><p>เปิด 8:00–16:30 · ไปเช้าคนน้อย</p><div class="links"><a href="https://maps.apple.com/?q=Jade%20Buddha%20Temple%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%8E%89%E4%BD%9B%E7%A6%85%E5%AF%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e7-1" data-t="11:30" style="--dot:var(--navy-2)"><time>11:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/m50-640.webp" srcset="img/hd/m50-640.webp 640w, img/hd/m50-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="M50 Art District (M50创意园)" loading="lazy" decoding="async"><small class="credit">ภาพ: MNXANL · <a href="https://commons.wikimedia.org/wiki/File:201703_M50_Creative_Park.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>M50 Art District (M50创意园)</h3><p>แกลเลอรีส่วนใหญ่เปิด 11:00–17:00 ปิดวันจันทร์</p><div class="links"><a href="https://maps.apple.com/?q=M50%20Art%20District%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=M50%E5%88%9B%E6%84%8F%E5%9B%AD&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" id="e7-2" data-t="14:30" style="--dot:#7F77DD"><time>14:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/hd/tianzifang-640.webp" srcset="img/hd/tianzifang-640.webp 640w, img/hd/tianzifang-1280.webp 1280w" sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="Tianzifang (田子坊) เก็บของฝาก" loading="lazy" decoding="async"><small class="credit">ภาพ: 钉钉 · <a href="https://commons.wikimedia.org/wiki/File:Tianzifang_3.jpg" target="_blank" rel="noopener">CC BY-SA 4.0</a></small></figure><h3>Tianzifang (田子坊) เก็บของฝาก</h3><p>ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ใกล้ที่พัก</p><div class="links"><a href="https://maps.apple.com/?q=Tianzifang%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E7%94%B0%E5%AD%90%E5%9D%8A&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" data-t="18:30" style="--dot:#D86A2B"><time>18:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><figure class="ph"><img class="thumb" src="img/long-time-ago.jpg" alt="Long Time Ago Mutton Shashlik (很久以前羊肉串)" loading="lazy" decoding="async"></figure><h3>Long Time Ago Mutton Shashlik (很久以前羊肉串) <span class="tag">มื้อเย็น</span></h3><p>ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) · ย้ายมาจากวัน Disney เพราะโชว์จบดึก</p><div class="links"><a href="https://maps.apple.com/?q=Long%20Time%20Ago%20Mutton%20Shashlik%20Guangyin%20Square%2C%20Shanghai" target="_blank" rel="noopener">🍎 Apple Maps</a><a href="https://uri.amap.com/search?keyword=%E5%BE%88%E4%B9%85%E4%BB%A5%E5%89%8D%E7%BE%8A%E8%82%89%E4%B8%B2%20%E5%85%89%E9%9F%B3%E5%B9%BF%E5%9C%BA&amp;city=%E4%B8%8A%E6%B5%B7&amp;src=shanghaitrip&amp;callnative=1" target="_blank" rel="noopener">🧭 Amap 高德</a></div></div></li><li class="ev" data-t="20:30" style="--dot:var(--gold)"><time>20:30</time><span class="dot" aria-hidden="true"></span><div class="evb"><h3>เก็บกระเป๋า</h3><p>ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก.</p></div></li></ol>
       <div class="note"><span aria-hidden="true">⭐</span><span>พรุ่งนี้ต้องเช็คเอาท์ก่อน 12:00 และออกไปสนามบินประมาณ 13:00</span></div>
     </section>
     <section class="day" id="day-8" data-day="8" data-date="2026-12-12" aria-label="วันที่ 8">
@@ -533,6 +593,7 @@
 
   <section class="sec" id="flights" aria-labelledby="fl-h">
     <div class="sec-h"><h2 id="fl-h">✈️ ตั๋วเครื่องบิน Spring Airlines</h2></div>
+    <div class="passw" tabindex="0" role="button" aria-label="พลิกตั๋วดูรายละเอียด"><div class="pass-in">
     <div class="pass">
       <div class="pm">
         <span class="tag">ขาไป · เสาร์ 5 ธ.ค. 2026</span>
@@ -540,8 +601,11 @@
         <div class="times"><span>16:45</span><span>22:05</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a></div>
       </div>
-      <div class="stub"><small>FLIGHT</small><b>9C7284</b></div>
-    </div>
+      <div class="stub"><small>FLIGHT</small><b>9C7284</b><span class="flip-hint">แตะพลิก ↻</span></div>
+      </div>
+      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag">9C7284 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี กินก่อนขึ้นหรือซื้อบนเครื่อง</li><li><b>🛬 ถึง PVG</b>22:05 เวลาจีน · ไปที่พักด้วย Didi ~1 ชม.</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
+    </div></div>
+    <div class="passw back" tabindex="0" role="button" aria-label="พลิกตั๋วดูรายละเอียด"><div class="pass-in">
     <div class="pass back">
       <div class="pm">
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
@@ -549,8 +613,10 @@
         <div class="times"><span>17:00</span><span>20:45</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a></div>
       </div>
-      <div class="stub"><small>FLIGHT</small><b>9C7289</b></div>
-    </div>
+      <div class="stub"><small>FLIGHT</small><b>9C7289</b><span class="flip-hint">แตะพลิก ↻</span></div>
+      </div>
+      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag gold">9C7289 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>⏰ ออกจากที่พัก</b>ประมาณ 13:00 ให้ถึงก่อนบิน 2–3 ชม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี · ชั่งกระเป๋าถือเข้ม</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
+    </div></div>
     <details class="card more">
       <summary>กระเป๋า เวลาออกจากที่พัก และวิธีเช็กไฟลท์</summary>
       <ul class="facts">
@@ -564,7 +630,7 @@
   <section class="sec" id="budget" aria-labelledby="bd-h">
     <div class="sec-h"><h2 id="bd-h">💰 งบประมาณต่อคน</h2></div>
     <div class="card">
-      <div class="btotal"><span>รวมทั้งหมด</span><b>29,860 ฿</b></div>
+      <div class="btotal"><span>รวมทั้งหมด</span><b data-n="29860">29,860 ฿</b></div>
       <ul class="blist"><li><span class="bi" aria-hidden="true">✈️</span><span class="bl">ตั๋วเครื่องบิน Spring Airlines ไป-กลับ</span><span class="ba">13,330 ฿</span><span class="bbar"><i style="width:100.0%"></i></span></li><li><span class="bi" aria-hidden="true">🏨</span><span class="bl">ที่พัก 7 คืน Atour X Hotel</span><span class="ba">6,565 ฿</span><span class="bbar"><i style="width:49.2%"></i></span></li><li><span class="bi" aria-hidden="true">🍜</span><span class="bl">ค่าอาหาร</span><span class="ba">5,000 ฿</span><span class="bbar"><i style="width:37.5%"></i></span></li><li><span class="bi" aria-hidden="true">🏰</span><span class="bl">ตั๋ว Disney + คูปอง 30 หยวน</span><span class="ba">2,208 ฿</span><span class="bbar"><i style="width:16.6%"></i></span></li><li><span class="bi" aria-hidden="true">🚇</span><span class="bl">ค่าเดินทางในเมือง</span><span class="ba">1,000 ฿</span><span class="bbar"><i style="width:7.5%"></i></span></li><li><span class="bi" aria-hidden="true">🚕</span><span class="bl">ค่าเดินทางไป-กลับสนามบิน</span><span class="ba">800 ฿</span><span class="bbar"><i style="width:6.0%"></i></span></li><li><span class="bi" aria-hidden="true">📱</span><span class="bl">e-SIM</span><span class="ba">632 ฿</span><span class="bbar"><i style="width:4.7%"></i></span></li><li><span class="bi" aria-hidden="true">🛡️</span><span class="bl">ประกันการเดินทาง</span><span class="ba">325 ฿</span><span class="bbar"><i style="width:2.4%"></i></span></li></ul>
     </div>
     <div class="card fx">
@@ -616,7 +682,7 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 11:03</small>
+    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 14:57</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -902,7 +968,7 @@
   // ---- Scroll reveal ----
   (function () {
     if (REDUCE || !('IntersectionObserver' in window)) return;
-    var sel = '.sec-h, .wx, .days, .pass, details.more, #budget .card, #prep .card, .taxi, .phrases, .sos-grid, .tips, .install, .ev';
+    var sel = '.sec-h, .wx, .days, .passw, details.more, #budget .card, #prep .card, .taxi, .phrases, .sos-grid, .tips, .install, .ev';
     var items = $$(sel);
     document.documentElement.classList.add('rv');
     var io = new IntersectionObserver(function (es) {
@@ -918,6 +984,94 @@
     document.addEventListener('daychange', function () {
       $$('.day.active .ev').forEach(function (ev, i) { io.unobserve(ev); ev.classList.remove('in'); ev.style.setProperty('--rd', (i * 0.06) + 's'); void ev.offsetWidth; ev.classList.add('in'); });
     });
+  })();
+
+
+  // ================= Motion set 2 =================
+  // 4 · Flip boarding passes (links inside still work)
+  $$('.passw').forEach(function (w) {
+    function flip() { var on = w.classList.toggle('on'); w.querySelector('.pass-back').setAttribute('aria-hidden', on ? 'false' : 'true'); w.querySelector('.pass').setAttribute('aria-hidden', on ? 'true' : 'false'); }
+    w.addEventListener('click', function (e) { if (e.target.closest('a')) return; flip(); });
+    w.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  });
+
+  // 5 · Timeline line fills as you scroll; dots light up
+  (function () {
+    if (REDUCE) return;
+    var raf = 0;
+    function upd() {
+      raf = 0;
+      var tl = $('.day.active .tl'); if (!tl) return;
+      var r = tl.getBoundingClientRect(), mid = innerHeight * 0.62;
+      var p = Math.max(0, Math.min(1, (mid - r.top - 10) / Math.max(1, r.height - 20)));
+      tl.style.setProperty('--tlp', p.toFixed(3));
+      $$('.ev', tl).forEach(function (ev) { var d = ev.querySelector('.dot'); ev.classList.toggle('lit', d.getBoundingClientRect().top < mid); });
+    }
+    function q() { if (!raf) raf = requestAnimationFrame(upd); }
+    addEventListener('scroll', q, { passive: true }); addEventListener('resize', q);
+    document.addEventListener('daychange', function () { setTimeout(upd, 30); });
+    upd();
+  })();
+
+  // 6 · Budget total counts up, bars grow
+  (function () {
+    var card = $('#budget .btotal'); if (!card) return; card = card.parentNode;
+    var b = $('.btotal b', card), N = +b.getAttribute('data-n');
+    if (REDUCE || !('IntersectionObserver' in window) || !N) return;
+    card.classList.add('bgrow');
+    $$('.bbar i', card).forEach(function (i, k) { i.style.setProperty('--bd', (0.15 + k * 0.12) + 's'); });
+    b.textContent = '0 ฿';
+    new IntersectionObserver(function (es, o) {
+      if (!es[0].isIntersecting) return; o.disconnect();
+      card.classList.add('go');
+      var t0 = performance.now();
+      (function step(t) { var k = Math.min(1, (t - t0) / 1300), e = 1 - Math.pow(1 - k, 3); b.textContent = Math.round(N * e).toLocaleString('en-US') + ' ฿'; if (k < 1) requestAnimationFrame(step); })(t0);
+    }, { threshold: 0.4 }).observe(card);
+  })();
+
+  // 10 · Photo curtain reveal
+  (function () {
+    if (REDUCE || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('open'); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    $$('.day .ph').forEach(function (f) { f.classList.add('cur'); io.observe(f); });
+    document.addEventListener('daychange', function () {
+      $$('.day.active .ph').forEach(function (f) { if (f.classList.contains('open')) return; io.unobserve(f); io.observe(f); });
+    });
+  })();
+
+  // 9 · Fireworks over the hero on special days (departure, Disney, last day) — or tap the title 3×
+  (function () {
+    var c = $('#fw'), x = c && c.getContext && c.getContext('2d'); if (!x || REDUCE) return;
+    var parts = [], run = false, dpr = Math.min(2, window.devicePixelRatio || 1);
+    var COLS = ['#F3DDA2', '#E26871', '#FFFFFF', '#8EC0E2', '#FFB36B', '#E8C877'];
+    function loop() {
+      x.globalCompositeOperation = 'destination-out'; x.fillStyle = 'rgba(0,0,0,.22)'; x.fillRect(0, 0, c.width, c.height);
+      x.globalCompositeOperation = 'lighter';
+      parts = parts.filter(function (p) { return p.l-- > 0; });
+      parts.forEach(function (p) {
+        p.vy += 0.045 * dpr; p.vx *= 0.975; p.vy *= 0.975; p.x += p.vx; p.y += p.vy;
+        x.globalAlpha = Math.min(1, p.l / 40); x.fillStyle = p.c; x.beginPath(); x.arc(p.x, p.y, 1.6 * dpr, 0, 7); x.fill();
+      });
+      x.globalAlpha = 1;
+      if (parts.length) requestAnimationFrame(loop); else { run = false; x.clearRect(0, 0, c.width, c.height); }
+    }
+    function burst(n) {
+      c.width = c.clientWidth * dpr; c.height = c.clientHeight * dpr;
+      for (var b = 0; b < n; b++) (function (b) {
+        setTimeout(function () {
+          var cx = c.width * (0.15 + Math.random() * 0.7), cy = c.height * (0.12 + Math.random() * 0.38), col = COLS[(Math.random() * COLS.length) | 0], m = 56;
+          for (var i = 0; i < m; i++) { var a = Math.PI * 2 * i / m, s = (1.6 + Math.random() * 3) * dpr; parts.push({ x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s, l: 55 + Math.random() * 35, c: col }); }
+          if (!run) { run = true; loop(); }
+        }, b * 420);
+      })(b);
+    }
+    var today = shNow().date, dis = $('.day .tag.gold') && $('.day .tag.gold').closest('.day');
+    var special = [TRIP_START, TRIP_END, dis ? dis.getAttribute('data-date') : ''];
+    if (special.indexOf(today) >= 0 || /[?&]fw=1/.test(location.search)) setTimeout(function () { burst(5); }, 900);
+    var taps = 0, tt = 0, h = $('#hero-title');
+    if (h) h.addEventListener('click', function () { taps++; clearTimeout(tt); tt = setTimeout(function () { taps = 0; }, 600); if (taps >= 3) { taps = 0; burst(4); } });
   })();
 
   // ---- Install-as-app card ----
@@ -1038,8 +1192,38 @@
   // ---- Lightbox ----
   (function () {
     var ov = $('#lightbox-overlay'), im = $('#lightbox-img');
-    $$('.thumb').forEach(function (img) { img.addEventListener('click', function () { im.src = img.src; im.alt = img.alt; ov.classList.add('active'); }); });
-    function close() { ov.classList.remove('active'); im.src = ''; }
+    var from = null, busy = false;
+    // Transform that puts the big image exactly over the thumbnail (cover-cropped via clip-path)
+    function overThumb(t) {
+      var F = im.getBoundingClientRect(), T = t.getBoundingClientRect();
+      if (!F.width || !T.width) return null;
+      var k = Math.max(T.width / F.width, T.height / F.height);
+      var vw = T.width / k, vh = T.height / k, ix = (F.width - vw) / 2, iy = (F.height - vh) / 2, r = 14 / k;
+      var dx = (T.left + T.width / 2) - (F.left + F.width / 2), dy = (T.top + T.height / 2) - (F.top + F.height / 2);
+      return { tf: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', cp: 'inset(' + iy + 'px ' + ix + 'px round ' + r + 'px)' };
+    }
+    function set(tf, cp, anim) { im.style.transition = anim ? '' : 'none'; im.style.transform = tf; im.style.clipPath = im.style.webkitClipPath = cp; }
+    $$('.thumb').forEach(function (img) { img.addEventListener('click', function () {
+      if (busy) return;
+      var src = img.currentSrc || img.src, big = src.replace(/-640\.webp$/, '-1280.webp');
+      im.alt = img.alt; from = img;
+      if (REDUCE) { im.src = big; ov.classList.add('active'); return; }
+      im.src = src; ov.classList.add('active', 'zoom');
+      var go = function () {
+        var o = overThumb(img); if (!o) { ov.classList.add('open'); return; }
+        set(o.tf, o.cp, false); img.style.visibility = 'hidden'; void im.offsetWidth;
+        requestAnimationFrame(function () { ov.classList.add('open'); set('none', 'inset(0px 0px round 12px)', true); });
+        if (big !== src) { var pre = new Image(); pre.onload = function () { if (from === img) im.src = big; }; pre.src = big; }
+      };
+      if (im.complete && im.naturalWidth) go(); else im.onload = function () { im.onload = null; go(); };
+    }); });
+    function close() {
+      if (!ov.classList.contains('active') || busy) return;
+      var t = from, o = (!REDUCE && t && ov.classList.contains('zoom')) ? overThumb(t) : null;
+      function done() { ov.classList.remove('active', 'zoom', 'open'); set('', '', false); im.removeAttribute('src'); if (t) t.style.visibility = ''; from = null; busy = false; }
+      if (!o) { done(); return; }
+      busy = true; ov.classList.remove('open'); set(o.tf, o.cp, true); setTimeout(done, 460);
+    }
     ov.addEventListener('click', function (e) { if (e.target === ov || e.target.id === 'lightbox-close') close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
   })();
@@ -1055,8 +1239,24 @@
     var input = $('#cny-input'), result = $('#thb-result'), meta = $('#currency-meta'), RATE_KEY = 'hkTripCnyThbRate', rate = null;
     function render() {
       var v = parseFloat(input.value);
-      if (isNaN(v) || rate === null) { result.textContent = '= 0.00 ฿'; return; }
-      result.textContent = '= ' + (v * rate).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿';
+      var str = (isNaN(v) || rate === null) ? '0.00' : (v * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      odo(str);
+    }
+    var odoEl = null, odoStr = '';
+    function odo(str) {
+      if (REDUCE) { result.textContent = '= ' + str + ' ฿'; return; }
+      if (!odoEl || str.length !== odoStr.length) {
+        result.innerHTML = '= <span class="odo" aria-hidden="true"></span> ฿<span class="vh"></span>';
+        odoEl = result.querySelector('.odo');
+        odoEl.innerHTML = str.split('').map(function (ch) {
+          return /\d/.test(ch) ? '<span class="col">' + '0123456789'.split('').map(function (d) { return '<span>' + d + '</span>'; }).join('') + '</span>' : '<span>' + ch + '</span>';
+        }).join('');
+        void odoEl.offsetWidth;
+      }
+      var k = 0;
+      str.split('').forEach(function (ch, i) { var c = odoEl.children[i]; if (c && c.className === 'col') { c.style.transitionDelay = (k++ * 35) + 'ms'; c.style.transform = 'translateY(-' + (+ch * 1.25) + 'em)'; } });
+      result.querySelector('.vh').textContent = str + ' บาท';
+      odoStr = str;
     }
     function applyRate(r, src, date) { rate = r; meta.textContent = '1 ¥ ≈ ' + r.toFixed(3) + ' ฿ · ' + src + (date ? ' (' + date + ')' : ''); render(); }
     try { var c = JSON.parse(store(RATE_KEY) || 'null'); if (c && c.rate) applyRate(c.rate, 'เรทล่าสุดที่บันทึกไว้', c.date); } catch (e) {}

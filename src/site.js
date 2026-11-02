@@ -259,7 +259,7 @@
   // ---- Scroll reveal ----
   (function () {
     if (REDUCE || !('IntersectionObserver' in window)) return;
-    var sel = '.sec-h, .wx, .days, .pass, details.more, #budget .card, #prep .card, .taxi, .phrases, .sos-grid, .tips, .install, .ev';
+    var sel = '.sec-h, .wx, .days, .passw, details.more, #budget .card, #prep .card, .taxi, .phrases, .sos-grid, .tips, .install, .ev';
     var items = $$(sel);
     document.documentElement.classList.add('rv');
     var io = new IntersectionObserver(function (es) {
@@ -275,6 +275,94 @@
     document.addEventListener('daychange', function () {
       $$('.day.active .ev').forEach(function (ev, i) { io.unobserve(ev); ev.classList.remove('in'); ev.style.setProperty('--rd', (i * 0.06) + 's'); void ev.offsetWidth; ev.classList.add('in'); });
     });
+  })();
+
+
+  // ================= Motion set 2 =================
+  // 4 · Flip boarding passes (links inside still work)
+  $$('.passw').forEach(function (w) {
+    function flip() { var on = w.classList.toggle('on'); w.querySelector('.pass-back').setAttribute('aria-hidden', on ? 'false' : 'true'); w.querySelector('.pass').setAttribute('aria-hidden', on ? 'true' : 'false'); }
+    w.addEventListener('click', function (e) { if (e.target.closest('a')) return; flip(); });
+    w.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  });
+
+  // 5 · Timeline line fills as you scroll; dots light up
+  (function () {
+    if (REDUCE) return;
+    var raf = 0;
+    function upd() {
+      raf = 0;
+      var tl = $('.day.active .tl'); if (!tl) return;
+      var r = tl.getBoundingClientRect(), mid = innerHeight * 0.62;
+      var p = Math.max(0, Math.min(1, (mid - r.top - 10) / Math.max(1, r.height - 20)));
+      tl.style.setProperty('--tlp', p.toFixed(3));
+      $$('.ev', tl).forEach(function (ev) { var d = ev.querySelector('.dot'); ev.classList.toggle('lit', d.getBoundingClientRect().top < mid); });
+    }
+    function q() { if (!raf) raf = requestAnimationFrame(upd); }
+    addEventListener('scroll', q, { passive: true }); addEventListener('resize', q);
+    document.addEventListener('daychange', function () { setTimeout(upd, 30); });
+    upd();
+  })();
+
+  // 6 · Budget total counts up, bars grow
+  (function () {
+    var card = $('#budget .btotal'); if (!card) return; card = card.parentNode;
+    var b = $('.btotal b', card), N = +b.getAttribute('data-n');
+    if (REDUCE || !('IntersectionObserver' in window) || !N) return;
+    card.classList.add('bgrow');
+    $$('.bbar i', card).forEach(function (i, k) { i.style.setProperty('--bd', (0.15 + k * 0.12) + 's'); });
+    b.textContent = '0 ฿';
+    new IntersectionObserver(function (es, o) {
+      if (!es[0].isIntersecting) return; o.disconnect();
+      card.classList.add('go');
+      var t0 = performance.now();
+      (function step(t) { var k = Math.min(1, (t - t0) / 1300), e = 1 - Math.pow(1 - k, 3); b.textContent = Math.round(N * e).toLocaleString('en-US') + ' ฿'; if (k < 1) requestAnimationFrame(step); })(t0);
+    }, { threshold: 0.4 }).observe(card);
+  })();
+
+  // 10 · Photo curtain reveal
+  (function () {
+    if (REDUCE || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('open'); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    $$('.day .ph').forEach(function (f) { f.classList.add('cur'); io.observe(f); });
+    document.addEventListener('daychange', function () {
+      $$('.day.active .ph').forEach(function (f) { if (f.classList.contains('open')) return; io.unobserve(f); io.observe(f); });
+    });
+  })();
+
+  // 9 · Fireworks over the hero on special days (departure, Disney, last day) — or tap the title 3×
+  (function () {
+    var c = $('#fw'), x = c && c.getContext && c.getContext('2d'); if (!x || REDUCE) return;
+    var parts = [], run = false, dpr = Math.min(2, window.devicePixelRatio || 1);
+    var COLS = ['#F3DDA2', '#E26871', '#FFFFFF', '#8EC0E2', '#FFB36B', '#E8C877'];
+    function loop() {
+      x.globalCompositeOperation = 'destination-out'; x.fillStyle = 'rgba(0,0,0,.22)'; x.fillRect(0, 0, c.width, c.height);
+      x.globalCompositeOperation = 'lighter';
+      parts = parts.filter(function (p) { return p.l-- > 0; });
+      parts.forEach(function (p) {
+        p.vy += 0.045 * dpr; p.vx *= 0.975; p.vy *= 0.975; p.x += p.vx; p.y += p.vy;
+        x.globalAlpha = Math.min(1, p.l / 40); x.fillStyle = p.c; x.beginPath(); x.arc(p.x, p.y, 1.6 * dpr, 0, 7); x.fill();
+      });
+      x.globalAlpha = 1;
+      if (parts.length) requestAnimationFrame(loop); else { run = false; x.clearRect(0, 0, c.width, c.height); }
+    }
+    function burst(n) {
+      c.width = c.clientWidth * dpr; c.height = c.clientHeight * dpr;
+      for (var b = 0; b < n; b++) (function (b) {
+        setTimeout(function () {
+          var cx = c.width * (0.15 + Math.random() * 0.7), cy = c.height * (0.12 + Math.random() * 0.38), col = COLS[(Math.random() * COLS.length) | 0], m = 56;
+          for (var i = 0; i < m; i++) { var a = Math.PI * 2 * i / m, s = (1.6 + Math.random() * 3) * dpr; parts.push({ x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s, l: 55 + Math.random() * 35, c: col }); }
+          if (!run) { run = true; loop(); }
+        }, b * 420);
+      })(b);
+    }
+    var today = shNow().date, dis = $('.day .tag.gold') && $('.day .tag.gold').closest('.day');
+    var special = [TRIP_START, TRIP_END, dis ? dis.getAttribute('data-date') : ''];
+    if (special.indexOf(today) >= 0 || /[?&]fw=1/.test(location.search)) setTimeout(function () { burst(5); }, 900);
+    var taps = 0, tt = 0, h = $('#hero-title');
+    if (h) h.addEventListener('click', function () { taps++; clearTimeout(tt); tt = setTimeout(function () { taps = 0; }, 600); if (taps >= 3) { taps = 0; burst(4); } });
   })();
 
   // ---- Install-as-app card ----
@@ -395,8 +483,38 @@
   // ---- Lightbox ----
   (function () {
     var ov = $('#lightbox-overlay'), im = $('#lightbox-img');
-    $$('.thumb').forEach(function (img) { img.addEventListener('click', function () { im.src = img.src; im.alt = img.alt; ov.classList.add('active'); }); });
-    function close() { ov.classList.remove('active'); im.src = ''; }
+    var from = null, busy = false;
+    // Transform that puts the big image exactly over the thumbnail (cover-cropped via clip-path)
+    function overThumb(t) {
+      var F = im.getBoundingClientRect(), T = t.getBoundingClientRect();
+      if (!F.width || !T.width) return null;
+      var k = Math.max(T.width / F.width, T.height / F.height);
+      var vw = T.width / k, vh = T.height / k, ix = (F.width - vw) / 2, iy = (F.height - vh) / 2, r = 14 / k;
+      var dx = (T.left + T.width / 2) - (F.left + F.width / 2), dy = (T.top + T.height / 2) - (F.top + F.height / 2);
+      return { tf: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', cp: 'inset(' + iy + 'px ' + ix + 'px round ' + r + 'px)' };
+    }
+    function set(tf, cp, anim) { im.style.transition = anim ? '' : 'none'; im.style.transform = tf; im.style.clipPath = im.style.webkitClipPath = cp; }
+    $$('.thumb').forEach(function (img) { img.addEventListener('click', function () {
+      if (busy) return;
+      var src = img.currentSrc || img.src, big = src.replace(/-640\.webp$/, '-1280.webp');
+      im.alt = img.alt; from = img;
+      if (REDUCE) { im.src = big; ov.classList.add('active'); return; }
+      im.src = src; ov.classList.add('active', 'zoom');
+      var go = function () {
+        var o = overThumb(img); if (!o) { ov.classList.add('open'); return; }
+        set(o.tf, o.cp, false); img.style.visibility = 'hidden'; void im.offsetWidth;
+        requestAnimationFrame(function () { ov.classList.add('open'); set('none', 'inset(0px 0px round 12px)', true); });
+        if (big !== src) { var pre = new Image(); pre.onload = function () { if (from === img) im.src = big; }; pre.src = big; }
+      };
+      if (im.complete && im.naturalWidth) go(); else im.onload = function () { im.onload = null; go(); };
+    }); });
+    function close() {
+      if (!ov.classList.contains('active') || busy) return;
+      var t = from, o = (!REDUCE && t && ov.classList.contains('zoom')) ? overThumb(t) : null;
+      function done() { ov.classList.remove('active', 'zoom', 'open'); set('', '', false); im.removeAttribute('src'); if (t) t.style.visibility = ''; from = null; busy = false; }
+      if (!o) { done(); return; }
+      busy = true; ov.classList.remove('open'); set(o.tf, o.cp, true); setTimeout(done, 460);
+    }
     ov.addEventListener('click', function (e) { if (e.target === ov || e.target.id === 'lightbox-close') close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
   })();
@@ -412,8 +530,24 @@
     var input = $('#cny-input'), result = $('#thb-result'), meta = $('#currency-meta'), RATE_KEY = 'hkTripCnyThbRate', rate = null;
     function render() {
       var v = parseFloat(input.value);
-      if (isNaN(v) || rate === null) { result.textContent = '= 0.00 ฿'; return; }
-      result.textContent = '= ' + (v * rate).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ฿';
+      var str = (isNaN(v) || rate === null) ? '0.00' : (v * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      odo(str);
+    }
+    var odoEl = null, odoStr = '';
+    function odo(str) {
+      if (REDUCE) { result.textContent = '= ' + str + ' ฿'; return; }
+      if (!odoEl || str.length !== odoStr.length) {
+        result.innerHTML = '= <span class="odo" aria-hidden="true"></span> ฿<span class="vh"></span>';
+        odoEl = result.querySelector('.odo');
+        odoEl.innerHTML = str.split('').map(function (ch) {
+          return /\d/.test(ch) ? '<span class="col">' + '0123456789'.split('').map(function (d) { return '<span>' + d + '</span>'; }).join('') + '</span>' : '<span>' + ch + '</span>';
+        }).join('');
+        void odoEl.offsetWidth;
+      }
+      var k = 0;
+      str.split('').forEach(function (ch, i) { var c = odoEl.children[i]; if (c && c.className === 'col') { c.style.transitionDelay = (k++ * 35) + 'ms'; c.style.transform = 'translateY(-' + (+ch * 1.25) + 'em)'; } });
+      result.querySelector('.vh').textContent = str + ' บาท';
+      odoStr = str;
     }
     function applyRate(r, src, date) { rate = r; meta.textContent = '1 ¥ ≈ ' + r.toFixed(3) + ' ฿ · ' + src + (date ? ' (' + date + ')' : ''); render(); }
     try { var c = JSON.parse(store(RATE_KEY) || 'null'); if (c && c.rate) applyRate(c.rate, 'เรทล่าสุดที่บันทึกไว้', c.date); } catch (e) {}

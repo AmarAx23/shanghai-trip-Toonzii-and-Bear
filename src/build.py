@@ -235,7 +235,7 @@ def event_html(e):
         img = (f'<figure class="ph"><img class="thumb" src="img/hd/{k}-640.webp" srcset="img/hd/{k}-640.webp 640w, img/hd/{k}-1280.webp 1280w" '
                f'sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="{E(e["title"])}" loading="lazy" decoding="async">{credit_html(k)}</figure>')
     else:
-        img = (f'<img class="thumb" src="img/{e["img"]}.jpg" alt="{E(e["title"])}" loading="lazy" decoding="async">' if e["img"] else "")
+        img = (f'<figure class="ph"><img class="thumb" src="img/{e["img"]}.jpg" alt="{E(e["title"])}" loading="lazy" decoding="async"></figure>' if e["img"] else "")
     eid = f' id="{e["eid"]}"' if e.get("eid") else ""
     return (f'<li class="ev"{eid} data-t="{e["data_t"]}" style="--dot:{KIND_DOT[e["kind"]]}">'
             f'<time>{E(e["t"])}</time><span class="dot" aria-hidden="true"></span>'
@@ -258,7 +258,14 @@ def day_html(d):
       <div class="note"><span aria-hidden="true">⭐</span><span>{E(d["note"])}</span></div>
     </section>'''
 
-tabs = "".join(f'<button type="button" class="dtab" data-day="{d["n"]}" aria-controls="day-{d["n"]}"><b>{d["n"]}</b><span>{d["dow"]} {d["iso"][-2:].lstrip("0")}</span></button>' for d in DAYS)
+LANTERN_SVG = ('<svg viewBox="0 0 40 92" aria-hidden="true"><line x1="20" y1="0" x2="20" y2="18" stroke="#E8C877" stroke-width="2"/>'
+  '<rect x="12" y="16" width="16" height="6" rx="2" fill="#E8C877"/><ellipse cx="20" cy="44" rx="17" ry="22" fill="#C2303A"/>'
+  '<ellipse class="glow" cx="20" cy="44" rx="12" ry="16" fill="#FFB36B"/><g stroke="#8A1A22" stroke-width="1.4" fill="none" opacity=".6">'
+  '<ellipse cx="20" cy="44" rx="10" ry="22"/><ellipse cx="20" cy="44" rx="4" ry="22"/></g><rect x="12" y="64" width="16" height="5" rx="2" fill="#E8C877"/>'
+  '<g stroke="#E8C877" stroke-width="1.6"><line x1="17" y1="69" x2="16" y2="86"/><line x1="20" y1="69" x2="20" y2="89"/><line x1="23" y1="69" x2="24" y2="86"/></g></svg>')
+LANTERNS = '<div class="lanterns" aria-hidden="true">' + "".join(f'<span class="lan l{i}">{LANTERN_SVG}</span>' for i in range(3)) + '</div>'
+
+tabs = tabs = "".join(f'<button type="button" class="dtab" data-day="{d["n"]}" aria-controls="day-{d["n"]}"><b>{d["n"]}</b><span>{d["dow"]} {d["iso"][-2:].lstrip("0")}</span></button>' for d in DAYS)
 days = "".join(day_html(d) for d in DAYS)
 
 bmax = max(b[1] for b in BUDGET)
@@ -312,10 +319,12 @@ page = f'''<!DOCTYPE html>
 <main class="wrap">
 
   <header class="hero" id="top">
+    <canvas class="fw" id="fw" aria-hidden="true"></canvas>
+    {LANTERNS}
     <button class="snow-btn" id="snow-btn" type="button" aria-pressed="true" aria-label="ปิดเปิดหิมะ">❄️</button>
     <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="สลับโหมดมืด"><span class="tt-stars">✦ ✧ ✦</span><span class="tt-cloud">☁️</span><span class="tt-knob"></span></button>
     <div class="eyebrow">SHANGHAI · DECEMBER 2026</div>
-    <h1>เซี่ยงไฮ้ 8 วัน 7 คืน</h1>
+    <h1 id="hero-title">เซี่ยงไฮ้ 8 วัน 7 คืน</h1>
     <p class="sub">5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland</p>
     <div class="cd" id="cd" role="timer" aria-label="นับถอยหลังถึงวันเดินทาง"></div>
     <p class="cd-msg" id="cd-msg"></p>
@@ -352,6 +361,7 @@ page = f'''<!DOCTYPE html>
 
   <section class="sec" id="flights" aria-labelledby="fl-h">
     <div class="sec-h"><h2 id="fl-h">✈️ ตั๋วเครื่องบิน Spring Airlines</h2></div>
+    <div class="passw" tabindex="0" role="button" aria-label="พลิกตั๋วดูรายละเอียด"><div class="pass-in">
     <div class="pass">
       <div class="pm">
         <span class="tag">ขาไป · เสาร์ 5 ธ.ค. 2026</span>
@@ -359,8 +369,11 @@ page = f'''<!DOCTYPE html>
         <div class="times"><span>16:45</span><span>22:05</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a></div>
       </div>
-      <div class="stub"><small>FLIGHT</small><b>9C7284</b></div>
-    </div>
+      <div class="stub"><small>FLIGHT</small><b>9C7284</b><span class="flip-hint">แตะพลิก ↻</span></div>
+      </div>
+      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag">9C7284 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี กินก่อนขึ้นหรือซื้อบนเครื่อง</li><li><b>🛬 ถึง PVG</b>22:05 เวลาจีน · ไปที่พักด้วย Didi ~1 ชม.</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
+    </div></div>
+    <div class="passw back" tabindex="0" role="button" aria-label="พลิกตั๋วดูรายละเอียด"><div class="pass-in">
     <div class="pass back">
       <div class="pm">
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
@@ -368,8 +381,10 @@ page = f'''<!DOCTYPE html>
         <div class="times"><span>17:00</span><span>20:45</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a></div>
       </div>
-      <div class="stub"><small>FLIGHT</small><b>9C7289</b></div>
-    </div>
+      <div class="stub"><small>FLIGHT</small><b>9C7289</b><span class="flip-hint">แตะพลิก ↻</span></div>
+      </div>
+      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag gold">9C7289 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>⏰ ออกจากที่พัก</b>ประมาณ 13:00 ให้ถึงก่อนบิน 2–3 ชม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี · ชั่งกระเป๋าถือเข้ม</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
+    </div></div>
     <details class="card more">
       <summary>กระเป๋า เวลาออกจากที่พัก และวิธีเช็กไฟลท์</summary>
       <ul class="facts">
@@ -383,7 +398,7 @@ page = f'''<!DOCTYPE html>
   <section class="sec" id="budget" aria-labelledby="bd-h">
     <div class="sec-h"><h2 id="bd-h">💰 งบประมาณต่อคน</h2></div>
     <div class="card">
-      <div class="btotal"><span>รวมทั้งหมด</span><b>{TOTAL:,} ฿</b></div>
+      <div class="btotal"><span>รวมทั้งหมด</span><b data-n="{TOTAL}">{TOTAL:,} ฿</b></div>
       <ul class="blist">{budget_rows}</ul>
     </div>
     <div class="card fx">
