@@ -490,6 +490,19 @@
   .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; }
   .pst-grid figure { margin: 0; animation: trIn .4s ease both; }
   .pst-grid img { width: 100%; display: block; border-radius: 14px; box-shadow: 0 6px 18px rgba(15,58,84,.16); background: var(--card); }
+  .pst-th { display: block; width: 100%; padding: 0; border: none; background: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
+  .pst-th:active img { transform: scale(.98); }
+  .pst-grid img { transition: transform .15s; }
+  .pv { position: fixed; inset: 0; z-index: 5; background: #0D1013; display: flex; flex-direction: column; animation: trIn .25s ease; }
+  .pv[hidden] { display: none; }
+  .pv-bar { flex: none; display: flex; align-items: center; gap: 8px; padding: calc(8px + env(safe-area-inset-top)) 12px 8px; color: #fff; }
+  .pv-bar button { font: inherit; font-size: 28px; line-height: 1; width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; }
+  .pv-bar button:disabled { opacity: .3; }
+  .pv-bar span { flex: 1; text-align: center; font-size: 14px; font-weight: 700; }
+  .pv-bar .pv-x { font-size: 30px; }
+  .pv-sc { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; padding: 0 8px calc(16px + env(safe-area-inset-bottom)); touch-action: pan-y pinch-zoom; }
+  .pv-sc img { display: block; width: 100%; max-width: 720px; margin: 0 auto; border-radius: 12px; transition: transform .25s ease, opacity .25s ease; }
+  .pv-sc img.out-l { transform: translateX(-30%); opacity: 0; } .pv-sc img.out-r { transform: translateX(30%); opacity: 0; }
   .pst-grid figcaption { font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }

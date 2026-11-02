@@ -733,7 +733,7 @@
   });
   // ---- Poster summaries (one picture per day, drawn on canvas) ----
   (function () {
-    var ov = $('#pst'), grid = $('#pst-grid'), stEl = $('#pst-st'), saveB = $('#pst-save'), files = [], busy = false;
+    var ov = $('#pst'), grid = $('#pst-grid'), stEl = $('#pst-st'), saveB = $('#pst-save'), files = [], shots = [], busy = false;
     var W = 1080, RED = '#B0242E', NAVY = '#0F3A54', GOLD = '#C79A3F', CREAM = '#FBF4E4', INK = '#1B2730', MUTED = '#6B7680';
     var HEAD = "600 {s}px Kanit, 'Noto Sans Thai', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif", BODY = "{w} {s}px 'Noto Sans Thai', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif", LANG = 'th';
     var WD = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -886,8 +886,8 @@
     }
     function addFig(blob, name, cap) {
       var url = URL.createObjectURL(blob), f = document.createElement('figure');
-      f.innerHTML = '<a href="' + url + '" download="' + name + '"><img alt="' + cap + '" src="' + url + '"></a><figcaption>' + cap + '</figcaption>';
-      grid.appendChild(f); files.push(new File([blob], name, { type: 'image/jpeg' }));
+      f.innerHTML = '<button type="button" class="pst-th" data-i="' + shots.length + '" aria-label="ขยายภาพ ' + cap + '"><img alt="' + cap + '" src="' + url + '"></button><figcaption>' + cap + '</figcaption>';
+      grid.appendChild(f); files.push(new File([blob], name, { type: 'image/jpeg' })); shots.push({ url: url, name: name, cap: cap });
     }
     function generate() {
       if (busy || files.length) return; busy = true; grid.innerHTML = ''; saveB.disabled = true;
@@ -903,23 +903,49 @@
         return chain;
       }).then(function () {
         busy = false; if (myLang !== LANG) { generate(); return; } saveB.disabled = false;
-        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะค้างที่รูปแล้วเลือก "บันทึกลงรูปภาพ" หรือกดบันทึกทั้งหมด';
+        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะที่ภาพเพื่อดูขยาย ปัดซ้าย-ขวาดูภาพถัดไป';
       }).catch(function () { busy = false; stEl.textContent = 'ทำภาพไม่สำเร็จ ลองใหม่อีกครั้ง'; });
     }
     function open() { ov.hidden = false; document.documentElement.style.overflow = 'hidden'; generate(); }
-    function close() { ov.hidden = true; document.documentElement.style.overflow = ''; }
+    function close() { pv.hidden = true; ov.hidden = true; document.documentElement.style.overflow = ''; }
     $$('.pst-lang button').forEach(function (b) { b.addEventListener('click', function () {
       var l = b.getAttribute('data-lang'); if (l === LANG) return; LANG = l;
       $$('.pst-lang button').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
-      files = []; grid.innerHTML = ''; saveB.disabled = true; if (!busy) generate();
+      files = []; shots = []; grid.innerHTML = ''; saveB.disabled = true; if (!busy) generate();
     }); });
     $('#print-btn').addEventListener('click', open);
     $('#pst-x').addEventListener('click', close);
     $('#pst-print').addEventListener('click', function () { close(); setTimeout(function () { window.print(); }, 100); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) close(); });
+    // Full-screen viewer: tap a picture, scroll to read, swipe or ‹ › for the next one
+    var pv = $('#pv'), pvImg = $('#pv-img'), pvSc = $('#pv-sc'), at = 0;
+    function show(i, dir) {
+      if (i < 0 || i >= shots.length) return;
+      at = i; $('#pv-n').textContent = (i + 1) + ' / ' + shots.length + ' · ' + shots[i].cap;
+      $('#pv-prev').disabled = i === 0; $('#pv-next').disabled = i === shots.length - 1;
+      if (dir && !REDUCE) { pvImg.className = dir > 0 ? 'out-l' : 'out-r'; setTimeout(function () { pvImg.src = shots[i].url; pvImg.alt = shots[i].cap; pvSc.scrollTop = 0; pvImg.className = dir > 0 ? 'out-r' : 'out-l'; void pvImg.offsetWidth; pvImg.className = ''; }, 180); }
+      else { pvImg.src = shots[i].url; pvImg.alt = shots[i].cap; pvSc.scrollTop = 0; }
+    }
+    grid.addEventListener('click', function (e) { var b = e.target.closest('.pst-th'); if (!b) return; pv.hidden = false; show(+b.getAttribute('data-i')); });
+    $('#pv-x').addEventListener('click', function () { pv.hidden = true; });
+    $('#pv-prev').addEventListener('click', function () { show(at - 1, -1); });
+    $('#pv-next').addEventListener('click', function () { show(at + 1, 1); });
+    (function () {
+      var sx = 0, sy = 0, multi = false;
+      pvSc.addEventListener('touchstart', function (e) { multi = e.touches.length > 1; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      pvSc.addEventListener('touchend', function (e) {
+        if (multi || (window.visualViewport && visualViewport.scale > 1.05)) return;
+        var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        show(at + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+      }, { passive: true });
+    })();
+    document.addEventListener('keydown', function (e) {
+      if (!pv.hidden) { if (e.key === 'Escape') pv.hidden = true; if (e.key === 'ArrowRight') show(at + 1, 1); if (e.key === 'ArrowLeft') show(at - 1, -1); return; }
+      if (e.key === 'Escape' && !ov.hidden) close();
+    });
     saveB.addEventListener('click', function () {
       if (navigator.canShare && navigator.canShare({ files: files })) { navigator.share({ files: files, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {}); return; }
-      $$('a[download]', grid).forEach(function (a, i) { setTimeout(function () { a.click(); }, i * 350); });
+      shots.forEach(function (sh, i) { setTimeout(function () { var a = document.createElement('a'); a.href = sh.url; a.download = sh.name; document.body.appendChild(a); a.click(); a.remove(); }, i * 350); });
     });
     window.__posters = { open: open };
   })();
