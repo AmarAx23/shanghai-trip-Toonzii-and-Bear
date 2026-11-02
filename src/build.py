@@ -154,45 +154,6 @@ TIPS = [("🛂", "วีซ่า", "พาสปอร์ตไทยเข้�
 
 KIND_DOT = {"fly": "var(--red)", "stay": "var(--gold)", "food": "#D86A2B", "see": "var(--navy-2)", "shop": "#7F77DD", "go": "var(--muted)"}
 
-# ---- Icons: one line-icon set (Lucide, icons/*.svg) instead of emoji, so every device looks the same ----
-import re as _re, glob as _glob
-EMOJI_ICON = {
- "✈": "plane", "🌙": "moon", "⛅": "cloud-sun", "🌉": "building-2", "☁": "cloud", "🌳": "trees", "🌥": "cloud",
- "🏮": "landmark", "☀": "sun", "🏰": "castle", "🚤": "sailboat", "🌤": "cloud-sun", "🙏": "landmark",
- "🍎": "map-pin", "🧭": "navigation", "📍": "map-pin", "🚕": "car-taxi-front", "🍜": "utensils", "🏨": "hotel",
- "🚇": "train-front", "📱": "smartphone", "🛡": "shield-check", "💳": "credit-card", "🛂": "book-user",
- "🔋": "battery-charging", "💊": "pill", "🔌": "plug", "🧣": "shirt", "📄": "file-text", "🌐": "globe",
- "👟": "footprints", "💴": "banknote", "💧": "droplet", "🤢": "pill-bottle", "⚖": "luggage", "☂": "umbrella",
- "🗺": "map", "👮": "siren", "🚑": "ambulance", "🚒": "flame", "🇹🇭": "landmark", "🏥": "hospital", "🧥": "shirt",
- "🎡": "castle", "🎄": "tree-pine", "⭐": "lightbulb", "🔊": "volume-2", "❄": "snowflake", "💰": "wallet",
- "🔗": "share-2", "🖨": "printer", "📲": "download", "🗓": "calendar-days", "🛫": "plane-takeoff",
- "🛬": "plane-landing", "🧳": "luggage", "💱": "arrow-left-right", "🎒": "backpack", "💾": "download",
- "🆘": "life-buoy", "🦌": "sparkles", "🎉": "party-popper", "✅": "circle-check", "✨": "sparkles",
-}
-_EMO_RE = _re.compile("(" + "|".join(sorted(map(_re.escape, EMOJI_ICON), key=len, reverse=True)) + ")\ufe0f?")
-def I(name, cls=""):
-    return f'<svg class="ic{(" " + cls) if cls else ""}" aria-hidden="true"><use href="#i-{name}"/></svg>'
-def iconize(text_html):
-    """Swap emoji and [[icon-name]] tokens for icons, only in text (never inside tags/attributes)."""
-    parts = _re.split(r"(<[^>]+>)", text_html)
-    for k, part in enumerate(parts):
-        if part.startswith("<"): continue
-        part = _re.sub(r"\[\[([a-z0-9-]+)\]\]", lambda m: I(m.group(1)), part)
-        parts[k] = _EMO_RE.sub(lambda m: I(EMOJI_ICON[m.group(1)]), part)
-    return "".join(parts)
-def icon_sprite():
-    out = []
-    for f in sorted(_glob.glob(_osroot.path.join(_ROOT, "icons", "*.svg"))):
-        body = open(f, encoding="utf-8").read()
-        inner = body[body.index(">", body.index("<svg")) + 1: body.rindex("</svg>")]
-        out.append(f'<symbol class="ln" id="i-{_osroot.path.basename(f)[:-4]}" viewBox="0 0 24 24">{inner.strip()}</symbol>')
-    # the trip mascot (same bear as the app icon), full colour
-    bear = open(_osroot.path.join(_HERE, "bear.svgfrag"), encoding="utf-8").read()
-    out.append(f'<symbol id="bear" viewBox="86 66 340 430">{bear}</symbol>')
-    return ('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'
-            '<style>symbol.ln{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}</style>'
-            + "".join(out) + "</defs></svg>")
-
 def links_html(links):
     if not links: return ""
     out = []
@@ -289,7 +250,7 @@ def day_html(d):
     <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" aria-label="วันที่ {d["n"]}">
       <div class="dayhead">
         <div class="num">{d["n"]}</div>
-        <div class="dh-txt"><h3>{E(d["title"])}{disney}</h3><p>{E(d["date"])} · <span class="wxb" data-date="{d["iso"]}" data-ic="{EMOJI_ICON.get(d["wx"].split(" ")[0].replace(chr(0xfe0f), ""), "cloud")}">{I(EMOJI_ICON.get(d["wx"].split(" ")[0].replace(chr(0xfe0f), ""), "cloud"))}<span class="wxt">{E(d["wx"].split(" ", 1)[1])}</span></span></p></div>
+        <div class="dh-txt"><h3>{E(d["title"])}{disney}</h3><p>{E(d["date"])} · <span class="wxb" data-date="{d["iso"]}">{E(d["wx"])}</span></p></div>
         <div class="dicon" aria-hidden="true">{d["icon"]}</div>
       </div>
       {mp}
@@ -341,7 +302,7 @@ page = f'''<!DOCTYPE html>
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <title>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026</title>
 <script>try{{var t=localStorage.getItem('hkTripTheme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark')}}catch(e){{}}</script>
-<script>if(navigator.standalone)document.documentElement.classList.add('ios-app');try{{if(sessionStorage.getItem('shSplash')||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('nosplash');sessionStorage.setItem('shSplash','1')}}catch(e){{}}</script>
+<script>if(navigator.standalone)document.documentElement.classList.add('ios-app')</script>
 <style>
 {CSS}
 </style>
@@ -350,10 +311,7 @@ page = f'''<!DOCTYPE html>
 <canvas id="snow" aria-hidden="true"></canvas>
 <main class="wrap">
 
-<div class="splash" id="splash" aria-hidden="true"><svg class="splash-bear"><use href="#bear"/></svg><div class="splash-t">กำลังเตรียมทริป…</div></div>
-<canvas id="confetti" aria-hidden="true"></canvas>
   <header class="hero" id="top">
-    <button type="button" class="hero-bear" id="hero-bear" aria-label="แตะเพื่อคุยกับน้องหมี"><svg><use href="#bear"/></svg></button>
     <button class="snow-btn" id="snow-btn" type="button" aria-pressed="true" aria-label="ปิดเปิดหิมะ">❄️</button>
     <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="สลับโหมดมืด"><span class="tt-stars">✦ ✧ ✦</span><span class="tt-cloud">☁️</span><span class="tt-knob"></span></button>
     <div class="eyebrow">SHANGHAI · DECEMBER 2026</div>
@@ -364,7 +322,7 @@ page = f'''<!DOCTYPE html>
     <div class="chips"><span class="chip">🏨 Atour X Huaihai Rd</span><span class="chip">💰 {TOTAL:,} ฿/คน</span><span class="chip">🚇 Metro + Didi</span></div>
     <div class="hero-actions">
       <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
-      <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">[[qr-code]]</span>QR</button>
+      <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
       <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖨️</span>พิมพ์</button>
     </div>
   </header>
@@ -417,7 +375,7 @@ page = f'''<!DOCTYPE html>
       <ul class="facts">
         <li><b>🧳 กระเป๋า (ต่อคน ทั้งไปและกลับ)</b>ถือขึ้นเครื่อง 1 ชิ้น ไม่เกิน 10 กก. ขนาดไม่เกิน 55×40×20 ซม. · โหลดรวม 20 กก. ขนาดแต่ละชิ้นไม่เกิน 100×60×40 ซม. · Spring Airlines ชั่งกระเป๋าถือค่อนข้างเข้ม และไม่มีอาหารฟรีบนเครื่อง</li>
         <li><b>⏰ ขากลับ</b>ออกจากที่พักไปสนามบินประมาณ 13:00 (นั่งรถ ~1 ชม.) ให้ถึงก่อนบิน 2–3 ชม.</li>
-        <li><b>[[plane]] เช็กไฟลท์บน iPhone</b>เปิดแอป Notes หรือ iMessage พิมพ์ <b class="mono">Fly 9C7284</b> หรือ <b class="mono">Fly 9C7289</b> แล้วกดค้างที่รหัสที่มีเส้นใต้ เลือก Preview Flight</li>
+        <li><b>📱 เช็กไฟลท์บน iPhone</b>เปิดแอป Notes หรือ iMessage พิมพ์ <b class="mono">Fly 9C7284</b> หรือ <b class="mono">Fly 9C7289</b> แล้วกดค้างที่รหัสที่มีเส้นใต้ เลือก Preview Flight</li>
       </ul>
     </details>
   </section>
@@ -443,7 +401,6 @@ page = f'''<!DOCTYPE html>
     <div class="sec-h"><h2 id="pk-h">🎒 สิ่งที่ต้องเตรียม</h2><span class="sec-note" id="pack-count">0/{len(PACK)}</span></div>
     <div class="card">
       <div class="pack-bar"><i id="pack-bar-fill"></i></div>
-      <div class="pack-done" id="pack-done" hidden><svg class="pd-bear" aria-hidden="true"><use href="#bear"/></svg><div><b>เตรียมของครบแล้ว!</b><span>น้องหมีพร้อมไปเซี่ยงไฮ้แล้ว</span></div></div>
       <ul class="pack">{pack_rows}</ul>
     </div>
     <div class="card offmap" id="offmap" data-tiles="{E(json.dumps(ALL_TILES))}">
@@ -477,7 +434,7 @@ page = f'''<!DOCTYPE html>
     <div class="tips">{tips_rows}</div>
   </section>
 
-  <footer class="foot"><svg class="foot-bear" aria-hidden="true"><use href="#bear"/></svg>🎄 Merry Christmas & Happy Shanghai Trip 🦌
+  <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
     <small class="ver">อัปเดตล่าสุด {BUILD_TH}</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: {E(_CRED["hero"][5])} · <a href="{E(commons_page(_CRED["hero"][3]))}" target="_blank" rel="noopener">{E(_CRED["hero"][4])}</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
@@ -495,7 +452,7 @@ page = f'''<!DOCTYPE html>
 <div class="qr-modal-overlay" id="qr-modal-overlay"></div>
 <div class="qr-modal" id="qr-modal" role="dialog" aria-label="QR Code">
   <button type="button" class="qr-modal-close" id="qr-modal-close" aria-label="ปิด">&times;</button>
-  <div class="qr-modal-title">[[qr-code]] สแกนเปิดแผนทริปนี้</div>
+  <div class="qr-modal-title">📱 สแกนเปิดแผนทริปนี้</div>
   <div class="qr-modal-sub">ให้เพื่อนร่วมทริปสแกนเพื่อเปิดหน้านี้</div>
   <img class="qr-modal-img" id="qr-modal-img" src="" alt="QR Code">
   <div class="qr-modal-url" id="qr-modal-url"></div>
@@ -508,7 +465,5 @@ page = f'''<!DOCTYPE html>
 </body>
 </html>
 '''
-_b = page.index("<body>") + len("<body>"); _s = page.index("<script>", _b)
-page = page[:_b] + "\n" + icon_sprite() + iconize(page[_b:_s]) + page[_s:]
 open(OUT, "w", encoding="utf-8").write(page)
 print("written", len(page))

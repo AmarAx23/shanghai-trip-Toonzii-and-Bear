@@ -68,7 +68,6 @@
   showDay(tn || 1, false);
   setInterval(todayMode, 60000);
 
-  function IC(name, cls) { return '<svg class="ic' + (cls ? ' ' + cls : '') + '" aria-hidden="true"><use href="#i-' + name + '"/></svg>'; }
   var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---- Countdown (flip board) ----
@@ -94,7 +93,7 @@
       if (diff <= 0) {
         cd.style.display = 'none';
         var n = dayIndexFor(shNow().date);
-        msg.innerHTML = n ? IC('tree-pine') + ' วันที่ ' + n + ' ของทริป ขอให้เที่ยวสนุก!' : (new Date() < new Date(TRIP_END + 'T23:59:00+08:00') ? IC('plane') + ' ออกเดินทางแล้ว ขอให้เที่ยวสนุก!' : IC('party-popper') + ' จบทริปแล้ว ขอบคุณที่เที่ยวด้วยกัน');
+        msg.textContent = n ? '🎄 วันที่ ' + n + ' ของทริป ขอให้เที่ยวสนุก!' : (new Date() < new Date(TRIP_END + 'T23:59:00+08:00') ? '✈️ ออกเดินทางแล้ว ขอให้เที่ยวสนุก!' : '🎉 จบทริปแล้ว ขอบคุณที่เที่ยวด้วยกัน');
         return;
       }
       var v = [Math.min(99, Math.floor(diff / 864e5)), Math.floor(diff % 864e5 / 36e5), Math.floor(diff % 36e5 / 6e4), Math.floor(diff % 6e4 / 1e3)];
@@ -155,8 +154,7 @@
         var grp = el('g', { 'class': 'pin' + (p.hotel ? ' home' : ''), transform: 'translate(' + xy[i][0].toFixed(1) + ' ' + xy[i][1].toFixed(1) + ')' }, svg);
         grp.style.animationDelay = (REDUCE ? 0 : 0.15 + i * 0.12) + 's';
         el('circle', { r: p.hotel ? 12 : 11 }, grp);
-        if (p.hotel) el('use', { href: '#i-hotel', x: -7, y: -7, width: 14, height: 14, 'class': 'hic' }, grp);
-        else { var tx = el('text', {}, grp); tx.textContent = String(++n); }
+        var tx = el('text', {}, grp); tx.textContent = p.hotel ? '🏨' : String(++n);
         if (!p.hotel) { var tt = el('title', {}, grp); tt.textContent = p.t + ' ' + p.name; grp.addEventListener('click', function () { goTo(p.id); }); }
       });
     };
@@ -194,7 +192,7 @@
     }
     function fallback(fig, why) {
       fig.classList.remove('real');
-      var n = fig.querySelector('.mnote'); if (n) n.innerHTML = 'แผนผังคร่าว ๆ (' + why + ') · ' + IC('hotel') + ' = ที่พัก';
+      var n = fig.querySelector('.mnote'); if (n) n.textContent = 'แผนผังคร่าว ๆ (' + why + ') · 🏨 = ที่พัก';
       drawMap(fig);
     }
     function build(fig) {
@@ -222,7 +220,7 @@
       var n = 0, seenHotel = false;
       pts.forEach(function (p, k) {
         if (p.hotel) { if (seenHotel) return; seenHotel = true; }
-        var label = p.hotel ? IC('hotel') : String(++n);
+        var label = p.hotel ? '🏨' : String(++n);
         var icon = L.divIcon({ className: '', html: '<div class="lpin' + (p.hotel ? ' home' : '') + '" style="animation-delay:' + (REDUCE ? 0 : 0.2 + k * 0.12) + 's">' + label + '</div>', iconSize: p.hotel ? [28, 28] : [24, 24], iconAnchor: p.hotel ? [14, 14] : [12, 12] });
         var m = L.marker([p.lat, p.lng], { icon: icon, title: p.hotel ? 'ที่พัก' : p.t + ' ' + p.name, keyboard: true }).addTo(map);
         if (!p.hotel) m.on('click', function () { goTo(p.id); });
@@ -370,12 +368,12 @@
   (function () {
     var wx = $('#wx'), note = $('#wx-note');
     var DOW = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
-    function icon(c) { return c <= 1 ? 'sun' : c <= 3 ? 'cloud-sun' : c <= 48 ? 'cloud-fog' : c <= 57 ? 'cloud-drizzle' : c <= 67 ? 'cloud-rain' : c <= 77 ? 'cloud-snow' : c <= 82 ? 'cloud-rain' : 'cloud-lightning'; }
+    function icon(c) { return c <= 1 ? '☀️' : c <= 3 ? '⛅' : c <= 48 ? '🌫️' : c <= 57 ? '🌦️' : c <= 67 ? '🌧️' : c <= 77 ? '🌨️' : c <= 82 ? '🌦️' : '⛈️'; }
     function label(iso) { var d = new Date(iso + 'T00:00:00Z'); return DOW[d.getUTCDay()] + ' ' + d.getUTCDate(); }
     // fallback: averages from the day headers
     wx.innerHTML = $$('.wxb').map(function (b) {
-      var tmp = (b.querySelector('.wxt') || b).textContent.replace('กลางคืน', '').trim();
-      return '<div class="trip"><div class="d">' + label(b.getAttribute('data-date')) + '</div><div class="i">' + IC(b.getAttribute('data-ic') || 'cloud') + '</div><div class="t">' + tmp + '</div></div>';
+      var t = b.textContent, ic = t.split(' ')[0], tmp = t.replace(/^\S+\s*/, '').replace('กลางคืน', '').trim();
+      return '<div class="trip"><div class="d">' + label(b.getAttribute('data-date')) + '</div><div class="i">' + ic + '</div><div class="t">' + tmp + '</div></div>';
     }).join('');
     var today = shNow().date;
     var daysToTrip = (Date.parse(TRIP_START) - Date.parse(today)) / 864e5;
@@ -387,8 +385,8 @@
       wx.innerHTML = d.time.map(function (t, i) {
         var hi = Math.round(d.temperature_2m_max[i]), lo = Math.round(d.temperature_2m_min[i]), ic = icon(d.weathercode[i]);
         var trip = t >= TRIP_START && t <= TRIP_END;
-        if (trip) $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.setAttribute('data-ic', ic); b.innerHTML = IC(ic) + '<span class="wxt">' + lo + '–' + hi + '°C (พยากรณ์)</span>'; });
-        return '<div' + (trip ? ' class="trip"' : '') + '><div class="d">' + label(t) + '</div><div class="i">' + IC(ic) + '</div><div class="t">' + hi + '° <small>' + lo + '°</small></div></div>';
+        if (trip) $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.textContent = ic + ' ' + lo + '–' + hi + '°C (พยากรณ์)'; });
+        return '<div' + (trip ? ' class="trip"' : '') + '><div class="d">' + label(t) + '</div><div class="i">' + ic + '</div><div class="t">' + hi + '° <small>' + lo + '°</small></div></div>';
       }).join('');
       note.textContent = inRange ? 'พยากรณ์จริงช่วงทริป' : 'พยากรณ์ 7 วันข้างหน้า · ใกล้วันเดินทางจะเปลี่ยนเป็นช่วงทริปเอง';
     }).catch(function () {});
@@ -438,22 +436,17 @@
     var KEY = 'hkTripPackingChecklist', saved = {};
     try { saved = JSON.parse(store(KEY) || '{}') || {}; } catch (e) { saved = {}; }
     var boxes = $$('.packing-item input'), fill = $('#pack-bar-fill'), count = $('#pack-count');
-    var doneBox = $('#pack-done');
-    function upd(byUser) {
-      var n = boxes.filter(function (b) { return b.checked; }).length, all = n === boxes.length;
+    function upd() {
+      var n = boxes.filter(function (b) { return b.checked; }).length;
       fill.style.width = (n / boxes.length * 100) + '%';
       count.textContent = n + '/' + boxes.length;
-      if (doneBox) {
-        var was = !doneBox.hidden; doneBox.hidden = !all;
-        if (all && byUser && !was) { doneBox.classList.remove('pop'); void doneBox.offsetWidth; doneBox.classList.add('pop'); celebrate(doneBox); }
-      }
     }
     boxes.forEach(function (cb) {
       var k = cb.getAttribute('data-key');
       if (saved[k]) { cb.checked = true; cb.closest('.packing-item').classList.add('checked'); }
       cb.addEventListener('change', function () {
         saved[k] = cb.checked; store(KEY, JSON.stringify(saved));
-        cb.closest('.packing-item').classList.toggle('checked', cb.checked); upd(true);
+        cb.closest('.packing-item').classList.toggle('checked', cb.checked); upd();
       });
     });
     upd();
@@ -472,7 +465,7 @@
 
   // ---- Share / print / QR ----
   function flash(btn, txt) { toast(txt, null, 1800); }
-  function copy(btn) { if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(function () { flash(btn, IC('circle-check') + ' คัดลอกลิงก์แล้ว'); }); }
+  function copy(btn) { if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(function () { flash(btn, '✅ คัดลอกแล้ว'); }); }
   $('#share-btn').addEventListener('click', function () {
     var b = this, data = { title: document.title, text: 'แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026', url: location.href };
     if (navigator.share) navigator.share(data).catch(function () {}); else copy(b);
@@ -508,7 +501,7 @@
       if (msg) status.textContent = msg;
       var done = n >= tiles.length;
       box.classList.toggle('done', done);
-      btn.innerHTML = done ? IC('circle-check') + ' เก็บแผนที่ครบแล้ว · อัปเดตอีกครั้ง' : IC('download') + ' เก็บแผนที่ไว้ใช้ออฟไลน์';
+      btn.textContent = done ? '✅ เก็บแผนที่ครบแล้ว · อัปเดตอีกครั้ง' : '💾 เก็บแผนที่ไว้ใช้ออฟไลน์';
     }
     function countCached() {
       return caches.open(TILE_CACHE).then(function (c) { return c.keys(); }).then(function (keys) {
@@ -541,43 +534,10 @@
       }).then(function () {
         busy = false; btn.disabled = false;
         if (fail) show(ok, 'เก็บได้ ' + ok + '/' + tiles.length + ' ชิ้น บางส่วนโหลดไม่สำเร็จ ลองกดอีกครั้ง');
-        else { show(ok, 'เก็บแผนที่ของทั้ง 8 วันไว้ในเครื่องแล้ว เปิดได้แม้ไม่มีเน็ต'); toast(IC('circle-check') + ' เก็บแผนที่ครบ ' + ok + ' ชิ้นแล้ว', null, 2200); }
+        else { show(ok, 'เก็บแผนที่ของทั้ง 8 วันไว้ในเครื่องแล้ว เปิดได้แม้ไม่มีเน็ต'); toast('✅ เก็บแผนที่ครบ ' + ok + ' ชิ้นแล้ว', null, 2200); }
       }).catch(function () { busy = false; btn.disabled = false; show(ok, 'เก็บแผนที่ไม่สำเร็จ ลองใหม่อีกครั้ง'); });
     });
   })();
-
-  // ---- Mascot: splash, hero bear, celebration ----
-  (function () {
-    var sp = $('#splash');
-    if (sp) {
-      var hide = function () { sp.classList.add('out'); setTimeout(function () { sp.remove(); }, 450); };
-      if (document.documentElement.classList.contains('nosplash')) sp.remove();
-      else { var t0 = Date.now(); window.addEventListener('load', function () { setTimeout(hide, Math.max(0, 700 - (Date.now() - t0))); }); setTimeout(hide, 1600); }
-    }
-    var hb = $('#hero-bear');
-    if (hb) hb.addEventListener('click', function () {
-      var days = Math.ceil((DEPART - Date.now()) / 864e5), n = dayIndexFor(shNow().date);
-      var lines = n ? ['วันที่ ' + n + ' แล้ว เที่ยวให้สนุกนะ!', 'อย่าลืมถ่ายรูปเยอะ ๆ', 'หนาวไหม ใส่ผ้าพันคอด้วยนะ'] :
-        days > 0 ? ['อีก ' + days + ' วันเจอกันที่เซี่ยงไฮ้!', 'เก็บแผนที่ออฟไลน์แล้วหรือยัง?', 'อย่าลืมกรอกบัตรขาเข้าออนไลน์ก่อนบิน 3 วันนะ', 'power bank ต้องมีโลโก้ 3C นะ', 'ตั้งค่า Alipay ไว้ก่อนไปด้วยนะ']
-        : ['ขอบคุณที่พาไปเที่ยวนะ!'];
-      hb.classList.remove('hop'); void hb.offsetWidth; hb.classList.add('hop');
-      toast('<svg class="tb" aria-hidden="true"><use href="#bear"/></svg>' + lines[Math.floor(Math.random() * lines.length)], null, 2600);
-    });
-  })();
-  function celebrate(anchor) {
-    toast('<svg class="tb" aria-hidden="true"><use href="#bear"/></svg>เตรียมของครบแล้ว เย้!', null, 2600);
-    if (REDUCE) return;
-    var c = $('#confetti'), x = c && c.getContext && c.getContext('2d'); if (!x) return;
-    var r = anchor.getBoundingClientRect(), ps = [], cols = ['#B0242E', '#C79A3F', '#E8C877', '#1D5C82', '#ffffff'];
-    c.width = innerWidth; c.height = innerHeight;
-    for (var i = 0; i < 110; i++) ps.push({ x: r.left + r.width / 2, y: r.top + 30, vx: (Math.random() - .5) * 11, vy: -5 - Math.random() * 9, a: Math.random() * 6, va: (Math.random() - .5) * .4, c: cols[i % 5], l: 150 });
-    (function f() {
-      x.clearRect(0, 0, c.width, c.height);
-      ps = ps.filter(function (p) { return p.l-- > 0 && p.y < c.height + 20; });
-      ps.forEach(function (p) { p.vy += .25; p.x += p.vx; p.y += p.vy; p.a += p.va; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-4, -2, 8, 4); x.restore(); });
-      if (ps.length) requestAnimationFrame(f); else x.clearRect(0, 0, c.width, c.height);
-    })();
-  }
 
   // ---- Toast ----
   function toast(html, onTap, ms) {
@@ -600,7 +560,7 @@
     if (!BUILD || navigator.onLine === false) return;
     fetch('index.html?check=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
       var m = html.match(/<meta name="build" content="(\d+)"/);
-      if (m && m[1] > BUILD) toast(IC('sparkles') + ' มีเวอร์ชันใหม่ <b>แตะเพื่ออัปเดต</b>', function () { location.reload(); });
+      if (m && m[1] > BUILD) toast('✨ มีเวอร์ชันใหม่ <b>แตะเพื่ออัปเดต</b>', function () { location.reload(); });
     }).catch(function () {});
   }
   document.addEventListener('visibilitychange', function () { if (!document.hidden) checkNewer(); });
