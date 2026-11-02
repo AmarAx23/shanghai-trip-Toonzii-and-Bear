@@ -505,7 +505,7 @@ page = f'''<!DOCTYPE html>
 <div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
   <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
   <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
-  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
+  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>

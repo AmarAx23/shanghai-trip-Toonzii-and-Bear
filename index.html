@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261102210817">
+<meta name="build" content="20261102213404">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -507,6 +507,7 @@
   :root[data-theme="dark"] .pst-lang button.on { color: #0D1013; }
   .pst-acts { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
   .pst-acts .btn { flex: 1; min-width: 150px; }
+  .pst-acts [hidden] { display: none; }
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
   .btn:disabled { opacity: .55; }
   .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
@@ -781,7 +782,7 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 21:08</small>
+    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 21:34</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -802,7 +803,7 @@
 <div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
   <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
   <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
-  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
+  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
@@ -1746,7 +1747,7 @@
       if (canFiles(fs)) return navigator.share({ files: fs, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {});
       return navigator.share({ title: document.title, url: location.href.split('#')[0].split('?')[0] }).catch(function () {});
     }
-    if (MOBILE) { printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
+    if (MOBILE) { printB.classList.remove('ghost'); printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
     printB.addEventListener('click', function () {
       if (MOBILE) { if (files.length) share(files); else share([]); return; }
       close(); setTimeout(function () { window.print(); }, 100);

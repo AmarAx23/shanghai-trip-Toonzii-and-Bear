@@ -922,7 +922,7 @@
       if (canFiles(fs)) return navigator.share({ files: fs, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {});
       return navigator.share({ title: document.title, url: location.href.split('#')[0].split('?')[0] }).catch(function () {});
     }
-    if (MOBILE) { printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
+    if (MOBILE) { printB.classList.remove('ghost'); printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
     printB.addEventListener('click', function () {
       if (MOBILE) { if (files.length) share(files); else share([]); return; }
       close(); setTimeout(function () { window.print(); }, 100);

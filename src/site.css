@@ -484,6 +484,7 @@
   :root[data-theme="dark"] .pst-lang button.on { color: #0D1013; }
   .pst-acts { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
   .pst-acts .btn { flex: 1; min-width: 150px; }
+  .pst-acts [hidden] { display: none; }
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
   .btn:disabled { opacity: .55; }
   .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
