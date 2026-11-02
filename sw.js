@@ -1,7 +1,7 @@
 // Offline support for the trip page.
 // The page itself is fetched network-first, so an installed iPhone/Android app always shows the newest
 // version when online and falls back to the saved copy when offline. Photos, fonts and Leaflet are cache-first.
-const CACHE_NAME = 'sh-trip-v23';
+const CACHE_NAME = 'sh-trip-v24';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -76,10 +76,12 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+const TILE_CACHE = 'sh-tiles-v1'; // OpenStreetMap tiles saved for offline use (kept across versions)
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== TILE_CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -94,7 +96,17 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return; // map tiles, weather, rates: straight to network
+  if (url.hostname === 'tile.openstreetmap.org') {
+    // map tiles: saved copy first (works offline / in China without VPN), otherwise fetch and keep it
+    event.respondWith(
+      caches.open(TILE_CACHE).then((c) => c.match(req.url).then((hit) => hit || fetch(req).then((res) => {
+        if (res && res.ok) c.put(req.url, res.clone());
+        return res;
+      })))
+    );
+    return;
+  }
+  if (url.origin !== self.location.origin) return; // weather, rates: straight to network
 
   if (isPage(req)) {
     event.respondWith(
