@@ -227,7 +227,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "12:30"): "tianzifang"}
+HD_BY_SLOT = {(2, "13:30"): "peoplespark", (2, "17:30"): "waibaidu", (3, "14:30"): "westbund", (5, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "17:00"): "spring", (6, "13:00"): "zongzi", (6, "18:00"): "jingan", (7, "11:30"): "northbund", (7, "17:30"): "ljznight", (8, "11:00"): "huaihai", (8, "13:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "12:30"): "tianzifang"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
