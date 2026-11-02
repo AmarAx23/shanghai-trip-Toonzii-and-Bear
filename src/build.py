@@ -96,7 +96,7 @@ DAYS = [
 
  dict(n=6, iso="2026-12-10", dow="พฤ.", date="พฤหัส 10 ธ.ค.", title="Zhujiajiao + Pane Jing'an", icon="🚤", wx="⛅ 4–10°C",
   events=[
-   ev("09:45", "food", "Pushing Coffee คาเฟ่น้องหมา", "สาขาถนน Maoming Road (茂名路) ช่วงตัดกับ Huaihai Middle Road · มีน้องหมาประจำร้านหลายตัว นั่งเก้าอี้หน้าร้านเล่นกับน้องหมาได้ · เช้าวันธรรมดาคนน้อย · ให้น้องหมาเดินมาหาก่อนค่อยลูบ ไม่ใช้แฟลช · Didi จากที่พัก ~5 นาที หรือเดิน ~20 นาที · ยังไม่ได้ยืนยันเวลาเปิด ค้น \"Pushing Coffee 茂名\" ใน Amap ก่อน", None, L("Pushing Coffee Maoming Road, Shanghai", "Pushing Coffee 茂名路"), tag="คาเฟ่"),
+   ev("09:45", "food", "Pushing Coffee คาเฟ่น้องหมา", "สาขาถนน Maoming Road (茂名路) ช่วงตัดกับ Huaihai Middle Road · มีน้องหมาประจำร้านหลายตัว นั่งเก้าอี้หน้าร้านเล่นกับน้องหมาได้ · เช้าวันธรรมดาคนน้อย · ให้น้องหมาเดินมาหาก่อนค่อยลูบ ไม่ใช้แฟลช · Didi จากที่พัก ~5 นาที หรือเดิน ~20 นาที · ยังไม่ได้ยืนยันเวลาเปิด ค้น \"Pushing Coffee 茂名\" ใน Amap ก่อน", "pushing", L("Pushing Coffee Maoming Road, Shanghai", "Pushing Coffee 茂名路"), tag="คาเฟ่"),
    ev("10:45", "go", "ไป Zhujiajiao", "จากคาเฟ่ · Didi ~1 ชม. หรือรถไฟฟ้าสาย 17 ลงสถานี Zhujiajiao", None,
       [("🧭 เส้นทางจากที่พัก", apple_dir("Zhujiajiao Ancient Town, Shanghai")), ("🧭 Amap 高德", amap("朱家角古镇"))]),
    ev("11:45", "see", "เดินเล่นเมืองน้ำ Zhujiajiao (朱家角)", "คลอง สะพานหิน Fangsheng Bridge (放生桥) บ้านเรือนโบราณ · นั่งเรือชมคลอง · วันธรรมดาคนน้อยกว่าเสาร์-อาทิตย์", None, L("Zhujiajiao Ancient Town, Shanghai", "朱家角古镇")),
