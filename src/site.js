@@ -915,7 +915,18 @@
     }); });
     $('#print-btn').addEventListener('click', open);
     $('#pst-x').addEventListener('click', close);
-    $('#pst-print').addEventListener('click', function () { close(); setTimeout(function () { window.print(); }, 100); });
+    // On phones the second button shares the pictures instead of printing
+    var MOBILE = window.matchMedia('(pointer: coarse)').matches && !!navigator.share, printB = $('#pst-print');
+    function canFiles(fs) { try { return !!(navigator.canShare && navigator.canShare({ files: fs })); } catch (e) { return false; } }
+    function share(fs) {
+      if (canFiles(fs)) return navigator.share({ files: fs, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {});
+      return navigator.share({ title: document.title, url: location.href.split('#')[0].split('?')[0] }).catch(function () {});
+    }
+    if (MOBILE) { printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
+    printB.addEventListener('click', function () {
+      if (MOBILE) { if (files.length) share(files); else share([]); return; }
+      close(); setTimeout(function () { window.print(); }, 100);
+    });
     // Full-screen viewer: tap a picture, scroll to read, swipe or ‹ › for the next one
     var pv = $('#pv'), pvImg = $('#pv-img'), pvSc = $('#pv-sc'), at = 0;
     function show(i, dir) {
@@ -927,6 +938,7 @@
     }
     grid.addEventListener('click', function (e) { var b = e.target.closest('.pst-th'); if (!b) return; pv.hidden = false; show(+b.getAttribute('data-i')); });
     $('#pv-x').addEventListener('click', function () { pv.hidden = true; });
+    $('#pv-sh').addEventListener('click', function () { if (files[at]) share([files[at]]); });
     $('#pv-prev').addEventListener('click', function () { show(at - 1, -1); });
     $('#pv-next').addEventListener('click', function () { show(at + 1, 1); });
     (function () {

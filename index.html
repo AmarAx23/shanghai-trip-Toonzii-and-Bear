@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261102210703">
+<meta name="build" content="20261102210817">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -523,6 +523,8 @@
   .pv-bar button:disabled { opacity: .3; }
   .pv-bar span { flex: 1; text-align: center; font-size: 14px; font-weight: 700; }
   .pv-bar .pv-x { font-size: 30px; }
+  .pv-bar .pv-sh { font-size: 20px; }
+  .pv-bar [hidden] { display: none; }
   .pv-sc { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; padding: 0 8px calc(16px + env(safe-area-inset-bottom)); touch-action: pan-y pinch-zoom; }
   .pv-sc img { display: block; width: 100%; max-width: 720px; margin: 0 auto; border-radius: 12px; transition: transform .25s ease, opacity .25s ease; }
   .pv-sc img.out-l { transform: translateX(-30%); opacity: 0; } .pv-sc img.out-r { transform: translateX(30%); opacity: 0; }
@@ -779,7 +781,7 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 21:07</small>
+    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 21:08</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -804,7 +806,7 @@
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
-    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
+    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
     <div class="pv-sc" id="pv-sc"><img id="pv-img" alt=""></div>
   </div>
 </div>
@@ -1737,7 +1739,18 @@
     }); });
     $('#print-btn').addEventListener('click', open);
     $('#pst-x').addEventListener('click', close);
-    $('#pst-print').addEventListener('click', function () { close(); setTimeout(function () { window.print(); }, 100); });
+    // On phones the second button shares the pictures instead of printing
+    var MOBILE = window.matchMedia('(pointer: coarse)').matches && !!navigator.share, printB = $('#pst-print');
+    function canFiles(fs) { try { return !!(navigator.canShare && navigator.canShare({ files: fs })); } catch (e) { return false; } }
+    function share(fs) {
+      if (canFiles(fs)) return navigator.share({ files: fs, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {});
+      return navigator.share({ title: document.title, url: location.href.split('#')[0].split('?')[0] }).catch(function () {});
+    }
+    if (MOBILE) { printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
+    printB.addEventListener('click', function () {
+      if (MOBILE) { if (files.length) share(files); else share([]); return; }
+      close(); setTimeout(function () { window.print(); }, 100);
+    });
     // Full-screen viewer: tap a picture, scroll to read, swipe or ‹ › for the next one
     var pv = $('#pv'), pvImg = $('#pv-img'), pvSc = $('#pv-sc'), at = 0;
     function show(i, dir) {
@@ -1749,6 +1762,7 @@
     }
     grid.addEventListener('click', function (e) { var b = e.target.closest('.pst-th'); if (!b) return; pv.hidden = false; show(+b.getAttribute('data-i')); });
     $('#pv-x').addEventListener('click', function () { pv.hidden = true; });
+    $('#pv-sh').addEventListener('click', function () { if (files[at]) share([files[at]]); });
     $('#pv-prev').addEventListener('click', function () { show(at - 1, -1); });
     $('#pv-next').addEventListener('click', function () { show(at + 1, 1); });
     (function () {

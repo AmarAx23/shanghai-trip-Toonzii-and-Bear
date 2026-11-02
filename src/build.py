@@ -509,7 +509,7 @@ page = f'''<!DOCTYPE html>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
-    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
+    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
     <div class="pv-sc" id="pv-sc"><img id="pv-img" alt=""></div>
   </div>
 </div>

@@ -500,6 +500,8 @@
   .pv-bar button:disabled { opacity: .3; }
   .pv-bar span { flex: 1; text-align: center; font-size: 14px; font-weight: 700; }
   .pv-bar .pv-x { font-size: 30px; }
+  .pv-bar .pv-sh { font-size: 20px; }
+  .pv-bar [hidden] { display: none; }
   .pv-sc { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; padding: 0 8px calc(16px + env(safe-area-inset-bottom)); touch-action: pan-y pinch-zoom; }
   .pv-sc img { display: block; width: 100%; max-width: 720px; margin: 0 auto; border-radius: 12px; transition: transform .25s ease, opacity .25s ease; }
   .pv-sc img.out-l { transform: translateX(-30%); opacity: 0; } .pv-sc img.out-r { transform: translateX(30%); opacity: 0; }
