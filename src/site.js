@@ -28,12 +28,22 @@
       if (on && scrollTab !== false) { var bar = t.parentNode; bar.scrollTo({ left: t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2, behavior: 'smooth' }); }
     });
   }
-  tabs.forEach(function (t) { t.addEventListener('click', function () { showDay(t.getAttribute('data-day')); }); });
+  // Jump to the first activity of the shown day, just below the sticky day tabs
+  function toFirst() {
+    requestAnimationFrame(function () {
+      var tl = $('.day.active .tl'), ev = tl && tl.querySelector('.ev'), bar = $('#dtabs'); if (!ev) return;
+      var stuck = bar.offsetHeight + (parseFloat(getComputedStyle(bar).top) || 0);
+      var y = tl.getBoundingClientRect().top + window.pageYOffset + ev.offsetTop - stuck - 6;
+      window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+  }
+  function pick(n) { showDay(n); toFirst(); }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { pick(t.getAttribute('data-day')); }); });
   function cur() { var a = $('.dtab.active'); return a ? parseInt(a.getAttribute('data-day'), 10) : 1; }
   document.addEventListener('keydown', function (e) {
     if (e.target && /input|textarea/i.test(e.target.tagName)) return;
-    if (e.key === 'ArrowRight' && cur() < N_DAYS) showDay(cur() + 1);
-    if (e.key === 'ArrowLeft' && cur() > 1) showDay(cur() - 1);
+    if (e.key === 'ArrowRight' && cur() < N_DAYS) pick(cur() + 1);
+    if (e.key === 'ArrowLeft' && cur() > 1) pick(cur() - 1);
   });
   (function () {
     var box = $('.days'), sx = 0, sy = 0;
@@ -42,8 +52,8 @@
     box.addEventListener('touchend', function (e) {
       var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
       if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      if (dx < 0 && cur() < N_DAYS) showDay(cur() + 1);
-      if (dx > 0 && cur() > 1) showDay(cur() - 1);
+      if (dx < 0 && cur() < N_DAYS) pick(cur() + 1);
+      if (dx > 0 && cur() > 1) pick(cur() - 1);
     }, { passive: true });
   })();
 

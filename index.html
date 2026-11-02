@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261102185851">
+<meta name="build" content="20261102191524">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -746,7 +746,7 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 18:58</small>
+    <small class="ver">อัปเดตล่าสุด 2 พ.ย. 2026 19:15</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -806,12 +806,22 @@
       if (on && scrollTab !== false) { var bar = t.parentNode; bar.scrollTo({ left: t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2, behavior: 'smooth' }); }
     });
   }
-  tabs.forEach(function (t) { t.addEventListener('click', function () { showDay(t.getAttribute('data-day')); }); });
+  // Jump to the first activity of the shown day, just below the sticky day tabs
+  function toFirst() {
+    requestAnimationFrame(function () {
+      var tl = $('.day.active .tl'), ev = tl && tl.querySelector('.ev'), bar = $('#dtabs'); if (!ev) return;
+      var stuck = bar.offsetHeight + (parseFloat(getComputedStyle(bar).top) || 0);
+      var y = tl.getBoundingClientRect().top + window.pageYOffset + ev.offsetTop - stuck - 6;
+      window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+  }
+  function pick(n) { showDay(n); toFirst(); }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { pick(t.getAttribute('data-day')); }); });
   function cur() { var a = $('.dtab.active'); return a ? parseInt(a.getAttribute('data-day'), 10) : 1; }
   document.addEventListener('keydown', function (e) {
     if (e.target && /input|textarea/i.test(e.target.tagName)) return;
-    if (e.key === 'ArrowRight' && cur() < N_DAYS) showDay(cur() + 1);
-    if (e.key === 'ArrowLeft' && cur() > 1) showDay(cur() - 1);
+    if (e.key === 'ArrowRight' && cur() < N_DAYS) pick(cur() + 1);
+    if (e.key === 'ArrowLeft' && cur() > 1) pick(cur() - 1);
   });
   (function () {
     var box = $('.days'), sx = 0, sy = 0;
@@ -820,8 +830,8 @@
     box.addEventListener('touchend', function (e) {
       var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
       if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      if (dx < 0 && cur() < N_DAYS) showDay(cur() + 1);
-      if (dx > 0 && cur() > 1) showDay(cur() - 1);
+      if (dx < 0 && cur() < N_DAYS) pick(cur() + 1);
+      if (dx > 0 && cur() > 1) pick(cur() - 1);
     }, { passive: true });
   })();
 
