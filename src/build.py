@@ -107,10 +107,11 @@ DAYS = [
    ev("18:00", "food", "มื้อเย็นแถว Jing'an / Nanjing West Road", "ย่านห้างและร้านอาหารเยอะ แล้วนั่งรถไฟฟ้าสาย 7 กลับที่พัก 2 สถานี · คืนนี้เก็บกระเป๋าบางส่วนไว้ก่อนได้", tag="มื้อเย็น"),
   ], note="ถ้าวันนี้ฝนตก สลับกับวันพรุ่งนี้ได้"),
 
- dict(n=7, iso="2026-12-11", dow="ศ.", date="ศุกร์ 11 ธ.ค.", title="Cocina 19 + Tianzifang + Lujiazui", icon="🙏", wx="🌤️ 5–11°C",
+ dict(n=7, iso="2026-12-11", dow="ศ.", date="ศุกร์ 11 ธ.ค.", title="The Bund brunch + Tianzifang + Lujiazui", icon="🙏", wx="🌤️ 5–11°C",
   events=[
-   ev("10:00", "food", "Cocina 19 ร้านอาหารสเปน ริม The Bund", "มื้อสาย ร้านเปิด 10:00 · 19 Fuzhou Road หัวมุมถนน Zhongshan East 1st Road (The Bund) · ตึกวิลล่าเก่า โต๊ะริมหน้าต่างวิวหอไข่มุก มีระเบียง · เมนูเด่น paella ซีฟู้ด · จองโต๊ะริมหน้าต่างล่วงหน้าได้ · กินแล้ว Didi ไป Tianzifang ~15 นาที", None, L("Cocina 19, 19 Fuzhou Road, Shanghai", "Cocina 19西班牙餐厅 外滩"), tag="มื้อสาย"),
-   ev("12:00", "shop", "Tianzifang (田子坊) เก็บของฝาก", "ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ใกล้ที่พัก · เดินเล่นสบาย ๆ ถึงราว 15:30", None, L("Tianzifang, Shanghai", "田子坊")),
+   ev("10:00", "food", "Cocina 19 ร้านอาหารสเปน ริม The Bund", "มื้อสาย ร้านเปิด 10:00 · 19 Fuzhou Road หัวมุมถนน Zhongshan East 1st Road (The Bund) · ตึกวิลล่าเก่า โต๊ะริมหน้าต่างวิวหอไข่มุก มีระเบียง · เมนูเด่น paella ซีฟู้ด · จองโต๊ะริมหน้าต่างล่วงหน้าได้ · กินแล้ว Didi ไป Manner Coffee North Bund ~5–10 นาที", None, L("Cocina 19, 19 Fuzhou Road, Shanghai", "Cocina 19西班牙餐厅 外滩"), tag="มื้อสาย"),
+   ev("11:30", "food", "Manner Coffee สาขา North Bund ริมแม่น้ำ", "ร้านกระจกใส 3 ด้าน ริมแม่น้ำหวงผู่ หันตรงหอไข่มุก · ท่าเรือสำราญนานาชาติ North Bund (北外滩国客中心码头) ใกล้ Dongdaming Road / Taiping Road เขต Hongkou · ข้ามคลอง Suzhou Creek จาก Cocina 19 ~5–10 นาที · ยังไม่ได้ยืนยันเวลาเปิด · แล้ว Didi ไป Tianzifang ~20 นาที", None, L("Manner Coffee North Bund International Cruise Terminal, Shanghai", "MANNER 北外滩国客中心滨江店"), tag="คาเฟ่"),
+   ev("12:30", "shop", "Tianzifang (田子坊) เก็บของฝาก", "ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ใกล้ที่พัก · เดินเล่นสบาย ๆ ถึงราว 15:30", None, L("Tianzifang, Shanghai", "田子坊")),
    ev("16:00", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 4 และ 6 ยังไม่ได้ไซซ์ที่อยากได้ · ร้านอยู่ทางผ่านจาก Tianzifang ไป Lujiazui (523 Huaihai Middle Road) · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ ไป Superbrand ตรงได้เลย", None, L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号"), tag="ถ้ายังไม่ได้ไซซ์"),
    ev("16:30", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui · Didi จาก Tianzifang ~20–25 นาที · ซื้อของฝากรอบสุดท้าย · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้ · ร้านมื้อเย็นอยู่ย่านเดียวกัน", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
    ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) ถนน Yincheng Road ย่าน Lujiazui ใกล้ Superbrand · ย้ายมาจากวัน Disney เพราะโชว์จบดึก · กินเสร็จนั่ง Didi หรือรถไฟฟ้าสาย 2 กลับที่พัก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场"), tag="มื้อเย็น"),
@@ -187,7 +188,7 @@ GEO = {
  (5, "08:30"): ((31.1440, 121.6570), "Disneyland"),
  (6, "09:45"): ((31.2185, 121.4590), "Pushing Coffee"), (6, "11:45"): ((31.1136, 121.0515), "Zhujiajiao"),
  (7, "10:00"): ((31.2385, 121.4887), "Cocina 19"), 
- (7, "12:00"): ((31.2103, 121.4641), "Tianzifang"), (7, "16:30"): ((31.2387, 121.4947), "Superbrand Mall"), (7, "18:30"): ((31.2370, 121.5010), "Long Time Ago"),
+ (7, "11:30"): ((31.2480, 121.4985), "Manner North Bund"), (7, "12:30"): ((31.2103, 121.4641), "Tianzifang"), (7, "16:30"): ((31.2387, 121.4947), "Superbrand Mall"), (7, "18:30"): ((31.2370, 121.5010), "Long Time Ago"),
  (8, "13:00"): (PVG_LL, "สนามบินผู่ตง T2"),
 }
 import json
@@ -225,7 +226,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "12:00"): "tianzifang"}
+HD_BY_SLOT = {(4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "12:30"): "tianzifang"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -246,7 +247,7 @@ ZH_EV = {
  (5, "07:00"): "从酒店出发 去上海迪士尼", (5, "08:30"): "奇幻童话城堡", (5, "10:00"): "疯狂动物城 + 明日世界", (5, "13:00"): "探险岛", (5, "15:00"): "宝藏湾",
  (5, "18:00"): "园内晚餐", (5, "21:15"): "点亮奇梦 + 烟花表演", (5, "22:00"): "回酒店",
  (6, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）", (6, "10:45"): "出发去朱家角", (6, "11:45"): "朱家角古镇 · 放生桥", (6, "13:00"): "古镇午餐 · 粽子", (6, "15:30"): "回市区 去静安", (6, "16:45"): "PANE 球鞋（永源路店）", (6, "18:00"): "静安 南京西路 晚餐",
- (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "12:00"): "田子坊 买伴手礼", (7, "16:00"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
+ (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "11:30"): "MANNER 咖啡（北外滩国客中心滨江店）", (7, "12:30"): "田子坊 买伴手礼", (7, "16:00"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
  (8, "10:00"): "亚朵X酒店 退房", (8, "11:00"): "淮海路 早午餐", (8, "13:00"): "去浦东国际机场 2号航站楼", (8, "17:00"): "航班 9C7289 上海浦东 → 曼谷",
 }
 for _d in DAYS:
