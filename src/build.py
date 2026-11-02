@@ -227,6 +227,25 @@ def credit_html(key):
     r = _CRED[key]
     return (f'<small class="credit">ภาพ: {E(r[5])} · <a href="{E(commons_page(r[3]))}" target="_blank" rel="noopener">{E(r[4])}</a></small>')
 
+
+# Chinese names for the summary pictures (ไทย / 中文 switch)
+ZH_DAY = {1: "出发去上海", 2: "人民广场 + 外滩", 3: "武康路 + 陆家嘴", 4: "老城厢 + 豫园", 5: "上海迪士尼乐园", 6: "朱家角古镇", 7: "玉佛寺 + M50 + 田子坊", 8: "回国"}
+ZH_EV = {
+ (1, "13:45"): "曼谷素万那普机场 值机", (1, "16:45"): "航班 9C7284 曼谷 → 上海浦东", (1, "22:05"): "抵达浦东国际机场 2号航站楼", (1, "23:45"): "入住 亚朵X酒店 淮海中路",
+ (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "人民广场", (2, "17:00"): "南京路步行街", (2, "18:30"): "外滩 · 黄浦江夜景",
+ (3, "11:00"): "奶奶家（武康路店）", (3, "12:30"): "武康路 · 武康大楼", (3, "16:00"): "正大广场（陆家嘴）", (3, "18:30"): "费大厨辣椒炒肉（陆家嘴）", (3, "21:00"): "淮海中路 散步",
+ (4, "11:00"): "喜粤8号（汝南街店）", (4, "12:45"): "新天地", (4, "14:30"): "豫园", (4, "17:00"): "豫园商城 · 上海城隍庙", (4, "19:00"): "牛New寿喜烧（豫园）",
+ (5, "07:00"): "从酒店出发 去上海迪士尼", (5, "08:30"): "奇幻童话城堡", (5, "10:00"): "疯狂动物城 + 明日世界", (5, "13:00"): "探险岛", (5, "15:00"): "宝藏湾",
+ (5, "18:00"): "园内晚餐", (5, "21:15"): "点亮奇梦 + 烟花表演", (5, "22:00"): "回酒店",
+ (6, "09:30"): "从酒店出发 去朱家角", (6, "10:30"): "朱家角古镇 · 放生桥", (6, "12:30"): "古镇午餐 · 粽子", (6, "15:30"): "回市区 休息", (6, "19:00"): "酒店附近晚餐（淮海路）",
+ (7, "09:30"): "玉佛禅寺", (7, "11:30"): "M50创意园", (7, "14:30"): "田子坊 买伴手礼", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
+ (8, "10:00"): "亚朵X酒店 退房", (8, "11:00"): "淮海路 早午餐", (8, "13:00"): "去浦东国际机场 2号航站楼", (8, "17:00"): "航班 9C7289 上海浦东 → 曼谷",
+}
+for _d in DAYS:
+    _d["zh"] = ZH_DAY.get(_d["n"], "")
+    for _e in _d["events"]:
+        _e["zh"] = ZH_EV.get((_d["n"], _e["t"]), "")
+
 def event_html(e):
     tag = f' <span class="tag">{E(e["tag"])}</span>' if e["tag"] else ""
     note = e["note"] if e["html_note"] else E(e["note"])
@@ -237,7 +256,7 @@ def event_html(e):
     else:
         img = (f'<figure class="ph"><img class="thumb" src="img/{e["img"]}.jpg" alt="{E(e["title"])}" loading="lazy" decoding="async"></figure>' if e["img"] else "")
     eid = f' id="{e["eid"]}"' if e.get("eid") else ""
-    return (f'<li class="ev"{eid} data-t="{e["data_t"]}" data-kind="{e["kind"]}" style="--dot:{KIND_DOT[e["kind"]]}">'
+    return (f'<li class="ev"{eid} data-t="{e["data_t"]}" data-kind="{e["kind"]}" data-zh="{E(e.get("zh", ""))}" style="--dot:{KIND_DOT[e["kind"]]}">'
             f'<time>{E(e["t"])}</time><span class="dot" aria-hidden="true"></span>'
             f'<div class="evb">{img}<h3>{E(e["title"])}{tag}</h3>'
             + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
@@ -247,7 +266,7 @@ def day_html(d):
     mp = day_geo(d)
     evs = "".join(event_html(e) for e in d["events"])
     return f'''
-    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" aria-label="วันที่ {d["n"]}">
+    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" data-zh="{E(d.get("zh", ""))}" aria-label="วันที่ {d["n"]}">
       <div class="dayhead">
         <div class="num">{d["n"]}</div>
         <div class="dh-txt"><h3>{E(d["title"])}{disney}</h3><p>{E(d["date"])} · <span class="wxb" data-date="{d["iso"]}">{E(d["wx"])}</span></p></div>
@@ -485,6 +504,7 @@ page = f'''<!DOCTYPE html>
 </div>
 <div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
   <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
+  <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
   <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>

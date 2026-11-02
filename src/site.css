@@ -478,6 +478,10 @@
   .pst-bar { display: flex; justify-content: space-between; align-items: center; position: sticky; top: calc(-10px - env(safe-area-inset-top)); background: var(--bg); padding: 6px 0; z-index: 2; }
   .pst-bar b { font-family: var(--head); font-weight: 600; font-size: 20px; color: var(--navy); }
   .pst-x { font-size: 34px; line-height: 1; border: none; background: none; color: var(--ink); cursor: pointer; padding: 0 4px; }
+  .pst-lang { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px; margin: 4px 0 8px; }
+  .pst-lang button { flex: 1; font: inherit; font-weight: 700; font-size: 14px; border: none; background: none; color: var(--muted); border-radius: 999px; padding: 8px; cursor: pointer; transition: background .25s, color .25s; }
+  .pst-lang button.on { background: var(--navy); color: #fff; }
+  :root[data-theme="dark"] .pst-lang button.on { color: #0D1013; }
   .pst-acts { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
   .pst-acts .btn { flex: 1; min-width: 150px; }
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }

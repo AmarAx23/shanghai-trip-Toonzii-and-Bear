@@ -735,12 +735,14 @@
   (function () {
     var ov = $('#pst'), grid = $('#pst-grid'), stEl = $('#pst-st'), saveB = $('#pst-save'), files = [], busy = false;
     var W = 1080, RED = '#B0242E', NAVY = '#0F3A54', GOLD = '#C79A3F', CREAM = '#FBF4E4', INK = '#1B2730', MUTED = '#6B7680';
-    var HEAD = "600 {s}px Kanit, 'Noto Sans Thai', sans-serif", BODY = "{w} {s}px 'Noto Sans Thai', sans-serif";
+    var HEAD = "600 {s}px Kanit, 'Noto Sans Thai', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif", BODY = "{w} {s}px 'Noto Sans Thai', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif", LANG = 'th';
+    var WD = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    function zhDate(iso) { var d = new Date(iso + 'T00:00:00Z'); return (d.getUTCMonth() + 1) + '月' + d.getUTCDate() + '日 ' + WD[d.getUTCDay()]; }
     var EMO = { fly: '✈️', stay: '🏨', food: '🍜', see: '📍', shop: '🛍️', go: '🚇' };
     function fH(s) { return HEAD.replace('{s}', s); } function fB(s, w) { return BODY.replace('{s}', s).replace('{w}', w || 400); }
     function rr(x, y, w, h, r, c) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
     var seg = window.Intl && Intl.Segmenter ? new Intl.Segmenter('th', { granularity: 'word' }) : null;
-    function pieces(t) { if (seg) return Array.from(seg.segment(t), function (x) { return x.segment; }); return t.match(/[฀-๿][ัิ-ฺ็-๎]*|\S+\s*|\s/g) || []; }
+    function pieces(t) { if (seg) return Array.from(seg.segment(t), function (x) { return x.segment; }); return t.match(/[฀-๿][ัิ-ฺ็-๎]*|[　-鿿＀-￯]|[^\s฀-๿　-鿿＀-￯]+\s*|\s/g) || []; }
     function wrap(c, t, maxW, maxL) {
       var out = [], line = '';
       pieces(t).forEach(function (p) {
@@ -831,9 +833,11 @@
     function dayData(sec) {
       var p = $('.dh-txt p', sec).textContent.split('·');
       return {
-        n: sec.getAttribute('data-day'), title: cleanTitle($('.dh-txt h3', sec)), date: p[0].trim(), wx: (p[1] || '').trim(), icon: $('.dicon', sec).textContent.trim(),
+        n: sec.getAttribute('data-day'), iso: sec.getAttribute('data-date'), zh: sec.getAttribute('data-zh') || '', title: cleanTitle($('.dh-txt h3', sec)), date: p[0].trim(), wx: (p[1] || '').trim(), icon: $('.dicon', sec).textContent.trim(),
         disney: !!$('.dh-txt .tag', sec), tip: ($('.note', sec) ? $('.note', sec).textContent.replace('⭐', '').trim() : ''),
-        evs: $$('.ev', sec).map(function (ev) { var im = $('img.thumb', ev), n = $('.evb > p', ev); return { time: $('time', ev).textContent.trim(), kind: ev.getAttribute('data-kind'), title: cleanTitle($('h3', ev)), note: n ? firstSentence(n.textContent) : '', src: im ? im.getAttribute('src') : '' }; })
+        evs: $$('.ev', sec).map(function (ev) { var im = $('img.thumb', ev), n = $('.evb > p', ev); var o = { time: $('time', ev).textContent.trim(), kind: ev.getAttribute('data-kind'), title: cleanTitle($('h3', ev)), note: n ? firstSentence(n.textContent) : '', src: im ? im.getAttribute('src') : '' }, z = ev.getAttribute('data-zh');
+          if (LANG === 'zh' && z) { o.note = o.title; o.title = z; }
+          return o; })
       };
     }
     function drawDay(d, hero) {
@@ -844,7 +848,8 @@
         c.font = fB(30); var tipH = d.tip ? 60 + wrap(c, d.tip, W - 240, 4).length * 44 + 50 : 0;
         var H = 670 + hs.reduce(function (a, b) { return a + b + 86; }, 0) + tipH + 120;
         cv.height = H; background(c, H);
-        var y = header(c, hero, 'SHANGHAI TRIP 2026' + (d.disney ? ' · DISNEY DAY' : ''), null, 'DAY ' + d.n + ' • ' + d.title, null, '📅 ' + d.date + ' 2026' + (d.wx ? '  ·  ' + d.wx : ''));
+        var zh = LANG === 'zh';
+        var y = header(c, hero, (zh ? '上海之旅 2026 · SHANGHAI TRIP' : 'SHANGHAI TRIP 2026') + (d.disney ? ' · DISNEY DAY' : ''), null, zh ? '第' + d.n + '天 • ' + (d.zh || d.title) : 'DAY ' + d.n + ' • ' + d.title, zh ? d.title : null, '📅 ' + (zh ? '2026年' + zhDate(d.iso) : d.date + ' 2026') + (d.wx ? '  ·  ' + d.wx.replace(/[\u0E00-\u0E7F]+/g, '').trim() : ''));
         y += 20;
         d.evs.forEach(function (e, i) {
           if (i) { c.fillStyle = GOLD; for (var k = 0; k < 4; k++) { c.beginPath(); c.arc(W / 2, y - 76 + k * 14, 4, 0, 7); c.fill(); } }
@@ -857,15 +862,17 @@
     function drawCover(days, hero) {
       var cv = document.createElement('canvas'), c = cv.getContext('2d'), H = 670 + days.length * 150 + 330 + 160;
       cv.width = W; cv.height = H; background(c, H);
-      var y = header(c, hero, 'SHANGHAI · DECEMBER 2026', 'เซี่ยงไฮ้', '8 วัน 7 คืน', '5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland', '🏨 Atour X Hotel · Huaihai Rd');
+      var zh = LANG === 'zh';
+      var y = zh ? header(c, hero, 'SHANGHAI · 2026年12月', '上海', '8天7晚', '2026年12月5日–12日 · เซี่ยงไฮ้ 8 วัน 7 คืน', '🏨 亚朵X酒店 · 淮海中路1329号')
+                 : header(c, hero, 'SHANGHAI · DECEMBER 2026', 'เซี่ยงไฮ้', '8 วัน 7 คืน', '5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland', '🏨 Atour X Hotel · Huaihai Rd');
       y += 10;
       days.forEach(function (d, i) {
         var col = i % 2 ? '#1D5C82' : RED;
         c.fillStyle = '#fff'; rr(60, y, W - 120, 126, 63, c); c.fill(); c.strokeStyle = col; c.lineWidth = 4; c.stroke();
         c.fillStyle = col; c.beginPath(); c.arc(126, y + 63, 46, 0, 7); c.fill();
         c.fillStyle = '#fff'; c.font = fH(48); c.textAlign = 'center'; c.fillText(d.n, 126, y + 80); c.textAlign = 'left';
-        c.fillStyle = MUTED; c.font = fB(26); c.fillText(d.date + (d.disney ? ' · DISNEY DAY' : ''), 200, y + 48);
-        c.fillStyle = NAVY; c.font = fH(40); var t = wrap(c, d.title, W - 120 - 140 - 130, 1)[0]; c.fillText(t, 200, y + 98);
+        c.fillStyle = MUTED; c.font = fB(26); c.fillText((zh ? zhDate(d.iso) + ' · ' + d.title : d.date + (d.disney ? ' · DISNEY DAY' : '')), 200, y + 48);
+        c.fillStyle = NAVY; c.font = fH(40); var t = wrap(c, zh && d.zh ? d.zh : d.title, W - 120 - 140 - 130, 1)[0]; c.fillText(t, 200, y + 98);
         c.font = fB(60); c.textAlign = 'right'; c.fillText(d.icon, W - 96, y + 86); c.textAlign = 'left';
         y += 150;
       });
@@ -873,7 +880,7 @@
       var fl = $$('.passw .pass').map(function (p) { var ap = $$('.route .ap b', p).map(function (b) { return b.textContent; }), tm = $$('.times span', p).map(function (s) { return s.textContent; }); return $('.stub b', p).textContent + '  ' + ap[0] + ' ' + tm[0] + ' → ' + ap[1] + ' ' + tm[1]; });
       c.fillStyle = NAVY; rr(60, y + 10, W - 120, 250, 40, c); c.fill();
       c.fillStyle = '#EBCB82'; c.font = fH(34); c.fillText('✈️ Spring Airlines', 100, y + 70);
-      c.fillStyle = '#fff'; c.font = fH(40); if (fl[0]) c.fillText('ไป  ' + fl[0], 100, y + 140); if (fl[1]) c.fillText('กลับ ' + fl[1], 100, y + 210);
+      c.fillStyle = '#fff'; c.font = fH(40); if (fl[0]) c.fillText((zh ? '去程 ' : 'ไป  ') + fl[0], 100, y + 140); if (fl[1]) c.fillText((zh ? '回程 ' : 'กลับ ') + fl[1], 100, y + 210);
       footer(c, y + 330, '');
       return toBlob(cv);
     }
@@ -884,23 +891,28 @@
     }
     function generate() {
       if (busy || files.length) return; busy = true; grid.innerHTML = ''; saveB.disabled = true;
-      var secs = $$('.day'), days = secs.map(dayData), n = 0, total = days.length + 1;
+      var secs = $$('.day'), days = secs.map(dayData), n = 0, total = days.length + 1, sfx = LANG === 'zh' ? '-zh' : '', myLang = LANG;
       function prog() { stEl.textContent = 'กำลังทำภาพ ' + n + '/' + total + '…'; }
       prog();
       var fontsReady = document.fonts && document.fonts.load ? Promise.all([document.fonts.load(fH(40), 'กขABC'), document.fonts.load(fB(30), 'กขABC'), document.fonts.load(fB(30, 700), 'กขABC')]).catch(function () {}) : Promise.resolve();
       fontsReady.then(function () { return img('img/hd/hero-960.webp'); }).then(function (hero) {
-        var chain = drawCover(days, hero).then(function (b) { n++; prog(); addFig(b, 'shanghai-trip-00-overview.jpg', 'ภาพรวมทริป'); });
+        var chain = drawCover(days, hero).then(function (b) { if (myLang !== LANG) return; n++; prog(); addFig(b, 'shanghai-trip-00-overview' + sfx + '.jpg', 'ภาพรวมทริป'); });
         days.forEach(function (d) {
-          chain = chain.then(function () { return drawDay(d, hero); }).then(function (b) { n++; prog(); addFig(b, 'shanghai-trip-day' + d.n + '.jpg', 'วันที่ ' + d.n + ' · ' + d.date); });
+          chain = chain.then(function () { return myLang === LANG ? drawDay(d, hero) : null; }).then(function (b) { if (!b || myLang !== LANG) return; n++; prog(); addFig(b, 'shanghai-trip-day' + d.n + sfx + '.jpg', 'วันที่ ' + d.n + ' · ' + d.date); });
         });
         return chain;
       }).then(function () {
-        busy = false; saveB.disabled = false;
+        busy = false; if (myLang !== LANG) { generate(); return; } saveB.disabled = false;
         stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะค้างที่รูปแล้วเลือก "บันทึกลงรูปภาพ" หรือกดบันทึกทั้งหมด';
       }).catch(function () { busy = false; stEl.textContent = 'ทำภาพไม่สำเร็จ ลองใหม่อีกครั้ง'; });
     }
     function open() { ov.hidden = false; document.documentElement.style.overflow = 'hidden'; generate(); }
     function close() { ov.hidden = true; document.documentElement.style.overflow = ''; }
+    $$('.pst-lang button').forEach(function (b) { b.addEventListener('click', function () {
+      var l = b.getAttribute('data-lang'); if (l === LANG) return; LANG = l;
+      $$('.pst-lang button').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
+      files = []; grid.innerHTML = ''; saveB.disabled = true; if (!busy) generate();
+    }); });
     $('#print-btn').addEventListener('click', open);
     $('#pst-x').addEventListener('click', close);
     $('#pst-print').addEventListener('click', function () { close(); setTimeout(function () { window.print(); }, 100); });
