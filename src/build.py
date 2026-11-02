@@ -237,7 +237,7 @@ def event_html(e):
     else:
         img = (f'<figure class="ph"><img class="thumb" src="img/{e["img"]}.jpg" alt="{E(e["title"])}" loading="lazy" decoding="async"></figure>' if e["img"] else "")
     eid = f' id="{e["eid"]}"' if e.get("eid") else ""
-    return (f'<li class="ev"{eid} data-t="{e["data_t"]}" style="--dot:{KIND_DOT[e["kind"]]}">'
+    return (f'<li class="ev"{eid} data-t="{e["data_t"]}" data-kind="{e["kind"]}" style="--dot:{KIND_DOT[e["kind"]]}">'
             f'<time>{E(e["t"])}</time><span class="dot" aria-hidden="true"></span>'
             f'<div class="evb">{img}<h3>{E(e["title"])}{tag}</h3>'
             + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
@@ -332,7 +332,7 @@ page = f'''<!DOCTYPE html>
     <div class="hero-actions">
       <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
       <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
-      <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖨️</span>พิมพ์</button>
+      <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖼️</span>ภาพสรุป</button>
     </div>
   </header>
 
@@ -482,6 +482,12 @@ page = f'''<!DOCTYPE html>
   <div class="tb-top"><span>请看 · ยื่นให้พนักงานดู</span><button type="button" class="tb-x" id="tb-x" aria-label="ปิด">&times;</button></div>
   <div class="tb-zh" id="tb-zh" lang="zh-CN"></div><div class="tb-py" id="tb-py"></div><div class="tb-th" id="tb-th"></div>
   <div class="tb-acts"><button type="button" class="btn" id="tb-say">🔊 播放 ฟังอีกครั้ง</button><button type="button" class="btn alt" id="tb-reply">🎙️ 请用中文回答 ให้พนักงานตอบ</button></div>
+</div>
+<div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
+  <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
+  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
+  <p class="pst-st" id="pst-st"></p>
+  <div class="pst-grid" id="pst-grid"></div>
 </div>
 <div class="lightbox-overlay" id="lightbox-overlay"><span class="lightbox-close" id="lightbox-close" aria-label="ปิด">&times;</span><img id="lightbox-img" src="" alt=""></div>
 <div class="qr-modal-overlay" id="qr-modal-overlay"></div>

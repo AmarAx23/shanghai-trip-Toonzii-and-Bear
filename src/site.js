@@ -731,7 +731,186 @@
     var b = this, data = { title: document.title, text: 'แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026', url: location.href };
     if (navigator.share) navigator.share(data).catch(function () {}); else copy(b);
   });
-  $('#print-btn').addEventListener('click', function () { window.print(); });
+  // ---- Poster summaries (one picture per day, drawn on canvas) ----
+  (function () {
+    var ov = $('#pst'), grid = $('#pst-grid'), stEl = $('#pst-st'), saveB = $('#pst-save'), files = [], busy = false;
+    var W = 1080, RED = '#B0242E', NAVY = '#0F3A54', GOLD = '#C79A3F', CREAM = '#FBF4E4', INK = '#1B2730', MUTED = '#6B7680';
+    var HEAD = "600 {s}px Kanit, 'Noto Sans Thai', sans-serif", BODY = "{w} {s}px 'Noto Sans Thai', sans-serif";
+    var EMO = { fly: '✈️', stay: '🏨', food: '🍜', see: '📍', shop: '🛍️', go: '🚇' };
+    function fH(s) { return HEAD.replace('{s}', s); } function fB(s, w) { return BODY.replace('{s}', s).replace('{w}', w || 400); }
+    function rr(x, y, w, h, r, c) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+    var seg = window.Intl && Intl.Segmenter ? new Intl.Segmenter('th', { granularity: 'word' }) : null;
+    function pieces(t) { if (seg) return Array.from(seg.segment(t), function (x) { return x.segment; }); return t.match(/[฀-๿][ัิ-ฺ็-๎]*|\S+\s*|\s/g) || []; }
+    function wrap(c, t, maxW, maxL) {
+      var out = [], line = '';
+      pieces(t).forEach(function (p) {
+        if (out.length >= maxL) return;
+        if (c.measureText(line + p).width <= maxW || !line) line += p;
+        else { out.push(line.trim()); line = p.replace(/^\s+/, ''); }
+      });
+      if (line && out.length < maxL) out.push(line.trim());
+      var used = out.join('').replace(/\s/g, '').length, all = t.replace(/\s/g, '').length;
+      if (used < all && out.length) { var l = out[out.length - 1]; while (l && c.measureText(l + '…').width > maxW) l = l.slice(0, -1); out[out.length - 1] = l.replace(/[\s·,]+$/, '') + '…'; }
+      return out;
+    }
+    function img(src) { return new Promise(function (ok) { if (!src) return ok(null); var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ok(null); }; i.src = src; }); }
+    function cover(c, im, x, y, w, h) { var k = Math.max(w / im.width, h / im.height), sw = w / k, sh = h / k; c.drawImage(im, (im.width - sw) / 2, (im.height - sh) / 2, sw, sh, x, y, w, h); }
+    function lantern(c, x, y, s) {
+      c.save(); c.translate(x, y); c.scale(s, s);
+      c.strokeStyle = '#E8C877'; c.lineWidth = 2; c.beginPath(); c.moveTo(20, -40); c.lineTo(20, 18); c.stroke();
+      c.fillStyle = '#E8C877'; rr(12, 16, 16, 6, 2, c); c.fill(); rr(12, 64, 16, 5, 2, c); c.fill();
+      c.fillStyle = '#C2303A'; c.beginPath(); c.ellipse(20, 44, 17, 22, 0, 0, 7); c.fill();
+      c.fillStyle = 'rgba(255,179,107,.55)'; c.beginPath(); c.ellipse(20, 44, 11, 15, 0, 0, 7); c.fill();
+      c.strokeStyle = 'rgba(138,26,34,.6)'; c.lineWidth = 1.4; c.beginPath(); c.ellipse(20, 44, 10, 22, 0, 0, 7); c.stroke(); c.beginPath(); c.ellipse(20, 44, 4, 22, 0, 0, 7); c.stroke();
+      c.strokeStyle = '#E8C877'; c.lineWidth = 1.6; [[17, 16], [20, 20], [23, 24]].forEach(function (a) { c.beginPath(); c.moveTo(a[0], 69); c.lineTo(a[1], 87); c.stroke(); });
+      c.restore();
+    }
+    function cloud(c, x, y, s, a) {
+      c.save(); c.translate(x, y); c.scale(s, s); c.globalAlpha = a; c.strokeStyle = GOLD; c.lineWidth = 3; c.lineCap = 'round';
+      c.beginPath(); c.arc(30, 30, 16, Math.PI * 0.9, Math.PI * 1.9); c.arc(58, 22, 20, Math.PI * 1.1, Math.PI * 1.95); c.arc(86, 32, 13, Math.PI * 1.3, Math.PI * 0.5); c.lineTo(22, 45); c.arc(22, 37, 8, Math.PI * 0.5, Math.PI * 1.3); c.stroke();
+      c.beginPath(); c.arc(48, 34, 7, 0, Math.PI * 1.6); c.stroke();
+      c.restore();
+    }
+    function background(c, H) {
+      var g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, CREAM); g.addColorStop(1, '#F3E3C6'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+      for (var yy = 620, k = 0; yy < H; yy += 260, k++) { cloud(c, k % 2 ? 860 : 20, yy, 1.6, 0.18); cloud(c, k % 2 ? 30 : 900, yy + 130, 1.1, 0.12); }
+    }
+    function header(c, hero, top, big, title, sub, pill) {
+      var h = 560; c.save(); rr(0, -60, W, h + 60, 70, c); c.clip();
+      if (hero) cover(c, hero, 0, 0, W, h); else { c.fillStyle = NAVY; c.fillRect(0, 0, W, h); }
+      var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(10,38,58,.78)'); g.addColorStop(.6, 'rgba(12,44,66,.86)'); g.addColorStop(1, 'rgba(120,26,34,.92)'); c.fillStyle = g; c.fillRect(0, 0, W, h);
+      c.restore();
+      lantern(c, 800, 30, 1.25); lantern(c, 880, 36, 1.5); lantern(c, 970, 26, 1.15);
+      c.textAlign = 'left'; c.fillStyle = '#EBCB82'; c.font = fH(34); c.fillText(top, 70, 130);
+      c.fillStyle = '#fff'; c.font = fH(big ? 96 : 52);
+      if (big) { c.fillText(big, 70, 245); }
+      c.font = fH(big ? 60 : 72); var lines = wrap(c, title, W - 140, 2), y = big ? 330 : 240;
+      lines.forEach(function (l) { c.fillText(l, 70, y); y += big ? 72 : 84; });
+      c.font = fB(32); c.fillStyle = 'rgba(255,255,255,.88)'; if (sub) c.fillText(sub, 70, y + 4);
+      if (pill) { c.font = fB(32, 700); var pw = c.measureText(pill).width + 64; c.fillStyle = 'rgba(255,255,255,.16)'; rr(70, h - 120, pw, 68, 34, c); c.fill(); c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2; c.stroke(); c.fillStyle = '#fff'; c.fillText(pill, 102, h - 74); }
+      // ribbon
+      c.save(); rr(-10, h + 26, W + 20, 34, 0, c); c.clip(); c.fillStyle = RED; c.fillRect(0, h + 26, W, 34); c.fillStyle = 'rgba(255,255,255,.9)';
+      for (var x = -40; x < W + 40; x += 56) { c.beginPath(); c.moveTo(x, h + 60); c.lineTo(x + 22, h + 26); c.lineTo(x + 40, h + 26); c.lineTo(x + 18, h + 60); c.fill(); }
+      c.restore();
+      return h + 110;
+    }
+    function footer(c, y, tip) {
+      if (tip) {
+        c.font = fB(30); var ls = wrap(c, tip, W - 240, 4), bh = 60 + ls.length * 44;
+        c.fillStyle = '#FFF6DF'; rr(60, y, W - 120, bh, 36, c); c.fill(); c.strokeStyle = GOLD; c.lineWidth = 3; c.stroke();
+        c.font = fB(46); c.fillText('⭐', 92, y + 70);
+        c.fillStyle = '#5A4515'; c.font = fB(30); ls.forEach(function (l, i) { c.fillText(l, 160, y + 64 + i * 44); }); y += bh + 50;
+      }
+      c.textAlign = 'center'; c.fillStyle = NAVY; c.font = fH(34); c.fillText('🐻 Toonzii & Bear · Shanghai 5–12 ธ.ค. 2026 🎄', W / 2, y + 10);
+      c.fillStyle = MUTED; c.font = fB(22); c.fillText('ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons', W / 2, y + 52);
+      c.textAlign = 'left';
+      return y + 90;
+    }
+    function card(c, y, e, i, pic, measureOnly) {
+      var col = i % 2 ? '#1D5C82' : RED, x = 60, w = W - 120, tx = x + (pic ? 350 : 250), tw = x + w - 36 - tx;
+      c.font = fH(44); var tl = wrap(c, e.title, tw, 2); c.font = fB(28); var nl = e.note ? wrap(c, e.note, tw, 2) : [];
+      var th = tl.length * 54 + (nl.length ? 12 + nl.length * 40 : 0), h = Math.max(pic ? 240 : 200, th + 96);
+      if (measureOnly) return h;
+      c.fillStyle = '#fff'; rr(x, y, w, h, 44, c); c.fill(); c.strokeStyle = col; c.lineWidth = 6; c.stroke();
+      // time pill
+      c.font = fH(40); var pw = c.measureText(e.time).width + 70;
+      c.fillStyle = col; rr(W / 2 - pw / 2, y - 34, pw, 66, 33, c); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 5; c.stroke();
+      c.fillStyle = '#fff'; c.textAlign = 'center'; c.fillText(e.time, W / 2, y + 12); c.textAlign = 'left';
+      var iy = y + (h - (pic ? 170 : 150)) / 2 + 12;
+      if (pic) { c.save(); rr(x + 34, iy, 290, 170, 26, c); c.clip(); cover(c, pic, x + 34, iy, 290, 170); c.restore(); }
+      else { c.fillStyle = i % 2 ? '#E7F0F7' : '#FBEDEE'; c.beginPath(); c.arc(x + 125, iy + 75, 75, 0, 7); c.fill(); c.font = fB(72); c.textAlign = 'center'; c.fillText(EMO[e.kind] || '📍', x + 125, iy + 100); c.textAlign = 'left'; }
+      var ty = y + (h - th) / 2 + 52;
+      c.fillStyle = NAVY; c.font = fH(44); tl.forEach(function (l) { c.fillText(l, tx, ty); ty += 54; });
+      c.fillStyle = MUTED; c.font = fB(28); ty += 4; nl.forEach(function (l) { c.fillText(l, tx, ty); ty += 40; });
+      return h;
+    }
+    function toBlob(cv) { return new Promise(function (ok) { cv.toBlob(function (b) { ok(b); }, 'image/jpeg', 0.92); }); }
+    function cleanTitle(h) { var x = h.cloneNode(true); $$('.tag', x).forEach(function (t) { t.remove(); }); return x.textContent.trim(); }
+    function firstSentence(t) { t = (t || '').replace(/\s+/g, ' ').trim(); var p = t.split(' · '); return p.slice(0, 2).join(' · '); }
+
+    function dayData(sec) {
+      var p = $('.dh-txt p', sec).textContent.split('·');
+      return {
+        n: sec.getAttribute('data-day'), title: cleanTitle($('.dh-txt h3', sec)), date: p[0].trim(), wx: (p[1] || '').trim(), icon: $('.dicon', sec).textContent.trim(),
+        disney: !!$('.dh-txt .tag', sec), tip: ($('.note', sec) ? $('.note', sec).textContent.replace('⭐', '').trim() : ''),
+        evs: $$('.ev', sec).map(function (ev) { var im = $('img.thumb', ev), n = $('.evb > p', ev); return { time: $('time', ev).textContent.trim(), kind: ev.getAttribute('data-kind'), title: cleanTitle($('h3', ev)), note: n ? firstSentence(n.textContent) : '', src: im ? im.getAttribute('src') : '' }; })
+      };
+    }
+    function drawDay(d, hero) {
+      var pics = d.evs.map(function (e) { return img(e.src); });
+      return Promise.all(pics).then(function (pics) {
+        var cv = document.createElement('canvas'), c = cv.getContext('2d'); cv.width = W; cv.height = 10;
+        var hs = d.evs.map(function (e, i) { return card(c, 0, e, i, pics[i], true); });
+        c.font = fB(30); var tipH = d.tip ? 60 + wrap(c, d.tip, W - 240, 4).length * 44 + 50 : 0;
+        var H = 670 + hs.reduce(function (a, b) { return a + b + 86; }, 0) + tipH + 120;
+        cv.height = H; background(c, H);
+        var y = header(c, hero, 'SHANGHAI TRIP 2026' + (d.disney ? ' · DISNEY DAY' : ''), null, 'DAY ' + d.n + ' • ' + d.title, null, '📅 ' + d.date + ' 2026' + (d.wx ? '  ·  ' + d.wx : ''));
+        y += 20;
+        d.evs.forEach(function (e, i) {
+          if (i) { c.fillStyle = GOLD; for (var k = 0; k < 4; k++) { c.beginPath(); c.arc(W / 2, y - 76 + k * 14, 4, 0, 7); c.fill(); } }
+          y += card(c, y, e, i, pics[i]) + 86;
+        });
+        footer(c, y - 20, d.tip);
+        return toBlob(cv);
+      });
+    }
+    function drawCover(days, hero) {
+      var cv = document.createElement('canvas'), c = cv.getContext('2d'), H = 670 + days.length * 150 + 330 + 160;
+      cv.width = W; cv.height = H; background(c, H);
+      var y = header(c, hero, 'SHANGHAI · DECEMBER 2026', 'เซี่ยงไฮ้', '8 วัน 7 คืน', '5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland', '🏨 Atour X Hotel · Huaihai Rd');
+      y += 10;
+      days.forEach(function (d, i) {
+        var col = i % 2 ? '#1D5C82' : RED;
+        c.fillStyle = '#fff'; rr(60, y, W - 120, 126, 63, c); c.fill(); c.strokeStyle = col; c.lineWidth = 4; c.stroke();
+        c.fillStyle = col; c.beginPath(); c.arc(126, y + 63, 46, 0, 7); c.fill();
+        c.fillStyle = '#fff'; c.font = fH(48); c.textAlign = 'center'; c.fillText(d.n, 126, y + 80); c.textAlign = 'left';
+        c.fillStyle = MUTED; c.font = fB(26); c.fillText(d.date + (d.disney ? ' · DISNEY DAY' : ''), 200, y + 48);
+        c.fillStyle = NAVY; c.font = fH(40); var t = wrap(c, d.title, W - 120 - 140 - 130, 1)[0]; c.fillText(t, 200, y + 98);
+        c.font = fB(60); c.textAlign = 'right'; c.fillText(d.icon, W - 96, y + 86); c.textAlign = 'left';
+        y += 150;
+      });
+      // flights
+      var fl = $$('.passw .pass').map(function (p) { var ap = $$('.route .ap b', p).map(function (b) { return b.textContent; }), tm = $$('.times span', p).map(function (s) { return s.textContent; }); return $('.stub b', p).textContent + '  ' + ap[0] + ' ' + tm[0] + ' → ' + ap[1] + ' ' + tm[1]; });
+      c.fillStyle = NAVY; rr(60, y + 10, W - 120, 250, 40, c); c.fill();
+      c.fillStyle = '#EBCB82'; c.font = fH(34); c.fillText('✈️ Spring Airlines', 100, y + 70);
+      c.fillStyle = '#fff'; c.font = fH(40); if (fl[0]) c.fillText('ไป  ' + fl[0], 100, y + 140); if (fl[1]) c.fillText('กลับ ' + fl[1], 100, y + 210);
+      footer(c, y + 330, '');
+      return toBlob(cv);
+    }
+    function addFig(blob, name, cap) {
+      var url = URL.createObjectURL(blob), f = document.createElement('figure');
+      f.innerHTML = '<a href="' + url + '" download="' + name + '"><img alt="' + cap + '" src="' + url + '"></a><figcaption>' + cap + '</figcaption>';
+      grid.appendChild(f); files.push(new File([blob], name, { type: 'image/jpeg' }));
+    }
+    function generate() {
+      if (busy || files.length) return; busy = true; grid.innerHTML = ''; saveB.disabled = true;
+      var secs = $$('.day'), days = secs.map(dayData), n = 0, total = days.length + 1;
+      function prog() { stEl.textContent = 'กำลังทำภาพ ' + n + '/' + total + '…'; }
+      prog();
+      var fontsReady = document.fonts && document.fonts.load ? Promise.all([document.fonts.load(fH(40), 'กขABC'), document.fonts.load(fB(30), 'กขABC'), document.fonts.load(fB(30, 700), 'กขABC')]).catch(function () {}) : Promise.resolve();
+      fontsReady.then(function () { return img('img/hd/hero-960.webp'); }).then(function (hero) {
+        var chain = drawCover(days, hero).then(function (b) { n++; prog(); addFig(b, 'shanghai-trip-00-overview.jpg', 'ภาพรวมทริป'); });
+        days.forEach(function (d) {
+          chain = chain.then(function () { return drawDay(d, hero); }).then(function (b) { n++; prog(); addFig(b, 'shanghai-trip-day' + d.n + '.jpg', 'วันที่ ' + d.n + ' · ' + d.date); });
+        });
+        return chain;
+      }).then(function () {
+        busy = false; saveB.disabled = false;
+        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะค้างที่รูปแล้วเลือก "บันทึกลงรูปภาพ" หรือกดบันทึกทั้งหมด';
+      }).catch(function () { busy = false; stEl.textContent = 'ทำภาพไม่สำเร็จ ลองใหม่อีกครั้ง'; });
+    }
+    function open() { ov.hidden = false; document.documentElement.style.overflow = 'hidden'; generate(); }
+    function close() { ov.hidden = true; document.documentElement.style.overflow = ''; }
+    $('#print-btn').addEventListener('click', open);
+    $('#pst-x').addEventListener('click', close);
+    $('#pst-print').addEventListener('click', function () { close(); setTimeout(function () { window.print(); }, 100); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) close(); });
+    saveB.addEventListener('click', function () {
+      if (navigator.canShare && navigator.canShare({ files: files })) { navigator.share({ files: files, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {}); return; }
+      $$('a[download]', grid).forEach(function (a, i) { setTimeout(function () { a.click(); }, i * 350); });
+    });
+    window.__posters = { open: open };
+  })();
   (function () {
     var ov = $('#qr-modal-overlay'), md = $('#qr-modal');
     function open() {

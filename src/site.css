@@ -471,13 +471,29 @@
   .rv .ph.cur::after { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(100deg, var(--gold-soft), color-mix(in srgb, var(--gold) 35%, var(--gold-soft))); transform-origin: right; transition: transform .85s cubic-bezier(.7,0,.2,1) .05s; pointer-events: none; }
   .rv .ph.cur.open .thumb { transform: none; }
   .rv .ph.cur.open::after { transform: scaleX(0); }
+
+  /* Poster gallery (ภาพสรุป) */
+  .pst { position: fixed; inset: 0; z-index: 1001; background: var(--bg); overflow: auto; padding: calc(10px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom)); }
+  .pst[hidden] { display: none; }
+  .pst-bar { display: flex; justify-content: space-between; align-items: center; position: sticky; top: calc(-10px - env(safe-area-inset-top)); background: var(--bg); padding: 6px 0; z-index: 2; }
+  .pst-bar b { font-family: var(--head); font-weight: 600; font-size: 20px; color: var(--navy); }
+  .pst-x { font-size: 34px; line-height: 1; border: none; background: none; color: var(--ink); cursor: pointer; padding: 0 4px; }
+  .pst-acts { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
+  .pst-acts .btn { flex: 1; min-width: 150px; }
+  .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
+  .btn:disabled { opacity: .55; }
+  .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
+  .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; }
+  .pst-grid figure { margin: 0; animation: trIn .4s ease both; }
+  .pst-grid img { width: 100%; display: block; border-radius: 14px; box-shadow: 0 6px 18px rgba(15,58,84,.16); background: var(--card); }
+  .pst-grid figcaption { font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
   }
   @media print {
     body { background: #fff; color: #000; }
-    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk, .tr, #tr-h, .tr-big { display: none !important; }
+    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk, .tr, #tr-h, .tr-big, .pst { display: none !important; }
     .day { display: block !important; page-break-inside: avoid; margin-bottom: 18px; }
     .rv .reveal { opacity: 1 !important; transform: none !important; }
     .msvg .draw, .msvg .pin { animation: none !important; }
