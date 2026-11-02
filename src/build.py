@@ -1,0 +1,469 @@
+# Builds index.html for the Shanghai trip site.
+import sys, html
+from urllib.parse import quote
+
+import os as _osroot
+_ROOT = _osroot.path.dirname(_osroot.path.dirname(_osroot.path.abspath(__file__)))
+_HERE = _osroot.path.dirname(_osroot.path.abspath(__file__))
+OUT = sys.argv[1] if len(sys.argv) > 1 else _osroot.path.join(_ROOT, "index.html")
+E = html.escape
+
+HOTEL_Q = "Atour X Hotel, 1329 Huaihai Middle Road, Shanghai"
+
+def apple(q):
+    return "https://maps.apple.com/?q=" + quote(q)
+
+def apple_dir(dest, mode="r", src=HOTEL_Q):
+    return f"https://maps.apple.com/?saddr={quote(src)}&daddr={quote(dest)}&dirflg={mode}"
+
+def amap(kw):
+    return f"https://uri.amap.com/search?keyword={quote(kw)}&city={quote('上海')}&src=shanghaitrip&callnative=1"
+
+def gmap(q):
+    return "https://www.google.com/maps/search/?api=1&query=" + quote(q)
+
+def L(apple_q=None, amap_kw=None, extra=None):
+    out = []
+    if apple_q: out.append(("🍎 Apple Maps", apple(apple_q)))
+    if amap_kw: out.append(("🧭 Amap 高德", amap(amap_kw)))
+    if extra: out += extra
+    return out
+
+TAXI_HOTEL = ("🚕 การ์ดให้คนขับ", "#taxi")
+
+def ev(t, kind, title, note="", img=None, links=None, tag=None, data_t=None, html_note=False):
+    return dict(t=t, kind=kind, title=title, note=note, img=img, links=links or [], tag=tag,
+                data_t=data_t or (t if t[:2].isdigit() else ""), html_note=html_note)
+
+DAYS = [
+ dict(n=1, iso="2026-12-05", dow="ส.", date="เสาร์ 5 ธ.ค.", title="เดินทางไปเซี่ยงไฮ้", icon="✈️", wx="🌙 ~8°C กลางคืน",
+  events=[
+   ev("13:45", "fly", "เช็คอินสนามบินสุวรรณภูมิ", "เผื่อเวลา 3 ชม. ก่อนบิน · ชั่งกระเป๋าถือไม่เกิน 10 กก. · Spring Airlines เป็นโลว์คอสต์ ไม่มีอาหารฟรีบนเครื่อง", "bkk",
+      [("📍 Google Maps", gmap("Suvarnabhumi Airport"))], data_t="14:45"),
+   ev("16:45", "fly", "บิน BKK → PVG · 9C7284", "บินประมาณ 4 ชม. 20 น. · เวลาจีนเร็วกว่าไทย 1 ชม.", data_t="17:45"),
+   ev("22:05", "fly", "ถึงสนามบินผู่ตง", "ผ่าน ตม. รับกระเป๋า แล้วเรียก Didi หรือต่อคิวแท็กซี่ · ยื่นการ์ดที่อยู่ภาษาจีนให้คนขับดูได้เลย", "pvg",
+      L("Shanghai Pudong International Airport Terminal 2", "浦东国际机场2号航站楼", [TAXI_HOTEL]), tag="อาคาร 2"),
+   ev("23:45", "stay", "เช็คอิน Atour X Hotel",
+      'ชั้น 1 และ 6–11 อาคาร Yunhai, 1329 Huaihai Middle Road เขต Xuhui · เดิน ~160 ม. ถึง MRT Changshu Road (สาย 1, 7) · โทร <a href="tel:+8615002128856">+86 150 0212 8856</a>, <a href="tel:+862133561052">+86 21 3356 1052</a>',
+      None, L(HOTEL_Q, "淮海中路1329号", [TAXI_HOTEL]), tag="ที่พัก", html_note=True),
+  ], note="เครื่องลงค่ำ ถึงที่พักราว 23:45 (เช็คอินได้ตั้งแต่ 14:00 มาดึกได้) พักให้เต็มที่ พรุ่งนี้เริ่มสายได้"),
+
+ dict(n=2, iso="2026-12-06", dow="อา.", date="อาทิตย์ 6 ธ.ค.", title="เที่ยวเบา ๆ + The Bund", icon="🌉", wx="⛅ 5–10°C",
+  events=[
+   ev("11:00", "go", "ออกจากที่พัก ไป People's Square", "รถไฟฟ้าสาย 1 จาก Changshu Road ไป People's Square ~15 นาที หรือเรียก Didi",
+      None, [("🧭 เส้นทางจากที่พัก", apple_dir("People's Square, Shanghai"))]),
+   ev("11:30", "food", "Lai Lai Xiao Long Bao (莱莱小笼)", "เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People's Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing'an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)",
+      "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路"), tag="มื้อกลางวัน"),
+   ev("13:30", "see", "People's Square", "แวะคาเฟ่หรือห้างแถวนี้ หลบหนาว ปรับตัวก่อนเดินต่อ", "peoples-square", L("People's Square, Shanghai", "人民广场")),
+   ev("17:00", "shop", "Nanjing Road Pedestrian Street", "ถนนช้อปปิ้งหลัก ไฟคริสต์มาสตามห้าง · เดินต่อไป The Bund ได้เลย", "nanjing-road", L("Nanjing Road Pedestrian Street, Shanghai", "南京路步行街")),
+   ev("18:30", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
+  ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ"),
+
+ dict(n=3, iso="2026-12-07", dow="จ.", date="จันทร์ 7 ธ.ค.", title="Wukang Road + Lujiazui", icon="🌳", wx="☁️ 4–8°C",
+  events=[
+   ev("11:00", "food", "Grandma's Home (奶奶家) สาขา Wukang Road", "ร้านอาหารเซี่ยงไฮ้ชื่อดัง", "grandmas-home", L("Grandma's Home Wukang Road, Shanghai", "奶奶家 武康路"), tag="มื้อกลางวัน"),
+   ev("12:30", "see", "เดินเล่น Wukang Road", "ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย", "wukang-road", L("Wukang Mansion, Shanghai", "武康大楼")),
+   ev("16:00", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui ข้ามฝั่งด้วยรถไฟฟ้าสาย 2 ลงสถานี Lujiazui · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
+   ev("18:30", "food", "Chef Fei (费大厨)", "ร้านพริกผัดหมูชื่อดัง (辣椒炒肉) รสจัดจ้านสไตล์หูหนาน", "chef-fei", L("Chef Fei Lujiazui, Shanghai", "费大厨 陆家嘴"), tag="มื้อเย็น"),
+   ev("21:00", "shop", "เดินถนน Huaihai Road แถวที่พัก", "ถนนช้อปปิ้งหน้าที่พัก ไฟประดับสวยตอนค่ำ · ไม่ไปก็ได้ถ้าเหนื่อย", "huaihai-road", L("Huaihai Middle Road, Shanghai", "淮海中路")),
+  ], note="Yu Garden ปิดทุกวันจันทร์ เลยย้ายไปพรุ่งนี้ ส่วนที่เที่ยววันนี้เปิดปกติ"),
+
+ dict(n=4, iso="2026-12-08", dow="อ.", date="อังคาร 8 ธ.ค.", title="เมืองเก่า + Yu Garden", icon="🏮", wx="🌥️ 4–9°C",
+  events=[
+   ev("11:00", "food", "Canton 8 (喜粤8号) สาขา Runan Street", "ร้านอาหารกวางตุ้ง", "canton8", L("Canton 8 Runan Street, Shanghai", "喜粤8号"), tag="มื้อกลางวัน"),
+   ev("12:45", "see", "Xintiandi (新天地)", "ตรอกอิฐแดงสไตล์ Shikumen ผสมจีน-ยุโรป · คาเฟ่ ร้านบูติก", "xintiandi", L("Xintiandi, Shanghai", "新天地")),
+   ev("14:30", "see", "Yu Garden (豫园) เข้าชมในสวน", "สวนจีนโบราณกว่า 400 ปี · เปิด 8:45–16:45 ปิดวันจันทร์ ต้องเข้าก่อนบ่าย 4 · ซื้อตั๋วหน้างานหรือในแอป", "yu-garden", L("Yu Garden, Shanghai", "豫园")),
+   ev("17:00", "shop", "Yuyuan Bazaar + City God Temple (城隍庙)", "ร้านค้าและแผงขนมรอบสวน เปิดไฟสวยตอนค่ำ · ซื้อของฝาก", None, L("Shanghai City God Temple", "上海城隍庙")),
+   ev("19:00", "food", "New Sukiyaki (牛New寿喜烧) ใกล้ Yu Garden", "บุฟเฟต์สุกี้ยากี้ญี่ปุ่นชื่อดัง · เนื้อหลายเกรด ซีฟู้ด น้ำซุปหลายแบบ · เริ่ม ~149 หยวน", "new-sukiyaki", L("New Sukiyaki Yu Garden, Shanghai", "牛New寿喜烧 豫园"), tag="มื้อเย็น"),
+  ], note="Yu Garden ปิด 16:45 เลยเรียงให้เข้าชมในสวนตอนบ่าย แล้วค่อยเดินตลาดตอนเปิดไฟ"),
+
+ dict(n=5, iso="2026-12-09", dow="พ.", date="พุธ 9 ธ.ค.", title="Shanghai Disneyland", icon="🏰", wx="☀️ 3–9°C", disney=True,
+  events=[
+   ev("07:00", "go", "ออกจากที่พัก ไป Disney", "เรียก Didi ~45–60 นาที (~¥100–150) หรือรถไฟฟ้าต่อสาย 11 ไปสถานี Disney Resort ~1 ชม. · สวนเปิดประมาณ 08:30 เช็กเวลาในแอป Shanghai Disney Resort",
+      "disneyland", [("🧭 เส้นทางจากที่พัก", apple_dir("Shanghai Disneyland")), ("🧭 Amap 高德", amap("上海迪士尼乐园"))]),
+   ev("08:30", "see", "Enchanted Storybook Castle", "ปราสาทใหญ่ที่สุดในบรรดาดิสนีย์แลนด์ทั่วโลก ถ่ายรูปก่อนคนเยอะ", "castle"),
+   ev("10:00", "see", "Zootopia + Tomorrowland", "Zootopia: Hot Pursuit และ TRON คิวยาว · ซื้อ Premier Access ในแอปหลังเข้าสวน ~¥140–180 ต่อเครื่องเล่น"),
+   ev("13:00", "see", "Adventure Isle", "Roaring Rapids และโซนผจญภัย", "adventure-isle"),
+   ev("15:00", "see", "Treasure Cove", "โซนโจรสลัด Pirates of the Caribbean: Battle for the Sunken Treasure", "treasure-cove"),
+   ev("18:00", "food", "มื้อเย็นในสวน", "กินก่อนไปหาที่ดูโชว์ หน้าปราสาทคนเริ่มแน่นตั้งแต่ 20:00", tag="มื้อเย็น"),
+   ev("21:15", "see", "Illuminate! + พลุ Magic All Around", "โชว์แสงสีฉายบนปราสาท 21:15 ต่อด้วยพลุฉลองครบ 10 ปี 21:30 · วันธรรมดามีรอบเดียว · ที่ดูแบบจองต้องซื้อ Premier Access ¥299", "fireworks"),
+   ev("22:00", "go", "กลับที่พัก", "รถไฟฟ้าสาย 11 เที่ยวสุดท้ายออกจากสถานี Disney Resort ประมาณ 22:30 · Didi หลัง 22:00 ราคาขึ้น 2–3 เท่า (~¥300)"),
+  ], note="วันพุธคนน้อยและตั๋วถูกกว่าเสาร์-อาทิตย์ (ประมาณ ¥499–539 ต่อคน) · ต่อแถวกลางแจ้งนาน ใส่เสื้อหนา · ปีนี้ฉลองครบ 10 ปี มีโชว์และขบวนพาเหรดพิเศษ"),
+
+ dict(n=6, iso="2026-12-10", dow="พฤ.", date="พฤหัส 10 ธ.ค.", title="Zhujiajiao เมืองน้ำโบราณ", icon="🚤", wx="⛅ 4–10°C",
+  events=[
+   ev("09:30", "go", "ออกจากที่พัก ไป Zhujiajiao", "Didi ~1 ชม. หรือรถไฟฟ้าสาย 17 ลงสถานี Zhujiajiao", None,
+      [("🧭 เส้นทางจากที่พัก", apple_dir("Zhujiajiao Ancient Town, Shanghai")), ("🧭 Amap 高德", amap("朱家角古镇"))]),
+   ev("10:30", "see", "เดินเล่นเมืองน้ำ Zhujiajiao (朱家角)", "คลอง สะพานหิน Fangsheng Bridge (放生桥) บ้านเรือนโบราณ · นั่งเรือชมคลอง · วันธรรมดาคนน้อยกว่าเสาร์-อาทิตย์", None, L("Zhujiajiao Ancient Town, Shanghai", "朱家角古镇")),
+   ev("12:30", "food", "มื้อกลางวันในเมืองน้ำ", "ร้านริมคลองมีเยอะ ลองบ๊ะจ่าง (粽子) ของขึ้นชื่อ", tag="มื้อกลางวัน"),
+   ev("15:30", "go", "กลับเข้าเมือง พักผ่อน", "แวะพักที่ที่พักก่อนออกไปกินมื้อเย็น"),
+   ev("19:00", "food", "มื้อเย็นแถวที่พัก", "ร้านแถว Huaihai Road เดินจากที่พักได้", tag="มื้อเย็น"),
+  ], note="ถ้าวันนี้อยากเที่ยวในเมือง สลับกับวันพรุ่งนี้ได้"),
+
+ dict(n=7, iso="2026-12-11", dow="ศ.", date="ศุกร์ 11 ธ.ค.", title="วัดพระหยก + M50 + Tianzifang", icon="🙏", wx="🌤️ 5–11°C",
+  events=[
+   ev("09:30", "see", "Jade Buddha Temple (玉佛禅寺)", "เปิด 8:00–16:30 · ไปเช้าคนน้อย", None, L("Jade Buddha Temple, Shanghai", "玉佛禅寺")),
+   ev("11:30", "see", "M50 Art District (M50创意园)", "แกลเลอรีส่วนใหญ่เปิด 11:00–17:00 ปิดวันจันทร์", None, L("M50 Art District, Shanghai", "M50创意园")),
+   ev("14:30", "shop", "Tianzifang (田子坊) เก็บของฝาก", "ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ใกล้ที่พัก", None, L("Tianzifang, Shanghai", "田子坊")),
+   ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) · ย้ายมาจากวัน Disney เพราะโชว์จบดึก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场"), tag="มื้อเย็น"),
+   ev("20:30", "stay", "เก็บกระเป๋า", "ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
+  ], note="พรุ่งนี้ต้องเช็คเอาท์ก่อน 12:00 และออกไปสนามบินประมาณ 13:00"),
+
+ dict(n=8, iso="2026-12-12", dow="ส.", date="เสาร์ 12 ธ.ค.", title="เดินทางกลับ", icon="✈️", wx="🌤️ 5–11°C",
+  events=[
+   ev("10:00", "stay", "เช็คเอาท์ Atour X Hotel", "ต้องเช็คเอาท์ก่อน 12:00 · ฝากกระเป๋าที่ล็อบบี้ได้ถ้าจะออกไปเดินเล่นก่อน"),
+   ev("11:00", "food", "มื้อสายแถว Huaihai Road", "กินใกล้ที่พัก ไม่ควรไปไกล"),
+   ev("13:00", "fly", "ไปสนามบินผู่ตง อาคาร 2", "Didi หรือแท็กซี่ ~1 ชม. · ถึงก่อนบิน 2–3 ชม.", None,
+      [("🧭 เส้นทางจากที่พัก", apple_dir("Shanghai Pudong International Airport Terminal 2", "d")), ("🧭 Amap 高德", amap("浦东国际机场2号航站楼")), ("🚕 การ์ดให้คนขับ", "#taxi-pvg")]),
+   ev("17:00", "fly", "บิน PVG → BKK · 9C7289", "บินประมาณ 4 ชม. 45 น. ถึงสุวรรณภูมิ 20:45 (เวลาไทย)"),
+  ], note="ขากลับมีของฝาก ชั่งกระเป๋าก่อนออกจากที่พัก"),
+]
+
+BUDGET = [("ตั๋วเครื่องบิน Spring Airlines ไป-กลับ", 13330, "✈️"), ("ที่พัก 7 คืน Atour X Hotel", 6565, "🏨"), ("ค่าอาหาร", 5000, "🍜"),
+          ("ตั๋ว Disney + คูปอง 30 หยวน", 2208, "🏰"), ("ค่าเดินทางในเมือง", 1000, "🚇"), ("ค่าเดินทางไป-กลับสนามบิน", 800, "🚕"),
+          ("e-SIM", 632, "📱"), ("ประกันการเดินทาง", 325, "🛡️")]
+TOTAL = sum(b[1] for b in BUDGET)
+assert TOTAL == 29860
+
+PACK = [("sim", "📱", "ซิมต่างประเทศ / eSIM จีน"), ("pay", "💳", "Alipay / WeChat Pay ผูกบัตร"), ("passport", "🛂", "Passport + สำเนา"),
+        ("powerbank", "🔋", "Power Bank ≤100Wh"), ("meds", "💊", "ยาแก้แพ้ / แก้ปวด"), ("plug", "🔌", "หัวแปลงปลั๊กไฟ (Type A/I)"),
+        ("coat", "🧣", "เสื้อกันหนาว + ผ้าพันคอ + ถุงมือ"), ("booking", "📄", "ปริ้น Booking ทั้งหมด"), ("vpn", "🌐", "VPN (Google/LINE ใช้ไม่ได้)"),
+        ("shoes", "👟", "รองเท้าเดินสบาย (เดินเยอะ)"), ("cash", "💴", "เงินสดหยวนสำรอง"), ("lipbalm", "💧", "ลิปมัน/โลชั่นกันผิวแห้ง"),
+        ("motionsick", "🤢", "ยาแก้เมารถ/เมาเครื่องบิน"), ("luggage", "⚖️", "ชั่งกระเป๋า: โหลด ≤20 กก. / ถือขึ้น ≤10 กก."), ("umbrella", "☂️", "ร่มพับ/เสื้อกันลม"),
+        ("maps", "🗺️", "โหลด Amap หรือใช้ Apple Maps (Google Maps ใช้ในจีนไม่ได้)")]
+
+SOS = [("110", "👮", "ตำรวจ", "มีสายด่วนรองรับภาษาอังกฤษ", "110"), ("120", "🚑", "รถพยาบาล", "เหตุฉุกเฉินทางการแพทย์", "120"),
+       ("119", "🚒", "ดับเพลิง", "ไฟไหม้ / เหตุฉุกเฉินอื่น ๆ", "119"),
+       ("+862164390630", "🌐", "สายด่วนช่วยเหลือชาวต่างชาติ", "ศูนย์บริการข้อมูลเซี่ยงไฮ้", "+86 21 6439 0630"),
+       ("+862152609899", "🇹🇭", "สถานกงสุลใหญ่ไทย ณ เซี่ยงไฮ้", "ต่อ 888 · 18 ถ.หว่านซาน เขต Changning", "+86 21 5260 9899"),
+       ("+862122163999", "🏥", "รพ. United Family (Changning)", "ห้องฉุกเฉิน 24 ชม. หมอพูดอังกฤษ · 699 Pingtang Rd · Didi ~20–30 นาที", "+86 21 2216 3999"),
+       ("+862162483986", "🏥", "รพ. Huashan 华山医院", "ใกล้ที่พักที่สุด ~1.5 กม. · 12 Middle Wulumuqi Rd · แผนกต่างชาติพูดอังกฤษ จ.–ศ. 8:00–17:00", "+86 21 6248 3986")]
+
+PHRASES = [("多少钱？", "duō shǎo qián", "เท่าไหร่ครับ/คะ"), ("不要辣", "bú yào là", "ไม่เอาเผ็ด"), ("少辣", "shǎo là", "เผ็ดน้อย"),
+           ("洗手间在哪里？", "xǐ shǒu jiān zài nǎ lǐ", "ห้องน้ำอยู่ไหน"), ("可以用支付宝吗？", "kě yǐ yòng zhī fù bǎo ma", "จ่าย Alipay ได้ไหม"),
+           ("这个", "zhè ge", "อันนี้ (ชี้ที่เมนู)"), ("买单", "mǎi dān", "เช็กบิล"), ("谢谢", "xiè xie", "ขอบคุณ")]
+
+TIPS = [("🛂", "วีซ่า", "พาสปอร์ตไทยเข้าจีนแบบ Free Visa อยู่ได้สูงสุด 30 วัน (ไม่เกิน 90 วันใน 180 วัน) · ตั้งแต่ 1 มี.ค. 2026 ไทย-จีนยกเว้นวีซ่าให้กันแบบสองทาง มีผลถึง 31 ธ.ค. 2026 ครอบคลุมทริปนี้"),
+        ("🗺️", "แผนที่ในจีน", "Google Maps ใช้ไม่ได้ถ้าไม่เปิด VPN · ลิงก์ในเว็บนี้ใช้ Apple Maps (ใช้ได้ในจีน) และ Amap 高德 ซึ่งคนท้องถิ่นใช้กัน"),
+        ("📱", "จ่ายเงิน", "โหลด Alipay / WeChat Pay ผูกบัตรต่างชาติไว้ล่วงหน้า ร้านส่วนใหญ่ไม่รับเงินสด"),
+        ("🚇", "รถไฟฟ้า", "ใช้ QR ในแอป Alipay หรือ Shanghai Public Transportation Card ครอบคลุมเกือบทุกจุดเที่ยว"),
+        ("🌐", "อินเทอร์เน็ต", "Google / Facebook / LINE ใช้ไม่ได้ในจีน โหลด VPN หรือใช้ WeChat แทนก่อนเดินทาง"),
+        ("🧥", "อากาศ", "หนาว 4–11°C ใส่เสื้อแบบหลายชั้น เพราะในห้างและร้านเปิดฮีตเตอร์ร้อน"),
+        ("🎡", "Disneyland ครบ 10 ปี", "ปีนี้มีแคมเปญ \"With You, It's Magic+\" โชว์หน้าปราสาทใหม่และขบวนพาเหรดพิเศษ · ซื้อตั๋วล่วงหน้าในเว็บหรือแอปทางการ"),
+        ("🎄", "คริสต์มาส", "ธันวาคมมีไฟประดับตามห้างและ The Bund สวยเป็นพิเศษ")]
+
+KIND_DOT = {"fly": "var(--red)", "stay": "var(--gold)", "food": "#D86A2B", "see": "var(--navy-2)", "shop": "#7F77DD", "go": "var(--muted)"}
+
+def links_html(links):
+    if not links: return ""
+    out = []
+    for label, url in links:
+        ext = "" if url.startswith("#") else ' target="_blank" rel="noopener"'
+        out.append(f'<a href="{E(url)}"{ext}>{E(label)}</a>')
+    return '<div class="links">' + "".join(out) + "</div>"
+
+
+# Approximate coordinates for the day maps (schematic, no map tiles: works offline and in China)
+HOTEL_LL = (31.2162, 121.4458)   # 1329 Middle Huaihai Rd, ~160 m from Changshu Rd station
+PVG_LL = (31.1525, 121.8018)
+GEO = {
+ (1, "22:05"): (PVG_LL, "สนามบินผู่ตง T2"),
+ (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2339, 121.4710), "People's Square"),
+ (2, "17:00"): ((31.2375, 121.4790), "Nanjing Road"), (2, "18:30"): ((31.2400, 121.4905), "The Bund"),
+ (3, "11:00"): ((31.2068, 121.4352), "Grandma's Home"), (3, "12:30"): ((31.2063, 121.4337), "Wukang Mansion"),
+ (3, "16:00"): ((31.2387, 121.4947), "Superbrand Mall"), (3, "18:30"): ((31.2372, 121.5000), "Chef Fei"),
+ (3, "21:00"): ((31.2163, 121.4585), "Huaihai Road"),
+ (4, "11:00"): ((31.2046, 121.4793), "Canton 8"), (4, "12:45"): ((31.2219, 121.4704), "Xintiandi"),
+ (4, "14:30"): ((31.2289, 121.4880), "Yu Garden"), (4, "17:00"): ((31.2280, 121.4880), "City God Temple"),
+ (4, "19:00"): ((31.2272, 121.4900), "New Sukiyaki"),
+ (5, "08:30"): ((31.1440, 121.6570), "Disneyland"),
+ (6, "10:30"): ((31.1136, 121.0515), "Zhujiajiao"),
+ (7, "09:30"): ((31.2437, 121.4398), "วัดพระหยก"), (7, "11:30"): ((31.2499, 121.4447), "M50"),
+ (7, "14:30"): ((31.2103, 121.4641), "Tianzifang"),
+ (8, "13:00"): (PVG_LL, "สนามบินผู่ตง T2"),
+}
+import json
+import sys as _sys, os as _os2; _sys.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__)))
+from tiles import plan as tile_plan
+ALL_TILES = []
+
+def day_geo(d):
+    stops = []
+    for i, e in enumerate(d["events"]):
+        g = GEO.get((d["n"], e["t"]))
+        if g:
+            e["eid"] = f"e{d['n']}-{i}"
+            stops.append({"id": e["eid"], "lat": g[0][0], "lng": g[0][1], "name": g[1], "t": e["t"]})
+    if not stops: return ""
+    route = stops[:]
+    if d["n"] == 1: route = stops + [{"hotel": 1}]
+    elif d["n"] == 8: route = [{"hotel": 1}] + stops
+    else: route = [{"hotel": 1}] + stops + [{"hotel": 1}]
+    data = {"hotel": {"lat": HOTEL_LL[0], "lng": HOTEL_LL[1]}, "route": route}
+    pts = [HOTEL_LL if p.get("hotel") else (p["lat"], p["lng"]) for p in route]
+    tp = tile_plan(pts)
+    data.update(minZoom=tp["minZoom"], maxZoom=tp["maxZoom"], view=tp["bounds"])
+    for t in tp["tiles"]:
+        if t not in ALL_TILES: ALL_TILES.append(t)
+    legend = "".join(f'<button type="button" class="mleg" data-go="{s["id"]}"><b>{k+1}</b>{E(s["name"])}</button>' for k, s in enumerate(stops))
+    return (f'<figure class="dmap" data-geo="{E(json.dumps(data, ensure_ascii=False))}">'
+            f'<div class="lmap" aria-label="แผนที่เส้นทางวันที่ {d["n"]}"></div>'
+            f'<svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ {d["n"]}"></svg>'
+            f'<figcaption><span class="mlegs">{legend}</span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>')
+
+# HD photos from Wikimedia Commons (see img/hd/credits.json): old image name or (day, time) -> key
+import os as _os
+_CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or ".", "img/hd/credits.json"), encoding="utf-8"))}
+HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
+             "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
+             "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
+HD_BY_SLOT = {(4, "17:00"): "citygod", (6, "10:30"): "zhujiajiao", (7, "09:30"): "jade", (7, "11:30"): "m50", (7, "14:30"): "tianzifang"}
+for _d in DAYS:
+    for _e in _d["events"]:
+        _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
+def commons_page(name):
+    return "https://commons.wikimedia.org/wiki/File:" + quote(name.replace(" ", "_"))
+def credit_html(key):
+    r = _CRED[key]
+    return (f'<small class="credit">ภาพ: {E(r[5])} · <a href="{E(commons_page(r[3]))}" target="_blank" rel="noopener">{E(r[4])}</a></small>')
+
+def event_html(e):
+    tag = f' <span class="tag">{E(e["tag"])}</span>' if e["tag"] else ""
+    note = e["note"] if e["html_note"] else E(e["note"])
+    if e.get("hd"):
+        k = e["hd"]
+        img = (f'<figure class="ph"><img class="thumb" src="img/hd/{k}-640.webp" srcset="img/hd/{k}-640.webp 640w, img/hd/{k}-1280.webp 1280w" '
+               f'sizes="(max-width: 640px) calc(100vw - 110px), 520px" alt="{E(e["title"])}" loading="lazy" decoding="async">{credit_html(k)}</figure>')
+    else:
+        img = (f'<img class="thumb" src="img/{e["img"]}.jpg" alt="{E(e["title"])}" loading="lazy" decoding="async">' if e["img"] else "")
+    eid = f' id="{e["eid"]}"' if e.get("eid") else ""
+    return (f'<li class="ev"{eid} data-t="{e["data_t"]}" style="--dot:{KIND_DOT[e["kind"]]}">'
+            f'<time>{E(e["t"])}</time><span class="dot" aria-hidden="true"></span>'
+            f'<div class="evb">{img}<h3>{E(e["title"])}{tag}</h3>'
+            + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
+
+def day_html(d):
+    disney = ' <span class="tag gold">DISNEY DAY</span>' if d.get("disney") else ""
+    mp = day_geo(d)
+    evs = "".join(event_html(e) for e in d["events"])
+    return f'''
+    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" aria-label="วันที่ {d["n"]}">
+      <div class="dayhead">
+        <div class="num">{d["n"]}</div>
+        <div class="dh-txt"><h3>{E(d["title"])}{disney}</h3><p>{E(d["date"])} · <span class="wxb" data-date="{d["iso"]}">{E(d["wx"])}</span></p></div>
+        <div class="dicon" aria-hidden="true">{d["icon"]}</div>
+      </div>
+      {mp}
+      <ol class="tl">{evs}</ol>
+      <div class="note"><span aria-hidden="true">⭐</span><span>{E(d["note"])}</span></div>
+    </section>'''
+
+tabs = "".join(f'<button type="button" class="dtab" data-day="{d["n"]}" aria-controls="day-{d["n"]}"><b>{d["n"]}</b><span>{d["dow"]} {d["iso"][-2:].lstrip("0")}</span></button>' for d in DAYS)
+days = "".join(day_html(d) for d in DAYS)
+
+bmax = max(b[1] for b in BUDGET)
+budget_rows = "".join(f'<li><span class="bi" aria-hidden="true">{i}</span><span class="bl">{E(l)}</span><span class="ba">{a:,} ฿</span><span class="bbar"><i style="width:{a/bmax*100:.1f}%"></i></span></li>' for l, a, i in BUDGET)
+
+CHECK_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>'
+pack_rows = "".join(f'<li class="packing-item" id="pack-{k}"><label><input type="checkbox" data-key="{k}"><span class="pack-box">{CHECK_SVG}</span><span class="packing-txt">{ic} {E(t)}</span></label></li>' for k, ic, t in PACK)
+
+sos_rows = "".join(f'<a class="sos" href="tel:{tel}"><span class="si" aria-hidden="true">{ic}</span><span><b>{E(n)}</b><small>{E(sub)}</small><em>{E(num)}</em></span></a>' for tel, ic, n, sub, num in SOS)
+
+phr_rows = "".join(f'<button type="button" class="phr" data-say="{E(zh)}"><span><span class="zh">{E(zh)}</span><span class="th">{E(th)} · {E(py)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for zh, py, th in PHRASES)
+
+tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
+
+import datetime as _dt
+BUILD = _dt.datetime.now(_dt.timezone(_dt.timedelta(hours=7)))
+BUILD_ID = BUILD.strftime('%Y%m%d%H%M%S')
+_TH_MON = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
+BUILD_TH = f"{BUILD.day} {_TH_MON[BUILD.month-1]} {BUILD.year} {BUILD:%H:%M}"
+CSS = open(sys.argv[2] if len(sys.argv) > 2 else _osroot.path.join(_HERE, "site.css"), encoding="utf-8").read()
+JS = open(sys.argv[3] if len(sys.argv) > 3 else _osroot.path.join(_HERE, "site.js"), encoding="utf-8").read()
+
+page = f'''<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="เซี่ยงไฮ้ 2026">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0F3A54">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<meta name="build" content="{BUILD_ID}">
+<link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
+<link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<title>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026</title>
+<script>try{{var t=localStorage.getItem('hkTripTheme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-theme','dark')}}catch(e){{}}</script>
+<script>if(navigator.standalone)document.documentElement.classList.add('ios-app')</script>
+<style>
+{CSS}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<main class="wrap">
+
+  <header class="hero" id="top">
+    <button class="snow-btn" id="snow-btn" type="button" aria-pressed="true" aria-label="ปิดเปิดหิมะ">❄️</button>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" type="button" aria-label="สลับโหมดมืด"><span class="tt-stars">✦ ✧ ✦</span><span class="tt-cloud">☁️</span><span class="tt-knob"></span></button>
+    <div class="eyebrow">SHANGHAI · DECEMBER 2026</div>
+    <h1>เซี่ยงไฮ้ 8 วัน 7 คืน</h1>
+    <p class="sub">5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland</p>
+    <div class="cd" id="cd" role="timer" aria-label="นับถอยหลังถึงวันเดินทาง"></div>
+    <p class="cd-msg" id="cd-msg"></p>
+    <div class="chips"><span class="chip">🏨 Atour X Huaihai Rd</span><span class="chip">💰 {TOTAL:,} ฿/คน</span><span class="chip">🚇 Metro + Didi</span></div>
+    <div class="hero-actions">
+      <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
+      <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
+      <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖨️</span>พิมพ์</button>
+    </div>
+  </header>
+
+  <aside class="card install" id="install" hidden>
+    <button type="button" class="ins-x" id="ins-x" aria-label="ปิด">&times;</button>
+    <div class="ins-h"><img src="icon-192.png" alt="" width="44" height="44"><div><b>ติดตั้งเป็นแอปบนมือถือ</b><span>เปิดจากหน้าจอโฮมได้เลย ใช้ได้แม้ไม่มีเน็ต</span></div></div>
+    <ol class="ins-ios" id="ins-ios" hidden>
+      <li>กดปุ่มแชร์ <span class="kbd"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M5 11v9h14v-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> ใน Safari</li>
+      <li>เลื่อนลงแล้วเลือก <b>เพิ่มไปยังหน้าจอโฮม</b> (Add to Home Screen)</li>
+      <li>กด <b>เพิ่ม</b> มุมขวาบน</li>
+    </ol>
+    <button type="button" class="btn" id="ins-btn" hidden>📲 ติดตั้งแอป</button>
+  </aside>
+
+  <section class="sec" id="weather" aria-labelledby="wx-h">
+    <div class="sec-h"><h2 id="wx-h">🌤️ อากาศเซี่ยงไฮ้</h2><span class="sec-note" id="wx-note">ค่าเฉลี่ยช่วงเดือนธันวาคม</span></div>
+    <div class="wx" id="wx"></div>
+  </section>
+
+  <section class="sec" id="plan" aria-labelledby="plan-h">
+    <div class="sec-h"><h2 id="plan-h">🗓️ แผนรายวัน</h2><span class="sec-note" id="today-note"></span></div>
+    <div class="dtabs" id="dtabs" role="tablist">{tabs}</div>
+    <div class="card days">{days}
+    </div>
+  </section>
+
+  <section class="sec" id="flights" aria-labelledby="fl-h">
+    <div class="sec-h"><h2 id="fl-h">✈️ ตั๋วเครื่องบิน Spring Airlines</h2></div>
+    <div class="pass">
+      <div class="pm">
+        <span class="tag">ขาไป · เสาร์ 5 ธ.ค. 2026</span>
+        <div class="route"><div class="ap"><b>BKK</b><span>สุวรรณภูมิ</span></div><div class="mid fly" data-dep="2026-12-05T16:45:00+07:00" data-arr="2026-12-05T22:05:00+08:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 20 น.</span></div><div class="ap r"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div></div>
+        <div class="times"><span>16:45</span><span>22:05</span></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a></div>
+      </div>
+      <div class="stub"><small>FLIGHT</small><b>9C7284</b></div>
+    </div>
+    <div class="pass back">
+      <div class="pm">
+        <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
+        <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T17:00:00+08:00" data-arr="2026-12-12T20:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 45 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
+        <div class="times"><span>17:00</span><span>20:45</span></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a></div>
+      </div>
+      <div class="stub"><small>FLIGHT</small><b>9C7289</b></div>
+    </div>
+    <details class="card more">
+      <summary>กระเป๋า เวลาออกจากที่พัก และวิธีเช็กไฟลท์</summary>
+      <ul class="facts">
+        <li><b>🧳 กระเป๋า (ต่อคน ทั้งไปและกลับ)</b>ถือขึ้นเครื่อง 1 ชิ้น ไม่เกิน 10 กก. ขนาดไม่เกิน 55×40×20 ซม. · โหลดรวม 20 กก. ขนาดแต่ละชิ้นไม่เกิน 100×60×40 ซม. · Spring Airlines ชั่งกระเป๋าถือค่อนข้างเข้ม และไม่มีอาหารฟรีบนเครื่อง</li>
+        <li><b>⏰ ขากลับ</b>ออกจากที่พักไปสนามบินประมาณ 13:00 (นั่งรถ ~1 ชม.) ให้ถึงก่อนบิน 2–3 ชม.</li>
+        <li><b>📱 เช็กไฟลท์บน iPhone</b>เปิดแอป Notes หรือ iMessage พิมพ์ <b class="mono">Fly 9C7284</b> หรือ <b class="mono">Fly 9C7289</b> แล้วกดค้างที่รหัสที่มีเส้นใต้ เลือก Preview Flight</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="sec" id="budget" aria-labelledby="bd-h">
+    <div class="sec-h"><h2 id="bd-h">💰 งบประมาณต่อคน</h2></div>
+    <div class="card">
+      <div class="btotal"><span>รวมทั้งหมด</span><b>{TOTAL:,} ฿</b></div>
+      <ul class="blist">{budget_rows}</ul>
+    </div>
+    <div class="card fx">
+      <h3>💱 แปลงเงินหยวน → บาท</h3>
+      <div class="fx-row">
+        <div class="fl-field"><span class="fl-yen" aria-hidden="true">¥</span><input type="number" inputmode="decimal" class="currency-input" id="cny-input" placeholder=" "><label for="cny-input">จำนวนหยวน</label></div>
+        <div class="currency-result" id="thb-result">= 0.00 ฿</div>
+      </div>
+      <div class="cny-chips"><button type="button" class="cny-chip" data-v="50">¥50</button><button type="button" class="cny-chip" data-v="100">¥100</button><button type="button" class="cny-chip" data-v="500">¥500</button><button type="button" class="cny-chip" data-v="1000">¥1,000</button></div>
+      <div class="currency-meta" id="currency-meta">กำลังโหลดเรทล่าสุด...</div>
+    </div>
+  </section>
+
+  <section class="sec" id="prep" aria-labelledby="pk-h">
+    <div class="sec-h"><h2 id="pk-h">🎒 สิ่งที่ต้องเตรียม</h2><span class="sec-note" id="pack-count">0/{len(PACK)}</span></div>
+    <div class="card">
+      <div class="pack-bar"><i id="pack-bar-fill"></i></div>
+      <ul class="pack">{pack_rows}</ul>
+    </div>
+    <div class="card offmap" id="offmap" data-tiles="{E(json.dumps(ALL_TILES))}">
+      <div class="om-h"><span class="om-i" aria-hidden="true">🗺️</span><div><b>แผนที่ออฟไลน์</b><span id="om-status">เก็บแผนที่ของทั้ง 8 วันไว้ในเครื่อง เปิดได้แม้ไม่มีเน็ตหรือไม่ได้เปิด VPN</span></div></div>
+      <div class="om-bar" aria-hidden="true"><i id="om-fill"></i></div>
+      <button type="button" class="btn" id="om-btn">💾 เก็บแผนที่ไว้ใช้ออฟไลน์</button>
+      <small class="om-note">ทำตอนอยู่ไทยและต่อ Wi-Fi · ใช้เน็ตประมาณ 3 MB · แผนที่ © OpenStreetMap contributors</small>
+    </div>
+  </section>
+
+  <section class="sec" id="sos" aria-labelledby="sos-h">
+    <div class="sec-h"><h2 id="sos-h">🆘 ช่วยเหลือในจีน</h2></div>
+    <div class="taxi" id="taxi">
+      <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
+      <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br><span>亚朵X酒店</span></div>
+      <div class="tx-en">Atour X Hotel · 1329 Huaihai Middle Road · เทียบกับที่อยู่ภาษาจีนในใบจองอีกครั้ง</div>
+      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，亚朵X酒店">🔊 ให้เว็บพูดภาษาจีน</button>
+    </div>
+    <div class="taxi alt" id="taxi-pvg">
+      <div class="tx-en">请带我去 · ขากลับไปสนามบิน</div>
+      <div class="tx-zh">浦东国际机场<br>2号航站楼</div>
+      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7289 ออก 17:00</div>
+      <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
+    </div>
+    <h3 class="sub-h">ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></h3>
+    <div class="phrases">{phr_rows}</div>
+    <h3 class="sub-h">เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></h3>
+    <div class="sos-grid">{sos_rows}</div>
+    <p class="hint">แนะนำแคปหน้านี้เก็บไว้ เผื่อไม่มีเน็ต</p>
+    <h3 class="sub-h">เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</h3>
+    <div class="tips">{tips_rows}</div>
+  </section>
+
+  <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
+    <small class="ver">อัปเดตล่าสุด {BUILD_TH}</small>
+    <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: {E(_CRED["hero"][5])} · <a href="{E(commons_page(_CRED["hero"][3]))}" target="_blank" rel="noopener">{E(_CRED["hero"][4])}</a> · แผนที่ © OpenStreetMap contributors</small></footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<nav class="bnav" aria-label="เมนูหลัก">
+  <a href="#plan" data-sec="plan"><i aria-hidden="true">🗓️</i>แผน</a>
+  <a href="#flights" data-sec="flights"><i aria-hidden="true">✈️</i>ตั๋ว</a>
+  <a href="#budget" data-sec="budget"><i aria-hidden="true">💰</i>งบ</a>
+  <a href="#prep" data-sec="prep"><i aria-hidden="true">🎒</i>เตรียมของ</a>
+  <a href="#sos" data-sec="sos"><i aria-hidden="true">🆘</i>ช่วยเหลือ</a>
+</nav>
+
+<div class="lightbox-overlay" id="lightbox-overlay"><span class="lightbox-close" id="lightbox-close" aria-label="ปิด">&times;</span><img id="lightbox-img" src="" alt=""></div>
+<div class="qr-modal-overlay" id="qr-modal-overlay"></div>
+<div class="qr-modal" id="qr-modal" role="dialog" aria-label="QR Code">
+  <button type="button" class="qr-modal-close" id="qr-modal-close" aria-label="ปิด">&times;</button>
+  <div class="qr-modal-title">📱 สแกนเปิดแผนทริปนี้</div>
+  <div class="qr-modal-sub">ให้เพื่อนร่วมทริปสแกนเพื่อเปิดหน้านี้</div>
+  <img class="qr-modal-img" id="qr-modal-img" src="" alt="QR Code">
+  <div class="qr-modal-url" id="qr-modal-url"></div>
+  <button type="button" class="btn" id="qr-copy-btn">🔗 คัดลอกลิงก์</button>
+</div>
+
+<script>
+{JS}
+</script>
+</body>
+</html>
+'''
+open(OUT, "w", encoding="utf-8").write(page)
+print("written", len(page))
