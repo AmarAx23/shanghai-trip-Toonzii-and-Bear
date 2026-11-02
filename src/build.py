@@ -272,12 +272,13 @@ def event_html(e):
             f'<div class="evb">{img}<h3>{E(e["title"])}{tag}</h3>'
             + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
 
+DAY_COVER = {1: "spring", 2: "bund", 3: "wukang", 4: "yu", 5: "castle", 6: "zhujiajiao", 7: "ljznight", 8: "pvg"}
 def day_html(d):
     disney = ' <span class="tag gold">DISNEY DAY</span>' if d.get("disney") else ""
     mp = day_geo(d)
     evs = "".join(event_html(e) for e in d["events"])
     return f'''
-    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" data-zh="{E(d.get("zh", ""))}" aria-label="วันที่ {d["n"]}">
+    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" data-zh="{E(d.get("zh", ""))}" data-cover="img/hd/{DAY_COVER.get(d["n"], "hero")}-640.webp" aria-label="วันที่ {d["n"]}">
       <div class="dayhead">
         <div class="num">{d["n"]}</div>
         <div class="dh-txt"><h3>{E(d["title"])}{disney}</h3><p>{E(d["date"])} · <span class="wxb" data-date="{d["iso"]}">{E(d["wx"])}</span></p></div>
@@ -324,15 +325,24 @@ def _plain(t):
 def _short(t, n=2):
     parts = [x.strip() for x in _plain(t).split(" · ") if x.strip()]
     return " · ".join(parts[:n])
+KIND_EMO = {"fly": "✈️", "stay": "🏨", "food": "🍜", "see": "📍", "shop": "🛍️", "go": "🚇"}
+def _ev_src(e):
+    if e.get("hd"): return f'img/hd/{e["hd"]}-640.webp'
+    if e.get("img"): return f'img/{e["img"]}.jpg'
+    return ""
 def _pr_day(d):
     rows = []
-    for e in d["events"]:
+    for i, e in enumerate(d["events"]):
         tag = f' <span class="p-tag">{E(e["tag"])}</span>' if e["tag"] else ""
         note = _short(e["note"])
-        rows.append(f'<tr><td class="p-t">{E(e["t"])}</td><td><b>{E(e["title"])}</b>{tag}' + (f'<div class="p-n">{E(note)}</div>' if note else "") + f'</td><td class="p-zh" lang="zh-CN">{E(e.get("zh", ""))}</td></tr>')
+        src = _ev_src(e)
+        pic = f'<img class="p-pic" data-psrc="{src}" alt="">' if src else f'<span class="p-pic p-emo">{KIND_EMO.get(e["kind"], "📍")}</span>'
+        zh = e.get("zh", "")
+        rows.append(f'<div class="p-ev {"alt" if i % 2 else ""}"><span class="p-time">{E(e["t"])}</span>{pic}<div class="p-body"><b>{E(e["title"])}</b>{tag}'
+                    + (f'<div class="p-n">{E(note)}</div>' if note else "") + (f'<div class="p-zh" lang="zh-CN">{E(zh)}</div>' if zh else "") + '</div></div>')
     disney = " · DISNEY DAY" if d.get("disney") else ""
-    return (f'<section class="p-day"><h3><span class="p-num">{d["n"]}</span>{E(d["date"])} · {E(d["title"])}{disney}<small>{E(d["wx"])}</small></h3>'
-            f'<table class="p-tbl"><tbody>{"".join(rows)}</tbody></table>'
+    return (f'<section class="p-day"><h3><span class="p-num">{d["n"]}</span><span class="p-dt"><small>{E(d["date"])} 2026{disney} · {E(d["wx"])}</small>{E(d["title"])}</span><span class="p-dzh" lang="zh-CN">{E(d.get("zh", ""))}</span></h3>'
+            f'<div class="p-evs">{"".join(rows)}</div>'
             + (f'<p class="p-tip">⭐ {E(_plain(d["note"]))}</p>' if d.get("note") else "") + '</section>')
 _pr_over = "".join(f'<tr><td class="p-t">{d["n"]}</td><td>{E(d["date"])}</td><td><b>{E(d["title"])}</b></td><td class="p-zh" lang="zh-CN">{E(d.get("zh", ""))}</td></tr>' for d in DAYS)
 _pr_budget = "".join(f'<tr><td>{E(l)}</td><td class="p-r">{a:,} ฿</td></tr>' for l, a, i in BUDGET)
@@ -341,7 +351,7 @@ _pr_phr = "".join(f'<tr><td class="p-zh" lang="zh-CN">{E(zh)}</td><td class="p-n
 _pr_pack = "".join(f'<li>☐ {E(t)}</li>' for k, ic, t in PACK)
 PRINTDOC = f"""
 <div id="printdoc" aria-hidden="true">
-  <header class="p-head"><div><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต {BUILD_TH}</p></div></header>
+  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต {BUILD_TH}</p></div></header>
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>

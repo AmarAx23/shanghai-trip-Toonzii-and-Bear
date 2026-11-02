@@ -731,6 +731,17 @@
     var b = this, data = { title: document.title, text: 'แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน ธันวาคม 2026', url: location.href };
     if (navigator.share) navigator.share(data).catch(function () {}); else copy(b);
   });
+  // ---- Print document: load its photos only when printing ----
+  function preparePrint() {
+    var ims = $$('#printdoc img[data-psrc]');
+    return Promise.all(ims.map(function (im) {
+      if (im.getAttribute('src')) return im.complete ? null : new Promise(function (ok) { im.onload = im.onerror = ok; });
+      return new Promise(function (ok) { im.onload = im.onerror = ok; im.src = im.getAttribute('data-psrc'); });
+    }));
+  }
+  window.addEventListener('beforeprint', preparePrint);
+  window.__printReady = preparePrint;
+
   // ---- Poster summaries (one picture per day, drawn on canvas) ----
   (function () {
     var ov = $('#pst'), grid = $('#pst-grid'), stEl = $('#pst-st'), saveB = $('#pst-save'), files = [], shots = [], busy = false;
@@ -833,7 +844,7 @@
     function dayData(sec) {
       var p = $('.dh-txt p', sec).textContent.split('·');
       return {
-        n: sec.getAttribute('data-day'), iso: sec.getAttribute('data-date'), zh: sec.getAttribute('data-zh') || '', title: cleanTitle($('.dh-txt h3', sec)), date: p[0].trim(), wx: (p[1] || '').trim(), icon: $('.dicon', sec).textContent.trim(),
+        n: sec.getAttribute('data-day'), cover: sec.getAttribute('data-cover'), iso: sec.getAttribute('data-date'), zh: sec.getAttribute('data-zh') || '', title: cleanTitle($('.dh-txt h3', sec)), date: p[0].trim(), wx: (p[1] || '').trim(), icon: $('.dicon', sec).textContent.trim(),
         disney: !!$('.dh-txt .tag', sec), tip: ($('.note', sec) ? $('.note', sec).textContent.replace('⭐', '').trim() : ''),
         evs: $$('.ev', sec).map(function (ev) { var im = $('img.thumb', ev), n = $('.evb > p', ev); var o = { time: $('time', ev).textContent.trim(), kind: ev.getAttribute('data-kind'), title: cleanTitle($('h3', ev)), note: n ? firstSentence(n.textContent) : '', src: im ? im.getAttribute('src') : '' }, z = ev.getAttribute('data-zh');
           if (LANG === 'zh' && z) { o.note = o.title; o.title = z; }
@@ -859,7 +870,7 @@
         return toBlob(cv);
       });
     }
-    function drawCover(days, hero) {
+    function drawCover(days, hero, covers) {
       var cv = document.createElement('canvas'), c = cv.getContext('2d'), H = 670 + days.length * 150 + 330 + 160;
       cv.width = W; cv.height = H; background(c, H);
       var zh = LANG === 'zh';
@@ -872,8 +883,8 @@
         c.fillStyle = col; c.beginPath(); c.arc(126, y + 63, 46, 0, 7); c.fill();
         c.fillStyle = '#fff'; c.font = fH(48); c.textAlign = 'center'; c.fillText(d.n, 126, y + 80); c.textAlign = 'left';
         c.fillStyle = MUTED; c.font = fB(26); c.fillText((zh ? zhDate(d.iso) + ' · ' + d.title : d.date + (d.disney ? ' · DISNEY DAY' : '')), 200, y + 48);
-        c.fillStyle = NAVY; c.font = fH(40); var t = wrap(c, zh && d.zh ? d.zh : d.title, W - 120 - 140 - 130, 1)[0]; c.fillText(t, 200, y + 98);
-        c.font = fB(60); c.textAlign = 'right'; c.fillText(d.icon, W - 96, y + 86); c.textAlign = 'left';
+        c.fillStyle = NAVY; c.font = fH(40); var t = wrap(c, zh && d.zh ? d.zh : d.title, W - 120 - 140 - 190, 1)[0]; c.fillText(t, 200, y + 98);
+        var cp = covers && covers[i]; if (cp) { c.save(); rr(W - 60 - 18 - 150, y + 14, 150, 98, 24, c); c.clip(); cover(c, cp, W - 60 - 18 - 150, y + 14, 150, 98); c.restore(); } else { c.font = fB(60); c.textAlign = 'right'; c.fillText(d.icon, W - 96, y + 86); c.textAlign = 'left'; }
         y += 150;
       });
       // flights
@@ -896,7 +907,7 @@
       prog();
       var fontsReady = document.fonts && document.fonts.load ? Promise.all([document.fonts.load(fH(40), 'กขABC'), document.fonts.load(fB(30), 'กขABC'), document.fonts.load(fB(30, 700), 'กขABC')]).catch(function () {}) : Promise.resolve();
       fontsReady.then(function () { return img('img/hd/hero-960.webp'); }).then(function (hero) {
-        var chain = drawCover(days, hero).then(function (b) { if (myLang !== LANG) return; n++; prog(); addFig(b, 'shanghai-trip-00-overview' + sfx + '.jpg', 'ภาพรวมทริป'); });
+        var chain = Promise.all(days.map(function (d) { return img(d.cover); })).then(function (cs) { return drawCover(days, hero, cs); }).then(function (b) { if (myLang !== LANG) return; n++; prog(); addFig(b, 'shanghai-trip-00-overview' + sfx + '.jpg', 'ภาพรวมทริป'); });
         days.forEach(function (d) {
           chain = chain.then(function () { return myLang === LANG ? drawDay(d, hero) : null; }).then(function (b) { if (!b || myLang !== LANG) return; n++; prog(); addFig(b, 'shanghai-trip-day' + d.n + sfx + '.jpg', 'วันที่ ' + d.n + ' · ' + d.date); });
         });
@@ -925,7 +936,7 @@
     if (MOBILE) { printB.classList.remove('ghost'); printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
     printB.addEventListener('click', function () {
       if (MOBILE) { if (files.length) share(files); else share([]); return; }
-      close(); setTimeout(function () { window.print(); }, 100);
+      close(); var t = setTimeout(go, 4000), done = false; function go() { if (done) return; done = true; clearTimeout(t); window.print(); } preparePrint().then(go);
     });
     // Full-screen viewer: tap a picture, scroll to read, swipe or ‹ › for the next one
     var pv = $('#pv'), pvImg = $('#pv-img'), pvSc = $('#pv-sc'), at = 0;
