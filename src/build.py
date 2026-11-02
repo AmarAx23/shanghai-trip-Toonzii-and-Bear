@@ -54,7 +54,7 @@ DAYS = [
       None, [("🧭 เส้นทางจากที่พัก", apple_dir("People's Square, Shanghai"))]),
    ev("11:30", "food", "Lai Lai Xiao Long Bao (莱莱小笼)", "เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People's Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing'an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)",
       "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路"), tag="มื้อกลางวัน"),
-   ev("13:30", "see", "Shanghai Museum (上海博物馆) ที่ People's Square", "พิพิธภัณฑ์ศิลปะจีนโบราณ ทองสัมฤทธิ์ เซรามิก ภาพวาด · อยู่ในตึก หลบหนาวได้ · เปิด 9:00–17:00 เข้าได้ถึง 16:00 · ไม่ต้องจองล่วงหน้า (ยกเว้นนิทรรศการพิเศษ) · พกพาสปอร์ต · ปิดวันจันทร์ · ออกมาแล้วเดินผ่านสวน People's Square ไป Nanjing Road", "peoples-square", L("Shanghai Museum, People's Square, Shanghai", "上海博物馆 人民广场")),
+   ev("13:30", "see", "People's Square", "แวะคาเฟ่หรือห้างแถวนี้ หลบหนาว ปรับตัวก่อนเดินต่อ", "peoples-square", L("People's Square, Shanghai", "人民广场")),
    ev("17:00", "shop", "Nanjing Road Pedestrian Street", "ถนนช้อปปิ้งหลัก ไฟคริสต์มาสตามห้าง · เดินต่อไป The Bund ได้เลย", "nanjing-road", L("Nanjing Road Pedestrian Street, Shanghai", "南京路步行街")),
    ev("18:30", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
   ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ"),
@@ -63,7 +63,7 @@ DAYS = [
   events=[
    ev("11:00", "food", "Grandma's Home (奶奶家) สาขา Wukang Road", "ร้านอาหารเซี่ยงไฮ้ชื่อดัง", "grandmas-home", L("Grandma's Home Wukang Road, Shanghai", "奶奶家 武康路"), tag="มื้อกลางวัน"),
    ev("12:30", "see", "เดินเล่น Wukang Road", "ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย", "wukang-road", L("Wukang Mansion, Shanghai", "武康大楼")),
-   ev("16:15", "see", "Shanghai Tower ชั้น 118 (上海中心大厦)", "จุดชมวิวสูงที่สุดในจีน · ขึ้นราว 16:15 ดูพระอาทิตย์ตก (~16:50) แล้วรอเมืองเปิดไฟ · ตั๋ว ~¥180 (จอง Trip.com/Klook ล่วงหน้าถูกกว่านิดหน่อย) · เปิด 8:30–22:00 · พกพาสปอร์ต · ข้ามฝั่งด้วยรถไฟฟ้าสาย 2 ลงสถานี Lujiazui · ลงมาแล้วเดินเล่น Superbrand Mall ได้", None, L("Shanghai Tower, Shanghai", "上海中心大厦")),
+   ev("16:00", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui ข้ามฝั่งด้วยรถไฟฟ้าสาย 2 ลงสถานี Lujiazui · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
    ev("18:30", "food", "Chef Fei (费大厨)", "ร้านพริกผัดหมูชื่อดัง (辣椒炒肉) รสจัดจ้านสไตล์หูหนาน", "chef-fei", L("Chef Fei Lujiazui, Shanghai", "费大厨 陆家嘴"), tag="มื้อเย็น"),
    ev("21:00", "shop", "เดินถนน Huaihai Road แถวที่พัก", "ถนนช้อปปิ้งหน้าที่พัก ไฟประดับสวยตอนค่ำ · ไม่ไปก็ได้ถ้าเหนื่อย", "huaihai-road", L("Huaihai Middle Road, Shanghai", "淮海中路")),
   ], note="Yu Garden ปิดทุกวันจันทร์ เลยย้ายไปพรุ่งนี้ ส่วนที่เที่ยววันนี้เปิดปกติ"),
@@ -90,22 +90,20 @@ DAYS = [
    ev("22:00", "go", "กลับที่พัก", "รถไฟฟ้าสาย 11 เที่ยวสุดท้ายออกจากสถานี Disney Resort ประมาณ 22:30 · Didi หลัง 22:00 ราคาขึ้น 2–3 เท่า (~¥300)"),
   ], note="วันพุธคนน้อยและตั๋วถูกกว่าเสาร์-อาทิตย์ (ประมาณ ¥499–539 ต่อคน) · ต่อแถวกลางแจ้งนาน ใส่เสื้อหนา · ปีนี้ฉลองครบ 10 ปี มีโชว์และขบวนพาเหรดพิเศษ"),
 
- dict(n=6, iso="2026-12-10", dow="พฤ.", date="พฤหัส 10 ธ.ค.", title="Zhujiajiao + โชว์กายกรรม", icon="🚤", wx="⛅ 4–10°C",
+ dict(n=6, iso="2026-12-10", dow="พฤ.", date="พฤหัส 10 ธ.ค.", title="Zhujiajiao เมืองน้ำโบราณ", icon="🚤", wx="⛅ 4–10°C",
   events=[
-   ev("10:30", "go", "ออกจากที่พัก ไป Zhujiajiao", "เมื่อคืนกลับจาก Disney ดึก ตื่นสายได้ · Didi ~1 ชม. หรือรถไฟฟ้าสาย 17 ลงสถานี Zhujiajiao", None,
+   ev("09:30", "go", "ออกจากที่พัก ไป Zhujiajiao", "Didi ~1 ชม. หรือรถไฟฟ้าสาย 17 ลงสถานี Zhujiajiao", None,
       [("🧭 เส้นทางจากที่พัก", apple_dir("Zhujiajiao Ancient Town, Shanghai")), ("🧭 Amap 高德", amap("朱家角古镇"))]),
-   ev("11:30", "see", "เดินเล่นเมืองน้ำ Zhujiajiao (朱家角)", "คลอง สะพานหิน Fangsheng Bridge (放生桥) บ้านเรือนโบราณ · นั่งเรือชมคลอง · วันธรรมดาคนน้อยกว่าเสาร์-อาทิตย์", None, L("Zhujiajiao Ancient Town, Shanghai", "朱家角古镇")),
-   ev("13:00", "food", "มื้อกลางวันในเมืองน้ำ", "ร้านริมคลองมีเยอะ ลองบ๊ะจ่าง (粽子) ของขึ้นชื่อ", tag="มื้อกลางวัน"),
+   ev("10:30", "see", "เดินเล่นเมืองน้ำ Zhujiajiao (朱家角)", "คลอง สะพานหิน Fangsheng Bridge (放生桥) บ้านเรือนโบราณ · นั่งเรือชมคลอง · วันธรรมดาคนน้อยกว่าเสาร์-อาทิตย์", None, L("Zhujiajiao Ancient Town, Shanghai", "朱家角古镇")),
+   ev("12:30", "food", "มื้อกลางวันในเมืองน้ำ", "ร้านริมคลองมีเยอะ ลองบ๊ะจ่าง (粽子) ของขึ้นชื่อ", tag="มื้อกลางวัน"),
    ev("15:30", "go", "กลับเข้าเมือง พักผ่อน", "แวะพักที่ที่พักก่อนออกไปกินมื้อเย็น"),
-   ev("17:30", "food", "มื้อเย็นแถวที่พัก", "ร้านแถว Huaihai Road เดินจากที่พักได้ · กินเร็วหน่อยเพื่อไปดูโชว์", tag="มื้อเย็น"),
-   ev("19:30", "see", "โชว์กายกรรม ERA Intersection of Time", "Shanghai Circus World (上海马戏城) · รอบ 19:30 ทุก อ.–ศ. ยาวประมาณ 1 ชม. · ตั๋ว ~$31–36 จองใน Trip.com/Klook ล่วงหน้า · พกพาสปอร์ต · รถไฟฟ้าสาย 1 จาก Changshu Road ตรงไปสถานี Shanghai Circus World ไม่ต้องต่อ ~25 นาที ออกจากที่พัก 18:45", None, L("Shanghai Circus World, Shanghai", "上海马戏城"), tag="ซื้อตั๋วก่อน"),
-  ], note="ถ้าวันนี้ฝนตก สลับกับวันพรุ่งนี้ได้ โชว์ ERA มีรอบวันศุกร์เหมือนกัน"),
+   ev("19:00", "food", "มื้อเย็นแถวที่พัก", "ร้านแถว Huaihai Road เดินจากที่พักได้", tag="มื้อเย็น"),
+  ], note="ถ้าวันนี้อยากเที่ยวในเมือง สลับกับวันพรุ่งนี้ได้"),
 
  dict(n=7, iso="2026-12-11", dow="ศ.", date="ศุกร์ 11 ธ.ค.", title="วัดพระหยก + M50 + Tianzifang", icon="🙏", wx="🌤️ 5–11°C",
   events=[
    ev("09:30", "see", "Jade Buddha Temple (玉佛禅寺)", "เปิด 8:00–16:30 · ไปเช้าคนน้อย", None, L("Jade Buddha Temple, Shanghai", "玉佛禅寺")),
    ev("11:30", "see", "M50 Art District (M50创意园)", "แกลเลอรีส่วนใหญ่เปิด 11:00–17:00 ปิดวันจันทร์", None, L("M50 Art District, Shanghai", "M50创意园")),
-   ev("13:00", "food", "มื้อกลางวันที่ Tianzifang", "ในตรอกมีร้านอาหารและคาเฟ่เยอะ นั่ง Didi จาก M50 ~20 นาที กินแล้วเดินเก็บของฝากต่อ", tag="มื้อกลางวัน"),
    ev("14:30", "shop", "Tianzifang (田子坊) เก็บของฝาก", "ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ใกล้ที่พัก", None, L("Tianzifang, Shanghai", "田子坊")),
    ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) · ย้ายมาจากวัน Disney เพราะโชว์จบดึก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场"), tag="มื้อเย็น"),
    ev("20:30", "stay", "เก็บกระเป๋า", "ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
@@ -170,16 +168,16 @@ HOTEL_LL = (31.2162, 121.4458)   # 1329 Middle Huaihai Rd, ~160 m from Changshu 
 PVG_LL = (31.1525, 121.8018)
 GEO = {
  (1, "22:05"): (PVG_LL, "สนามบินผู่ตง T2"),
- (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2283, 121.4703), "Shanghai Museum"),
+ (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2339, 121.4710), "People's Square"),
  (2, "17:00"): ((31.2375, 121.4790), "Nanjing Road"), (2, "18:30"): ((31.2400, 121.4905), "The Bund"),
  (3, "11:00"): ((31.2068, 121.4352), "Grandma's Home"), (3, "12:30"): ((31.2063, 121.4337), "Wukang Mansion"),
- (3, "16:15"): ((31.2335, 121.5055), "Shanghai Tower"), (3, "18:30"): ((31.2372, 121.5000), "Chef Fei"),
+ (3, "16:00"): ((31.2387, 121.4947), "Superbrand Mall"), (3, "18:30"): ((31.2372, 121.5000), "Chef Fei"),
  (3, "21:00"): ((31.2163, 121.4585), "Huaihai Road"),
  (4, "11:00"): ((31.2046, 121.4793), "Canton 8"), (4, "12:45"): ((31.2219, 121.4704), "Xintiandi"),
  (4, "14:30"): ((31.2289, 121.4880), "Yu Garden"), (4, "17:00"): ((31.2280, 121.4880), "City God Temple"),
  (4, "19:00"): ((31.2272, 121.4900), "New Sukiyaki"),
  (5, "08:30"): ((31.1440, 121.6570), "Disneyland"),
- (6, "11:30"): ((31.1136, 121.0515), "Zhujiajiao"), (6, "19:30"): ((31.2807, 121.4503), "ERA โชว์กายกรรม"),
+ (6, "10:30"): ((31.1136, 121.0515), "Zhujiajiao"),
  (7, "09:30"): ((31.2437, 121.4398), "วัดพระหยก"), (7, "11:30"): ((31.2499, 121.4447), "M50"),
  (7, "14:30"): ((31.2103, 121.4641), "Tianzifang"),
  (8, "13:00"): (PVG_LL, "สนามบินผู่ตง T2"),
@@ -219,7 +217,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(4, "17:00"): "citygod", (6, "11:30"): "zhujiajiao", (7, "09:30"): "jade", (7, "11:30"): "m50", (7, "14:30"): "tianzifang"}
+HD_BY_SLOT = {(4, "17:00"): "citygod", (6, "10:30"): "zhujiajiao", (7, "09:30"): "jade", (7, "11:30"): "m50", (7, "14:30"): "tianzifang"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
