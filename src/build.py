@@ -1,3 +1,4 @@
+import re
 # Builds index.html for the Shanghai trip site.
 import sys, html
 from urllib.parse import quote
@@ -317,6 +318,57 @@ BUILD_TH = f"{BUILD.day} {_TH_MON[BUILD.month-1]} {BUILD.year} {BUILD:%H:%M}"
 CSS = open(sys.argv[2] if len(sys.argv) > 2 else _osroot.path.join(_HERE, "site.css"), encoding="utf-8").read()
 JS = open(sys.argv[3] if len(sys.argv) > 3 else _osroot.path.join(_HERE, "site.js"), encoding="utf-8").read()
 
+# ---- A4 print document (shown only when printing) ----
+def _plain(t):
+    return re.sub(r"<[^>]+>", "", t or "").replace("&amp;", "&")
+def _short(t, n=2):
+    parts = [x.strip() for x in _plain(t).split(" · ") if x.strip()]
+    return " · ".join(parts[:n])
+def _pr_day(d):
+    rows = []
+    for e in d["events"]:
+        tag = f' <span class="p-tag">{E(e["tag"])}</span>' if e["tag"] else ""
+        note = _short(e["note"])
+        rows.append(f'<tr><td class="p-t">{E(e["t"])}</td><td><b>{E(e["title"])}</b>{tag}' + (f'<div class="p-n">{E(note)}</div>' if note else "") + f'</td><td class="p-zh" lang="zh-CN">{E(e.get("zh", ""))}</td></tr>')
+    disney = " · DISNEY DAY" if d.get("disney") else ""
+    return (f'<section class="p-day"><h3><span class="p-num">{d["n"]}</span>{E(d["date"])} · {E(d["title"])}{disney}<small>{E(d["wx"])}</small></h3>'
+            f'<table class="p-tbl"><tbody>{"".join(rows)}</tbody></table>'
+            + (f'<p class="p-tip">⭐ {E(_plain(d["note"]))}</p>' if d.get("note") else "") + '</section>')
+_pr_over = "".join(f'<tr><td class="p-t">{d["n"]}</td><td>{E(d["date"])}</td><td><b>{E(d["title"])}</b></td><td class="p-zh" lang="zh-CN">{E(d.get("zh", ""))}</td></tr>' for d in DAYS)
+_pr_budget = "".join(f'<tr><td>{E(l)}</td><td class="p-r">{a:,} ฿</td></tr>' for l, a, i in BUDGET)
+_pr_sos = "".join(f'<tr><td><b>{E(n)}</b><div class="p-n">{E(sub)}</div></td><td class="p-r p-mono">{E(num)}</td></tr>' for tel, ic, n, sub, num in SOS)
+_pr_phr = "".join(f'<tr><td class="p-zh" lang="zh-CN">{E(zh)}</td><td class="p-n">{E(py)}</td><td>{E(th)}</td></tr>' for zh, py, th in PHRASES)
+_pr_pack = "".join(f'<li>☐ {E(t)}</li>' for k, ic, t in PACK)
+PRINTDOC = f"""
+<div id="printdoc" aria-hidden="true">
+  <header class="p-head"><div><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต {BUILD_TH}</p></div></header>
+  <div class="p-grid">
+    <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
+      <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
+      <tr><td><b>ขากลับ</b> ส. 12 ธ.ค.</td><td class="p-mono">9C7289</td><td>PVG 17:00 → BKK 20:45</td></tr></tbody></table>
+      <div class="p-n">กระเป๋า: ถือขึ้น 1 ชิ้น ≤10 กก. (55×40×20 ซม.) · โหลด 20 กก. · ไม่มีอาหารฟรี</div></div>
+    <div class="p-box"><h4>🏨 ที่พัก 7 คืน</h4><b>Atour X Hotel · Huaihai Middle Road</b><div lang="zh-CN" class="p-zh">亚朵X酒店 · 上海市徐汇区淮海中路1329号</div>
+      <div class="p-n">ใกล้ MRT Changshu Road (สาย 1, 7) · โทร +86 150 0212 8856, +86 21 3356 1052 · เช็คอิน 14:00 เช็คเอาท์ 12:00</div></div>
+  </div>
+  <h2>ภาพรวม 8 วัน</h2>
+  <table class="p-tbl p-over"><tbody>{_pr_over}</tbody></table>
+  <h2>แผนรายวัน</h2>
+  {"".join(_pr_day(d) for d in DAYS)}
+  <section class="p-help">
+    <h2>ยื่นให้คนขับ · 请带我去</h2>
+    <div class="p-grid">
+      <div class="p-taxi"><small>ไปที่พัก</small><div lang="zh-CN">上海市徐汇区<br>淮海中路1329号<br>亚朵X酒店</div></div>
+      <div class="p-taxi"><small>ไปสนามบิน (ขากลับ)</small><div lang="zh-CN">浦东国际机场<br>2号航站楼</div></div>
+    </div>
+    <div class="p-grid">
+      <div><h2>เบอร์ฉุกเฉิน</h2><table class="p-tbl"><tbody>{_pr_sos}</tbody></table></div>
+      <div><h2>ประโยคที่ใช้บ่อย</h2><table class="p-tbl"><tbody>{_pr_phr}</tbody></table>
+        <h2>งบต่อคน</h2><table class="p-tbl"><tbody>{_pr_budget}<tr><td><b>รวม</b></td><td class="p-r"><b>{TOTAL:,} ฿</b></td></tr></tbody></table></div>
+    </div>
+    <h2>เช็กลิสต์ก่อนออกเดินทาง</h2><ul class="p-pack">{_pr_pack}</ul>
+  </section>
+</div>"""
+
 page = f'''<!DOCTYPE html>
 <html lang="th">
 <head>
@@ -497,6 +549,7 @@ page = f'''<!DOCTYPE html>
     <small class="ver">อัปเดตล่าสุด {BUILD_TH}</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: {E(_CRED["hero"][5])} · <a href="{E(commons_page(_CRED["hero"][3]))}" target="_blank" rel="noopener">{E(_CRED["hero"][4])}</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
+{PRINTDOC}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <nav class="bnav" aria-label="เมนูหลัก">

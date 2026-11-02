@@ -511,17 +511,41 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
   }
+  #printdoc { display: none; }
   @media print {
-    body { background: #fff; color: #000; }
-    body::before, #snow, .snow-btn, .install, .bnav, .theme-toggle-btn, .hero-actions, .dtabs, #weather, .links, .taxi .btn, .phr .spk, .tr, #tr-h, .tr-big, .pst { display: none !important; }
-    .day { display: block !important; page-break-inside: avoid; margin-bottom: 18px; }
-    .rv .reveal { opacity: 1 !important; transform: none !important; }
-    .msvg .draw, .msvg .pin { animation: none !important; }
-    .hero { color: #000; background: none; border: 1px solid #ccc; }
-    .card, .pass { box-shadow: none; }
-    .lanterns, .fw, .flip-hint { display: none !important; }
-    .pass-back { position: static; transform: none; margin-top: 8px; }
-    .pass-in { transform: none !important; }
-    details > *:not(summary) { display: block; }
-    .wrap { padding-bottom: 0; }
+    @page { size: A4; margin: 11mm 12mm 12mm; }
+    html, body { background: #fff !important; color: #111; overflow: visible !important; }
+    body > *:not(#printdoc), body::before, body::after { display: none !important; }
+    #printdoc { display: block; font-family: 'Noto Sans Thai', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 9.5pt; line-height: 1.4; color: #111; }
+    #printdoc h1 { font-family: var(--head); font-size: 20pt; margin: 0; color: #0F3A54; }
+    #printdoc h2 { font-family: var(--head); font-size: 12pt; margin: 10pt 0 4pt; color: #0F3A54; border-bottom: 1.5pt solid #B0242E; padding-bottom: 2pt; }
+    #printdoc h4 { margin: 0 0 3pt; font-size: 10pt; color: #0F3A54; }
+    .p-head { border-bottom: 3pt solid #B0242E; padding-bottom: 6pt; margin-bottom: 8pt; }
+    .p-head small { letter-spacing: 1.2pt; color: #8a6a1f; font-weight: 700; font-size: 8pt; }
+    .p-head p { margin: 2pt 0 0; color: #555; }
+    .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt; }
+    .p-box { border: 1pt solid #ccc; border-radius: 6pt; padding: 6pt 8pt; break-inside: avoid; }
+    .p-tbl { width: 100%; border-collapse: collapse; }
+    .p-tbl td { border-bottom: 0.6pt solid #ddd; padding: 2.5pt 4pt; vertical-align: top; }
+    .p-tbl tr:last-child td { border-bottom: none; }
+    .p-t { width: 34pt; font-weight: 700; color: #B0242E; white-space: nowrap; }
+    .p-r { text-align: right; white-space: nowrap; }
+    .p-mono { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .p-n { color: #555; font-size: 8.5pt; }
+    .p-zh { font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif; color: #333; }
+    .p-tbl .p-zh { width: 30%; font-size: 9pt; }
+    .p-tag { font-size: 7.5pt; color: #B0242E; border: 0.6pt solid #B0242E; border-radius: 6pt; padding: 0 4pt; margin-left: 3pt; white-space: nowrap; }
+    .p-day { break-inside: avoid; margin: 0 0 8pt; border: 1pt solid #ddd; border-radius: 6pt; padding: 5pt 7pt; }
+    .p-day h3 { margin: 0 0 3pt; font-size: 11pt; font-family: var(--head); display: flex; align-items: center; gap: 6pt; }
+    .p-day h3 small { margin-left: auto; font-family: var(--body); font-size: 8.5pt; color: #666; font-weight: 400; }
+    .p-num { display: inline-grid; place-items: center; width: 16pt; height: 16pt; border-radius: 50%; background: #0F3A54; color: #fff; font-size: 9pt; }
+    .p-tip { margin: 3pt 0 0; font-size: 8.5pt; color: #6b5313; background: #FBF4E4; border-radius: 4pt; padding: 2pt 5pt; }
+    .p-help { break-before: page; }
+    .p-taxi { border: 2pt solid #C79A3F; border-radius: 8pt; padding: 8pt; text-align: center; break-inside: avoid; }
+    .p-taxi small { color: #666; }
+    .p-taxi div { font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif; font-size: 20pt; font-weight: 700; line-height: 1.3; }
+    .p-pack { columns: 3; list-style: none; padding: 0; margin: 0; font-size: 9pt; }
+    .p-pack li { padding: 1.5pt 0; break-inside: avoid; }
+    .p-over td { padding: 1.5pt 4pt; }
   }
+
