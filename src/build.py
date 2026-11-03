@@ -220,8 +220,8 @@ def day_all_links(stops, n):
     o, dst, way = seq[0], seq[-1], seq[1:-1]
     g_url = (f'https://www.google.com/maps/dir/?api=1&origin={o["lat"]},{o["lng"]}&destination={dst["lat"]},{dst["lng"]}'
              + (("&waypoints=" + quote("|".join(f'{w["lat"]},{w["lng"]}' for w in way[:9]), safe=",")) if way else ""))
-    return (f'<div class="mall"><a class="mall-a" href="{E(amap_url)}" target="_blank" rel="noopener">🧭 ทุกจุดใน Amap 高德</a>'
-            f'<a class="mall-g" href="{E(g_url)}" target="_blank" rel="noopener">🗺️ เส้นทางทั้งวัน Google Maps</a></div>')
+    return (f'<div class="mall"><a class="mall-a" href="{E(amap_url)}" target="_blank" rel="noopener">🧭 ทุกจุดใน Amap</a>'
+            f'<a class="mall-g" href="{E(g_url)}" target="_blank" rel="noopener">🗺️ เส้นทาง Google</a></div>')
 
 def day_geo(d):
     stops = []

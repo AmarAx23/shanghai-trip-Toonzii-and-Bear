@@ -186,10 +186,11 @@
   .mleg b { width: 18px; height: 18px; border-radius: 50%; background: var(--red); color: #fff; font-size: 11px; display: grid; place-items: center; }
   :root[data-theme="dark"] .mleg b { color: #1b0d0e; }
   .mall { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .mall a { flex: 1 1 140px; text-align: center; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 12px; padding: 8px 10px; }
-  .mall-a { background: var(--navy); color: #fff; }
+  .mall a { font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 999px; padding: 4px 11px; border: 1px solid var(--line); line-height: 1.5; }
+  .mall-a { background: var(--navy); color: #fff; border-color: var(--navy) !important; }
   :root[data-theme="dark"] .mall-a { color: #0D1013; }
-  .mall-g { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
+  .mall-g { background: var(--gold-soft); color: var(--navy-2); }
+  .mall a:active { transform: scale(.96); }
   .dmap small { display: block; font-size: 11px; color: var(--muted); margin-top: 6px; }
   .ev.flash .evb { animation: flash 1.4s ease; border-radius: 14px; }
   @keyframes flash { 0%, 40% { background: var(--gold-soft); box-shadow: 0 0 0 6px var(--gold-soft); } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
