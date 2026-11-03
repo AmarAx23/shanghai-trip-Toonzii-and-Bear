@@ -198,13 +198,38 @@ import sys as _sys, os as _os2; _sys.path.insert(0, _os2.path.dirname(_os2.path.
 from tiles import plan as tile_plan
 ALL_TILES = []
 
+import math as _m
+def wgs2gcj(lat, lng):
+    """WGS-84 -> GCJ-02 (the shifted coordinates Amap uses inside China)."""
+    a, ee = 6378245.0, 0.00669342162296594323
+    x, y = lng - 105.0, lat - 35.0
+    dlat = -100.0 + 2.0*x + 3.0*y + 0.2*y*y + 0.1*x*y + 0.2*_m.sqrt(abs(x)) + (20.0*_m.sin(6.0*x*_m.pi) + 20.0*_m.sin(2.0*x*_m.pi))*2.0/3.0 + (20.0*_m.sin(y*_m.pi) + 40.0*_m.sin(y/3.0*_m.pi))*2.0/3.0 + (160.0*_m.sin(y/12.0*_m.pi) + 320*_m.sin(y*_m.pi/30.0))*2.0/3.0
+    dlng = 300.0 + x + 2.0*y + 0.1*x*x + 0.1*x*y + 0.1*_m.sqrt(abs(x)) + (20.0*_m.sin(6.0*x*_m.pi) + 20.0*_m.sin(2.0*x*_m.pi))*2.0/3.0 + (20.0*_m.sin(x*_m.pi) + 40.0*_m.sin(x/3.0*_m.pi))*2.0/3.0 + (150.0*_m.sin(x/12.0*_m.pi) + 300.0*_m.sin(x/30.0*_m.pi))*2.0/3.0
+    rad = lat/180.0*_m.pi; magic = 1 - ee*_m.sin(rad)**2; sq = _m.sqrt(magic)
+    dlat = (dlat*180.0)/((a*(1-ee))/(magic*sq)*_m.pi); dlng = (dlng*180.0)/(a/sq*_m.cos(rad)*_m.pi)
+    return lat + dlat, lng + dlng
+def _mk(t): return re.sub(r"[,|&#]", " ", t).strip()
+def day_all_links(stops, n):
+    hotel = {"lat": HOTEL_LL[0], "lng": HOTEL_LL[1]}
+    pts = [dict(hotel, label="ที่พัก 亚朵X酒店")] + [dict(s, label=f'{k+1} {s["zh"] or s["name"]}') for k, s in enumerate(stops)]
+    if n == 8: pts = pts  # still show hotel as the start
+    mk = "|".join(f'{g[1]:.6f},{g[0]:.6f},{_mk(p["label"])}' for p in pts[:10] for g in [wgs2gcj(p["lat"], p["lng"])])
+    amap_url = "https://uri.amap.com/marker?markers=" + quote(mk, safe=",|") + "&src=shanghai-trip&callnative=1"
+    seq = [hotel] + stops + ([] if n in (1, 8) else [hotel])
+    if n == 1: seq = stops + [hotel]
+    o, dst, way = seq[0], seq[-1], seq[1:-1]
+    g_url = (f'https://www.google.com/maps/dir/?api=1&origin={o["lat"]},{o["lng"]}&destination={dst["lat"]},{dst["lng"]}'
+             + (("&waypoints=" + quote("|".join(f'{w["lat"]},{w["lng"]}' for w in way[:9]), safe=",")) if way else ""))
+    return (f'<div class="mall"><a class="mall-a" href="{E(amap_url)}" target="_blank" rel="noopener">🧭 ทุกจุดใน Amap 高德</a>'
+            f'<a class="mall-g" href="{E(g_url)}" target="_blank" rel="noopener">🗺️ เส้นทางทั้งวัน Google Maps</a></div>')
+
 def day_geo(d):
     stops = []
     for i, e in enumerate(d["events"]):
         g = GEO.get((d["n"], e["t"]))
         if g:
             e["eid"] = f"e{d['n']}-{i}"
-            stops.append({"id": e["eid"], "lat": g[0][0], "lng": g[0][1], "name": g[1], "t": e["t"]})
+            stops.append({"id": e["eid"], "lat": g[0][0], "lng": g[0][1], "name": g[1], "t": e["t"], "zh": e.get("zh", "")})
     if not stops: return ""
     route = stops[:]
     if d["n"] == 1: route = stops + [{"hotel": 1}]
@@ -221,7 +246,7 @@ def day_geo(d):
             f'<button type="button" class="mfs" aria-label="ดูแผนที่ทั้งวันเต็มจอ"><span class="mfs-o">⛶ เต็มจอ</span><span class="mfs-c">✕ ปิด</span></button>'
             f'<div class="lmap" aria-label="แผนที่เส้นทางวันที่ {d["n"]}"></div>'
             f'<svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ {d["n"]}"></svg>'
-            f'<figcaption><span class="mlegs">{legend}</span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>')
+            f'<figcaption><span class="mlegs">{legend}</span>{day_all_links(stops, d["n"]) if len(stops) > 1 else ""}<small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>')
 
 # HD photos from Wikimedia Commons (see img/hd/credits.json): old image name or (day, time) -> key
 import os as _os
