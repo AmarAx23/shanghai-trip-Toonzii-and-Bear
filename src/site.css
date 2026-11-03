@@ -169,6 +169,17 @@
   @keyframes mpop { from { transform: scale(0); } }
   .msvg .home circle { fill: var(--navy-2); }
   .msvg .home text { font-size: 12px; }
+  .dmap { position: relative; }
+  .mfs { position: absolute; top: 10px; right: 10px; z-index: 500; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--navy); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; box-shadow: 0 2px 8px rgba(0,0,0,.15); cursor: pointer; }
+  .mfs .mfs-c { display: none; }
+  .dmap.fs { position: fixed; inset: 0; z-index: 1003; margin: 0; border: none; border-radius: 0; display: flex; flex-direction: column; animation: trIn .25s ease; }
+  .dmap.fs .mfs { top: calc(10px + env(safe-area-inset-top)); font-size: 14px; padding: 8px 14px; }
+  .dmap.fs .mfs .mfs-o { display: none; } .dmap.fs .mfs .mfs-c { display: inline; }
+  .dmap.fs .lmap, .dmap.fs .msvg { flex: 1; height: auto !important; min-height: 0; }
+  .dmap.fs .leaflet-top { top: env(safe-area-inset-top); }
+  .dmap.fs figcaption { padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  html.mfs-open, html.mfs-open body { overflow: hidden; }
+  html.mfs-open .bnav { display: none; }
   .dmap figcaption { padding: 8px 10px 10px; border-top: 1px solid var(--line); background: var(--card); }
   .mlegs { display: flex; flex-wrap: wrap; gap: 6px; }
   .mleg { font: inherit; font-size: 12px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px 2px 3px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }

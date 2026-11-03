@@ -218,6 +218,7 @@ def day_geo(d):
         if t not in ALL_TILES: ALL_TILES.append(t)
     legend = "".join(f'<button type="button" class="mleg" data-go="{s["id"]}"><b>{k+1}</b>{E(s["name"])}</button>' for k, s in enumerate(stops))
     return (f'<figure class="dmap" data-geo="{E(json.dumps(data, ensure_ascii=False))}">'
+            f'<button type="button" class="mfs" aria-label="ดูแผนที่ทั้งวันเต็มจอ"><span class="mfs-o">⛶ เต็มจอ</span><span class="mfs-c">✕ ปิด</span></button>'
             f'<div class="lmap" aria-label="แผนที่เส้นทางวันที่ {d["n"]}"></div>'
             f'<svg class="msvg" role="img" aria-label="แผนผังเส้นทางวันที่ {d["n"]}"></svg>'
             f'<figcaption><span class="mlegs">{legend}</span><small class="mnote">แตะหมุดเพื่อดูกิจกรรม · 🏨 = ที่พัก</small></figcaption></figure>')

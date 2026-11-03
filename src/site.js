@@ -174,7 +174,24 @@
     ev.scrollIntoView({ behavior: REDUCE ? 'auto' : 'smooth', block: 'center' });
     ev.classList.remove('flash'); void ev.offsetWidth; ev.classList.add('flash');
   }
-  $$('.mleg').forEach(function (b) { b.addEventListener('click', function () { goTo(b.getAttribute('data-go')); }); });
+  $$('.mleg').forEach(function (b) { b.addEventListener('click', function () {
+    var f = b.closest('.dmap'), id = b.getAttribute('data-go');
+    if (f && f.classList.contains('fs')) { fsMap(f, false); setTimeout(function () { goTo(id); }, 80); } else goTo(id);
+  }); });
+  // Full-screen day map (whole route of the day)
+  function fsMap(fig, on) {
+    fig.classList.toggle('fs', on); document.documentElement.classList.toggle('mfs-open', on);
+    fig.querySelector('.mfs').setAttribute('aria-label', on ? 'ปิดแผนที่เต็มจอ' : 'ดูแผนที่ทั้งวันเต็มจอ');
+    function fit() { if (fig._map) { fig._map.invalidateSize(); if (fig._bounds) fig._map.fitBounds(fig._bounds, { padding: on ? [48, 48] : [24, 24], maxZoom: fig._map.getMaxZoom() }); } else drawMap(fig); }
+    setTimeout(fit, 320);
+    requestAnimationFrame(function () {
+      fit();
+      if (!on) { var head = fig.closest('.day') && fig.closest('.day').querySelector('.dayhead'); if (head) head.scrollIntoView({ block: 'start' }); }
+    });
+  }
+  $$('.mfs').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); var f = b.closest('.dmap'); fsMap(f, !f.classList.contains('fs')); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var f = $('.dmap.fs'); if (f) fsMap(f, false); } });
+  document.addEventListener('daychange', function () { var f = $('.dmap.fs'); if (f) fsMap(f, false); });
 
   // ---- Real maps: Leaflet + OpenStreetMap tiles, falling back to the schematic when tiles can't load ----
   var realMap = (function () {
