@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261103105957">
+<meta name="build" content="20261103114628">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -501,6 +501,19 @@
   .pst-bar { display: flex; justify-content: space-between; align-items: center; position: sticky; top: calc(-10px - env(safe-area-inset-top)); background: var(--bg); padding: 6px 0; z-index: 2; }
   .pst-bar b { font-family: var(--head); font-weight: 600; font-size: 20px; color: var(--navy); }
   .pst-x { font-size: 34px; line-height: 1; border: none; background: none; color: var(--ink); cursor: pointer; padding: 0 4px; }
+  .fly-ip { font: inherit; font-size: 12px; font-weight: 700; color: var(--navy-2); background: var(--gold-soft); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+  .fly-ip:active { transform: scale(.96); }
+  .fly-sheet { position: fixed; inset: 0; z-index: 1002; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; animation: trIn .25s ease; }
+  .fly-sheet[hidden] { display: none; }
+  .fs-card { background: var(--card); color: var(--ink); width: 100%; max-width: 520px; border-radius: 22px 22px 0 0; padding: 16px 18px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -10px 30px rgba(0,0,0,.2); }
+  .fs-top { display: flex; justify-content: space-between; align-items: center; }
+  .fs-top b { font-family: var(--head); font-weight: 600; font-size: 17px; color: var(--navy); }
+  .fs-x { font-size: 30px; line-height: 1; border: none; background: none; color: var(--ink); cursor: pointer; }
+  .fs-ok { margin: 6px 0 8px; font-size: 13.5px; color: #1f7a3d; font-weight: 700; }
+  .fs-card ol { margin: 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px; }
+  .fs-n { font-size: 12.5px; color: var(--muted); margin: 10px 0; }
+  .fs-acts { display: flex; gap: 8px; }
+  .fs-acts .btn { flex: 1; text-align: center; text-decoration: none; }
   .pst-lang { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px; margin: 4px 0 8px; }
   .pst-lang button { flex: 1; font: inherit; font-weight: 700; font-size: 14px; border: none; background: none; color: var(--muted); border-radius: 999px; padding: 8px; cursor: pointer; transition: background .25s, color .25s; }
   .pst-lang button.on { background: var(--navy); color: #fff; }
@@ -732,7 +745,7 @@
         <span class="tag">ขาไป · เสาร์ 5 ธ.ค. 2026</span>
         <div class="route"><div class="ap"><b>BKK</b><span>สุวรรณภูมิ</span></div><div class="mid fly" data-dep="2026-12-05T16:45:00+07:00" data-arr="2026-12-05T22:05:00+08:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 20 น.</span></div><div class="ap r"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div></div>
         <div class="times"><span>16:45</span><span>22:05</span></div>
-        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7284">📱 iPhone</button></div>
       </div>
       <div class="stub"><small>FLIGHT</small><b>9C7284</b><span class="flip-hint">แตะพลิก ↻</span></div>
       </div>
@@ -744,7 +757,7 @@
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
         <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T17:00:00+08:00" data-arr="2026-12-12T20:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 45 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
         <div class="times"><span>17:00</span><span>20:45</span></div>
-        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7289">📱 iPhone</button></div>
       </div>
       <div class="stub"><small>FLIGHT</small><b>9C7289</b><span class="flip-hint">แตะพลิก ↻</span></div>
       </div>
@@ -830,12 +843,12 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 3 พ.ย. 2026 10:59</small>
+    <small class="ver">อัปเดตล่าสุด 3 พ.ย. 2026 11:46</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 
 <div id="printdoc" aria-hidden="true">
-  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 3 พ.ย. 2026 10:59</p></div></header>
+  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 3 พ.ย. 2026 11:46</p></div></header>
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
@@ -886,6 +899,20 @@
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
     <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
     <div class="pv-sc" id="pv-sc"><img id="pv-img" alt=""></div>
+  </div>
+</div>
+<div class="fly-sheet" id="fly-sheet" role="dialog" aria-label="ติดตามเที่ยวบินบน iPhone" hidden>
+  <div class="fs-card">
+    <div class="fs-top"><b>📱 ติดตามเที่ยวบินบน iPhone</b><button type="button" class="fs-x" id="fs-x" aria-label="ปิด">&times;</button></div>
+    <p class="fs-ok" id="fs-ok"></p>
+    <ol>
+      <li>กด <b>เปิดแอปโน้ต</b> ด้านล่าง แล้วสร้างโน้ตใหม่</li>
+      <li>แตะค้างในโน้ต เลือก <b>วาง (Paste)</b></li>
+      <li>เลขเที่ยวบินจะมี<b>เส้นใต้</b> แตะที่เลขนั้น แล้วเลือก <b>แสดงตัวอย่างเที่ยวบิน (Preview Flight)</b></li>
+      <li>จะเห็นเวลาออก-ถึง อาคาร ประตูขึ้นเครื่อง จุดรับกระเป๋า และแผนที่เส้นทางบิน แบบเรียลไทม์</li>
+    </ol>
+    <p class="fs-n">ถ้าไม่มีเส้นใต้ ลองพิมพ์ใหม่เป็น <b class="mono" id="fs-alt"></b> · ใช้ในแอปข้อความ (iMessage) ได้เหมือนกัน · ข้อมูลจะขึ้นก่อนวันบินไม่กี่วัน</p>
+    <div class="fs-acts"><a class="btn" id="fs-notes" href="mobilenotes://">📝 เปิดแอปโน้ต</a><button type="button" class="btn ghost" id="fs-copy">📋 คัดลอกอีกครั้ง</button></div>
   </div>
 </div>
 <div class="lightbox-overlay" id="lightbox-overlay"><span class="lightbox-close" id="lightbox-close" aria-label="ปิด">&times;</span><img id="lightbox-img" src="" alt=""></div>
@@ -1194,7 +1221,7 @@
   // 4 · Flip boarding passes (links inside still work)
   $$('.passw').forEach(function (w) {
     function flip() { var on = w.classList.toggle('on'); w.querySelector('.pass-back').setAttribute('aria-hidden', on ? 'false' : 'true'); w.querySelector('.pass').setAttribute('aria-hidden', on ? 'true' : 'false'); }
-    w.addEventListener('click', function (e) { if (e.target.closest('a')) return; flip(); });
+    w.addEventListener('click', function (e) { if (e.target.closest('a, button')) return; flip(); });
     w.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
   });
 
@@ -1275,6 +1302,30 @@
     if (special.indexOf(today) >= 0 || /[?&]fw=1/.test(location.search)) setTimeout(function () { burst(5); }, 900);
     var taps = 0, tt = 0, h = $('#hero-title');
     if (h) h.addEventListener('click', function () { taps++; clearTimeout(tt); tt = setTimeout(function () { taps = 0; }, 600); if (taps >= 3) { taps = 0; burst(4); } });
+  })();
+
+  // ---- Track a flight with iPhone's built-in flight preview (Notes / Messages) ----
+  (function () {
+    var sh = $('#fly-sheet'); if (!sh) return;
+    var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var cur = '';
+    function copy(t) {
+      var ok = function () { $('#fs-ok').textContent = '✓ คัดลอก "' + t + '" แล้ว'; };
+      var fail = function () { $('#fs-ok').textContent = 'คัดลอกไม่สำเร็จ พิมพ์เองว่า "' + t + '"'; };
+      try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok, fail); return; } } catch (e) {}
+      try { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); var r = document.execCommand('copy'); ta.remove(); r ? ok() : fail(); } catch (e) { fail(); }
+    }
+    $$('.fly-ip').forEach(function (b) { b.addEventListener('click', function (e) {
+      e.stopPropagation(); var code = b.getAttribute('data-fly');
+      cur = 'Flight ' + code; copy(cur);
+      $('#fs-alt').textContent = 'Spring Airlines ' + code.slice(2) + ' หรือ ' + code.slice(0, 2) + ' ' + code.slice(2);
+      $('#fs-notes').style.display = IOS ? '' : 'none';
+      sh.hidden = false;
+    }); });
+    $('#fs-copy').addEventListener('click', function () { if (cur) copy(cur); });
+    $('#fs-x').addEventListener('click', function () { sh.hidden = true; });
+    sh.addEventListener('click', function (e) { if (e.target === sh) sh.hidden = true; });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sh.hidden = true; });
   })();
 
   // ---- Install-as-app card ----

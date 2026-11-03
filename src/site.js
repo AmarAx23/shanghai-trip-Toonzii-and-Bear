@@ -292,7 +292,7 @@
   // 4 · Flip boarding passes (links inside still work)
   $$('.passw').forEach(function (w) {
     function flip() { var on = w.classList.toggle('on'); w.querySelector('.pass-back').setAttribute('aria-hidden', on ? 'false' : 'true'); w.querySelector('.pass').setAttribute('aria-hidden', on ? 'true' : 'false'); }
-    w.addEventListener('click', function (e) { if (e.target.closest('a')) return; flip(); });
+    w.addEventListener('click', function (e) { if (e.target.closest('a, button')) return; flip(); });
     w.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
   });
 
@@ -373,6 +373,30 @@
     if (special.indexOf(today) >= 0 || /[?&]fw=1/.test(location.search)) setTimeout(function () { burst(5); }, 900);
     var taps = 0, tt = 0, h = $('#hero-title');
     if (h) h.addEventListener('click', function () { taps++; clearTimeout(tt); tt = setTimeout(function () { taps = 0; }, 600); if (taps >= 3) { taps = 0; burst(4); } });
+  })();
+
+  // ---- Track a flight with iPhone's built-in flight preview (Notes / Messages) ----
+  (function () {
+    var sh = $('#fly-sheet'); if (!sh) return;
+    var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var cur = '';
+    function copy(t) {
+      var ok = function () { $('#fs-ok').textContent = '✓ คัดลอก "' + t + '" แล้ว'; };
+      var fail = function () { $('#fs-ok').textContent = 'คัดลอกไม่สำเร็จ พิมพ์เองว่า "' + t + '"'; };
+      try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok, fail); return; } } catch (e) {}
+      try { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); var r = document.execCommand('copy'); ta.remove(); r ? ok() : fail(); } catch (e) { fail(); }
+    }
+    $$('.fly-ip').forEach(function (b) { b.addEventListener('click', function (e) {
+      e.stopPropagation(); var code = b.getAttribute('data-fly');
+      cur = 'Flight ' + code; copy(cur);
+      $('#fs-alt').textContent = 'Spring Airlines ' + code.slice(2) + ' หรือ ' + code.slice(0, 2) + ' ' + code.slice(2);
+      $('#fs-notes').style.display = IOS ? '' : 'none';
+      sh.hidden = false;
+    }); });
+    $('#fs-copy').addEventListener('click', function () { if (cur) copy(cur); });
+    $('#fs-x').addEventListener('click', function () { sh.hidden = true; });
+    sh.addEventListener('click', function (e) { if (e.target === sh) sh.hidden = true; });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sh.hidden = true; });
   })();
 
   // ---- Install-as-app card ----

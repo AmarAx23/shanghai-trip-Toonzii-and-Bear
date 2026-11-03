@@ -458,7 +458,7 @@ page = f'''<!DOCTYPE html>
         <span class="tag">ขาไป · เสาร์ 5 ธ.ค. 2026</span>
         <div class="route"><div class="ap"><b>BKK</b><span>สุวรรณภูมิ</span></div><div class="mid fly" data-dep="2026-12-05T16:45:00+07:00" data-arr="2026-12-05T22:05:00+08:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 20 น.</span></div><div class="ap r"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div></div>
         <div class="times"><span>16:45</span><span>22:05</span></div>
-        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7284" target="_blank" rel="noopener">🛫 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7284" target="_blank" rel="noopener">🛫 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7284">📱 iPhone</button></div>
       </div>
       <div class="stub"><small>FLIGHT</small><b>9C7284</b><span class="flip-hint">แตะพลิก ↻</span></div>
       </div>
@@ -470,7 +470,7 @@ page = f'''<!DOCTYPE html>
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
         <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T17:00:00+08:00" data-arr="2026-12-12T20:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 45 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
         <div class="times"><span>17:00</span><span>20:45</span></div>
-        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7289">📱 iPhone</button></div>
       </div>
       <div class="stub"><small>FLIGHT</small><b>9C7289</b><span class="flip-hint">แตะพลิก ↻</span></div>
       </div>
@@ -584,6 +584,20 @@ page = f'''<!DOCTYPE html>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
     <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
     <div class="pv-sc" id="pv-sc"><img id="pv-img" alt=""></div>
+  </div>
+</div>
+<div class="fly-sheet" id="fly-sheet" role="dialog" aria-label="ติดตามเที่ยวบินบน iPhone" hidden>
+  <div class="fs-card">
+    <div class="fs-top"><b>📱 ติดตามเที่ยวบินบน iPhone</b><button type="button" class="fs-x" id="fs-x" aria-label="ปิด">&times;</button></div>
+    <p class="fs-ok" id="fs-ok"></p>
+    <ol>
+      <li>กด <b>เปิดแอปโน้ต</b> ด้านล่าง แล้วสร้างโน้ตใหม่</li>
+      <li>แตะค้างในโน้ต เลือก <b>วาง (Paste)</b></li>
+      <li>เลขเที่ยวบินจะมี<b>เส้นใต้</b> แตะที่เลขนั้น แล้วเลือก <b>แสดงตัวอย่างเที่ยวบิน (Preview Flight)</b></li>
+      <li>จะเห็นเวลาออก-ถึง อาคาร ประตูขึ้นเครื่อง จุดรับกระเป๋า และแผนที่เส้นทางบิน แบบเรียลไทม์</li>
+    </ol>
+    <p class="fs-n">ถ้าไม่มีเส้นใต้ ลองพิมพ์ใหม่เป็น <b class="mono" id="fs-alt"></b> · ใช้ในแอปข้อความ (iMessage) ได้เหมือนกัน · ข้อมูลจะขึ้นก่อนวันบินไม่กี่วัน</p>
+    <div class="fs-acts"><a class="btn" id="fs-notes" href="mobilenotes://">📝 เปิดแอปโน้ต</a><button type="button" class="btn ghost" id="fs-copy">📋 คัดลอกอีกครั้ง</button></div>
   </div>
 </div>
 <div class="lightbox-overlay" id="lightbox-overlay"><span class="lightbox-close" id="lightbox-close" aria-label="ปิด">&times;</span><img id="lightbox-img" src="" alt=""></div>

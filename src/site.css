@@ -478,6 +478,19 @@
   .pst-bar { display: flex; justify-content: space-between; align-items: center; position: sticky; top: calc(-10px - env(safe-area-inset-top)); background: var(--bg); padding: 6px 0; z-index: 2; }
   .pst-bar b { font-family: var(--head); font-weight: 600; font-size: 20px; color: var(--navy); }
   .pst-x { font-size: 34px; line-height: 1; border: none; background: none; color: var(--ink); cursor: pointer; padding: 0 4px; }
+  .fly-ip { font: inherit; font-size: 12px; font-weight: 700; color: var(--navy-2); background: var(--gold-soft); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+  .fly-ip:active { transform: scale(.96); }
+  .fly-sheet { position: fixed; inset: 0; z-index: 1002; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; animation: trIn .25s ease; }
+  .fly-sheet[hidden] { display: none; }
+  .fs-card { background: var(--card); color: var(--ink); width: 100%; max-width: 520px; border-radius: 22px 22px 0 0; padding: 16px 18px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -10px 30px rgba(0,0,0,.2); }
+  .fs-top { display: flex; justify-content: space-between; align-items: center; }
+  .fs-top b { font-family: var(--head); font-weight: 600; font-size: 17px; color: var(--navy); }
+  .fs-x { font-size: 30px; line-height: 1; border: none; background: none; color: var(--ink); cursor: pointer; }
+  .fs-ok { margin: 6px 0 8px; font-size: 13.5px; color: #1f7a3d; font-weight: 700; }
+  .fs-card ol { margin: 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px; }
+  .fs-n { font-size: 12.5px; color: var(--muted); margin: 10px 0; }
+  .fs-acts { display: flex; gap: 8px; }
+  .fs-acts .btn { flex: 1; text-align: center; text-decoration: none; }
   .pst-lang { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 4px; margin: 4px 0 8px; }
   .pst-lang button { flex: 1; font: inherit; font-weight: 700; font-size: 14px; border: none; background: none; color: var(--muted); border-radius: 999px; padding: 8px; cursor: pointer; transition: background .25s, color .25s; }
   .pst-lang button.on { background: var(--navy); color: #fff; }
