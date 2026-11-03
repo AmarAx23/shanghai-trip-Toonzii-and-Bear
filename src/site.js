@@ -28,12 +28,12 @@
       if (on && scrollTab !== false) { var bar = t.parentNode; bar.scrollTo({ left: t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2, behavior: 'smooth' }); }
     });
   }
-  // Jump to the first activity of the shown day, just below the sticky day tabs
+  // Jump to the chosen day's header + map, just below the sticky day tabs
   function toFirst() {
     requestAnimationFrame(function () {
-      var tl = $('.day.active .tl'), ev = tl && tl.querySelector('.ev'), bar = $('#dtabs'); if (!ev) return;
+      var head = $('.day.active .dayhead'), bar = $('#dtabs'); if (!head) return;
       var stuck = bar.offsetHeight + (parseFloat(getComputedStyle(bar).top) || 0);
-      var y = tl.getBoundingClientRect().top + window.pageYOffset + ev.offsetTop - stuck - 6;
+      var y = head.getBoundingClientRect().top + window.pageYOffset - stuck - 8;
       window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     });
   }
