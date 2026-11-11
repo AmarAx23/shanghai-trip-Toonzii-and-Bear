@@ -548,7 +548,8 @@
     body > *:not(#printdoc), body::before, body::after { display: none !important; }
     html.print-posters #printdoc { display: none !important; }
     html.print-posters body > #pstprint { display: block !important; }
-    #pstprint img { display: block; max-width: 100%; max-height: 274mm; width: auto; height: auto; margin: 0 auto; break-after: page; page-break-after: always; }
+    html.print-posters, html.print-posters body { margin: 0 !important; padding: 0 !important; }
+    #pstprint img { display: block; width: 210mm; height: 297mm; margin: 0; break-after: page; page-break-after: always; }
     #pstprint img:last-child { break-after: auto; page-break-after: auto; }
     #printdoc, #printdoc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #printdoc { display: block; font-family: 'Noto Sans Thai', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 9.5pt; line-height: 1.38; color: #1B2730; }

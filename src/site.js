@@ -786,7 +786,7 @@
   // ---- Poster summaries (one picture per day, drawn on canvas) ----
   (function () {
     var ov = $('#pst'), grid = $('#pst-grid'), stEl = $('#pst-st'), saveB = $('#pst-save'), files = [], shots = [], busy = false;
-    var W = 1080, RED = '#B0242E', NAVY = '#0F3A54', GOLD = '#C79A3F', CREAM = '#FBF4E4', INK = '#1B2730', MUTED = '#6B7680';
+    var HDR_H = 560, W = 1080, RED = '#B0242E', NAVY = '#0F3A54', GOLD = '#C79A3F', CREAM = '#FBF4E4', INK = '#1B2730', MUTED = '#6B7680';
     var HEAD = "600 {s}px Kanit, 'Noto Sans Thai', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif", BODY = "{w} {s}px 'Noto Sans Thai', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif", LANG = 'th';
     var WD = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
     function zhDate(iso) { var d = new Date(iso + 'T00:00:00Z'); return (d.getUTCMonth() + 1) + '月' + d.getUTCDate() + '日 ' + WD[d.getUTCDay()]; }
@@ -830,11 +830,11 @@
       for (var yy = 620, k = 0; yy < H; yy += 260, k++) { cloud(c, k % 2 ? 860 : 20, yy, 1.6, 0.18); cloud(c, k % 2 ? 30 : 900, yy + 130, 1.1, 0.12); }
     }
     function header(c, hero, top, big, title, sub, pill) {
-      var h = 560; c.save(); rr(0, -60, W, h + 60, 70, c); c.clip();
+      var h = HDR_H; c.save(); rr(0, -60, W, h + 60, 70, c); c.clip();
       if (hero) cover(c, hero, 0, 0, W, h); else { c.fillStyle = NAVY; c.fillRect(0, 0, W, h); }
       var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(10,38,58,.78)'); g.addColorStop(.6, 'rgba(12,44,66,.86)'); g.addColorStop(1, 'rgba(120,26,34,.92)'); c.fillStyle = g; c.fillRect(0, 0, W, h);
       c.restore();
-      lantern(c, 800, 30, 1.25); lantern(c, 880, 36, 1.5); lantern(c, 970, 26, 1.15);
+      lantern(c, W - 280, 30, 1.25); lantern(c, W - 200, 36, 1.5); lantern(c, W - 110, 26, 1.15);
       c.textAlign = 'left'; c.fillStyle = '#EBCB82'; c.font = fH(34); c.fillText(top, 70, 130);
       c.fillStyle = '#fff'; c.font = fH(big ? 96 : 52);
       if (big) { c.fillText(big, 70, 245); }
@@ -860,22 +860,28 @@
       c.textAlign = 'left';
       return y + 90;
     }
-    function card(c, y, e, i, pic, measureOnly) {
-      var col = i % 2 ? '#1D5C82' : RED, x = 60, w = W - 120, tx = x + (pic ? 350 : 250), tw = x + w - 36 - tx;
-      c.font = fH(44); var tl = wrap(c, e.title, tw, 2); c.font = fB(28); var nl = e.note ? wrap(c, e.note, tw, 2) : [];
-      var th = tl.length * 54 + (nl.length ? 12 + nl.length * 40 : 0), h = Math.max(pic ? 240 : 200, th + 96);
+    // o (optional): {x, w, pw, ph, tf, nf} for the compact two-column A4 layout
+    function card(c, y, e, i, pic, measureOnly, o) {
+      o = o || {};
+      var col = i % 2 ? '#1D5C82' : RED, x = o.x || 60, w = o.w || W - 120, PW = o.pw || 290, PH = o.ph || 170, TF = o.tf || 44, NF = o.nf || 28;
+      var R = Math.round(PH * 0.44), pad = o.pw ? 24 : 34;
+      var tx = x + pad + (pic ? PW + (o.pw ? 22 : 26) : R * 2 + (o.pw ? 22 : 40)), tw = x + w - (o.pw ? 22 : 36) - tx;
+      var LT = Math.round(TF * 1.23), LN = Math.round(NF * 1.43);
+      c.font = fH(TF); var tl = wrap(c, e.title, tw, 2); c.font = fB(NF); var nl = e.note ? wrap(c, e.note, tw, 2) : [];
+      var th = tl.length * LT + (nl.length ? 10 + nl.length * LN : 0), h = Math.max(pic ? PH + 70 : R * 2 + 50, th + (o.pw ? 76 : 96));
       if (measureOnly) return h;
-      c.fillStyle = '#fff'; rr(x, y, w, h, 44, c); c.fill(); c.strokeStyle = col; c.lineWidth = 6; c.stroke();
+      c.fillStyle = '#fff'; rr(x, y, w, h, o.pw ? 34 : 44, c); c.fill(); c.strokeStyle = col; c.lineWidth = o.pw ? 5 : 6; c.stroke();
       // time pill
-      c.font = fH(40); var pw = c.measureText(e.time).width + 70;
-      c.fillStyle = col; rr(W / 2 - pw / 2, y - 34, pw, 66, 33, c); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 5; c.stroke();
-      c.fillStyle = '#fff'; c.textAlign = 'center'; c.fillText(e.time, W / 2, y + 12); c.textAlign = 'left';
-      var iy = y + (h - (pic ? 170 : 150)) / 2 + 12;
-      if (pic) { c.save(); rr(x + 34, iy, 290, 170, 26, c); c.clip(); cover(c, pic, x + 34, iy, 290, 170); c.restore(); }
-      else { c.fillStyle = i % 2 ? '#E7F0F7' : '#FBEDEE'; c.beginPath(); c.arc(x + 125, iy + 75, 75, 0, 7); c.fill(); c.font = fB(72); c.textAlign = 'center'; c.fillText(EMO[e.kind] || '📍', x + 125, iy + 100); c.textAlign = 'left'; }
-      var ty = y + (h - th) / 2 + 52;
-      c.fillStyle = NAVY; c.font = fH(44); tl.forEach(function (l) { c.fillText(l, tx, ty); ty += 54; });
-      c.fillStyle = MUTED; c.font = fB(28); ty += 4; nl.forEach(function (l) { c.fillText(l, tx, ty); ty += 40; });
+      var PF = o.pw ? 34 : 40, cx = x + w / 2;
+      c.font = fH(PF); var pw = c.measureText(e.time).width + 60;
+      c.fillStyle = col; rr(cx - pw / 2, y - PF * 0.85, pw, PF * 1.65, PF * 0.82, c); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 5; c.stroke();
+      c.fillStyle = '#fff'; c.textAlign = 'center'; c.fillText(e.time, cx, y + PF * 0.3); c.textAlign = 'left';
+      var iy = y + (h - (pic ? PH : R * 2)) / 2 + 10;
+      if (pic) { c.save(); rr(x + pad, iy, PW, PH, 22, c); c.clip(); cover(c, pic, x + pad, iy, PW, PH); c.restore(); }
+      else { c.fillStyle = i % 2 ? '#E7F0F7' : '#FBEDEE'; c.beginPath(); c.arc(x + pad + R, iy + R, R, 0, 7); c.fill(); c.font = fB(Math.round(R)); c.textAlign = 'center'; c.fillText(EMO[e.kind] || '📍', x + pad + R, iy + R * 1.33); c.textAlign = 'left'; }
+      var ty = y + (h - th) / 2 + TF * 1.15;
+      c.fillStyle = NAVY; c.font = fH(TF); tl.forEach(function (l) { c.fillText(l, tx, ty); ty += LT; });
+      c.fillStyle = MUTED; c.font = fB(NF); ty += 2; nl.forEach(function (l) { c.fillText(l, tx, ty); ty += LN; });
       return h;
     }
     function toBlob(cv) { return new Promise(function (ok) { cv.toBlob(function (b) { ok(b); }, 'image/jpeg', 0.92); }); }
@@ -935,6 +941,74 @@
       c.fillStyle = '#fff'; c.font = fH(40); if (fl[0]) c.fillText((zh ? '去程 ' : 'ไป  ') + fl[0], 100, y + 140); if (fl[1]) c.fillText((zh ? '回程 ' : 'กลับ ') + fl[1], 100, y + 210);
       footer(c, y + 330, '');
       return toBlob(cv);
+    }
+    // ---- A4-shaped versions for printing (1240 x 1754 = A4 at 150 dpi) ----
+    var A4W = 1240, A4H = 1754;
+    function tipHeight(c, tip) { if (!tip) return 0; c.font = fB(30); return 60 + wrap(c, tip, W - 240, 4).length * 44 + 50; }
+    function fitA4(src, H) {
+      var cv = document.createElement('canvas'), c = cv.getContext('2d'); cv.width = A4W; cv.height = A4H;
+      if (H <= A4H) { c.drawImage(src, 0, 0); return cv; }
+      var k = A4H / H, w = A4W * k; background(c, A4H); c.drawImage(src, 0, 0, A4W, H, (A4W - w) / 2, 0, w, A4H); return cv;
+    }
+    function drawDayA4(d, hero) {
+      return Promise.all(d.evs.map(function (e) { return img(e.src); })).then(function (pics) {
+        var keep = W; W = A4W; HDR_H = 470;
+        var cv = document.createElement('canvas'), c = cv.getContext('2d'); cv.width = W; cv.height = 10;
+        var two = d.evs.length > 4, gap = 36, cw = two ? (W - 120 - gap) / 2 : W - 120;
+        var O = two ? function (k) { return { x: 60 + (k ? cw + gap : 0), w: cw, pw: 170, ph: 112, tf: 33, nf: 23 }; } : function () { return { x: 60, w: cw }; };
+        var half = two ? Math.ceil(d.evs.length / 2) : d.evs.length, SP = two ? 66 : 86;
+        var cols = [[], []]; d.evs.forEach(function (e, i) { cols[i < half ? 0 : 1].push(i); });
+        var hs = d.evs.map(function (e, i) { return card(c, 0, e, i, pics[i], true, O(i < half ? 0 : 1)); });
+        var colH = cols.map(function (ix) { return ix.reduce(function (a, i) { return a + hs[i] + SP; }, 0); });
+        var tipH = tipHeight(c, d.tip), H = Math.max(A4H, HDR_H + 130 + Math.max(colH[0], colH[1]) + tipH + 110);
+        cv.height = H; background(c, H);
+        var zh = LANG === 'zh';
+        var y0 = header(c, hero, (zh ? '上海之旅 2026 · SHANGHAI TRIP' : 'SHANGHAI TRIP 2026') + (d.disney ? ' · DISNEY DAY' : ''), null, zh ? '第' + d.n + '天 • ' + (d.zh || d.title) : 'DAY ' + d.n + ' • ' + d.title, zh ? d.title : null, '📅 ' + (zh ? '2026年' + zhDate(d.iso) : d.date + ' 2026') + (d.wx ? '  ·  ' + d.wx.replace(/[฀-๿]+/g, '').trim() : '')) + 30;
+        cols.forEach(function (ix, k) {
+          var y = y0, o = O(k);
+          ix.forEach(function (i, j) {
+            if (j) { c.fillStyle = GOLD; for (var q = 0; q < 3; q++) { c.beginPath(); c.arc(o.x + o.w / 2, y - SP + 12 + q * 12, 4, 0, 7); c.fill(); } }
+            y += card(c, y, d.evs[i], i, pics[i], false, o) + SP;
+          });
+        });
+        footer(c, H - tipH - 110, d.tip);
+        var out = fitA4(cv, H); W = keep; HDR_H = 560; return toBlob(out);
+      });
+    }
+    function drawCoverA4(days, hero, covers) {
+      var keep = W; W = A4W;
+      var cv = document.createElement('canvas'), c = cv.getContext('2d'); cv.width = W; cv.height = A4H; background(c, A4H);
+      var zh = LANG === 'zh';
+      var y = (zh ? header(c, hero, 'SHANGHAI · 2026年12月', '上海', '8天7晚', '2026年12月5日–12日 · เซี่ยงไฮ้ 8 วัน 7 คืน', '🏨 亚朵X酒店 · 淮海中路1329号')
+                  : header(c, hero, 'SHANGHAI · DECEMBER 2026', 'เซี่ยงไฮ้', '8 วัน 7 คืน', '5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland', '🏨 Atour X Hotel · Huaihai Rd')) + 20;
+      var gap = 30, rw = (W - 120 - gap) / 2, half = Math.ceil(days.length / 2);
+      days.forEach(function (d, i) {
+        var k = i < half ? 0 : 1, x = 60 + k * (rw + gap), ry = y + (i - k * half) * 150, col = i % 2 ? '#1D5C82' : RED;
+        c.fillStyle = '#fff'; rr(x, ry, rw, 128, 64, c); c.fill(); c.strokeStyle = col; c.lineWidth = 4; c.stroke();
+        c.fillStyle = col; c.beginPath(); c.arc(x + 62, ry + 64, 42, 0, 7); c.fill();
+        c.fillStyle = '#fff'; c.font = fH(44); c.textAlign = 'center'; c.fillText(d.n, x + 62, ry + 80); c.textAlign = 'left';
+        var tx = x + 122, tw = rw - 122 - 150;
+        c.fillStyle = MUTED; c.font = fB(23); c.fillText(wrap(c, zh ? zhDate(d.iso) : d.date + (d.disney ? ' · DISNEY' : ''), tw, 1)[0], tx, ry + 48);
+        c.fillStyle = NAVY; c.font = fH(32); wrap(c, zh && d.zh ? d.zh : d.title, tw, 2).forEach(function (l, q) { c.fillText(l, tx, ry + 86 + q * 34); });
+        var cp = covers && covers[i]; if (cp) { c.save(); rr(x + rw - 140, ry + 16, 124, 96, 22, c); c.clip(); cover(c, cp, x + rw - 140, ry + 16, 124, 96); c.restore(); }
+      });
+      y += half * 150 + 20;
+      var fl = $$('.passw .pass').map(function (p) { var ap = $$('.route .ap b', p).map(function (b) { return b.textContent; }), tm = $$('.times span', p).map(function (s) { return s.textContent; }); return $('.stub b', p).textContent + '  ' + ap[0] + ' ' + tm[0] + ' → ' + ap[1] + ' ' + tm[1]; });
+      c.fillStyle = NAVY; rr(60, y, W - 120, 230, 40, c); c.fill();
+      c.fillStyle = '#EBCB82'; c.font = fH(34); c.fillText('✈️ Spring Airlines', 100, y + 62);
+      c.fillStyle = '#fff'; c.font = fH(40); if (fl[0]) c.fillText((zh ? '去程 ' : 'ไป  ') + fl[0], 100, y + 128); if (fl[1]) c.fillText((zh ? '回程 ' : 'กลับ ') + fl[1], 100, y + 192);
+      footer(c, A4H - 110, '');
+      W = keep; return toBlob(cv);
+    }
+    var a4cache = {};
+    function buildA4() {
+      if (a4cache[LANG]) return Promise.resolve(a4cache[LANG]);
+      var lang = LANG, days = $$('.day').map(dayData), urls = [];
+      return img('img/hd/hero-960.webp').then(function (hero) {
+        var chain = Promise.all(days.map(function (d) { return img(d.cover); })).then(function (cs) { return drawCoverA4(days, hero, cs); }).then(function (b) { urls.push(URL.createObjectURL(b)); });
+        days.forEach(function (d) { chain = chain.then(function () { return drawDayA4(d, hero); }).then(function (b) { urls.push(URL.createObjectURL(b)); stEl.textContent = 'กำลังเตรียมภาพสำหรับพิมพ์ ' + urls.length + '/' + (days.length + 1) + '…'; }); });
+        return chain.then(function () { a4cache[lang] = urls; return urls; });
+      });
     }
     function addFig(blob, name, cap) {
       var url = URL.createObjectURL(blob), f = document.createElement('figure');
@@ -996,15 +1070,21 @@
     // Print the summary pictures themselves, one per A4 page
     var pimgB = $('#pst-pimg'), pp = $('#pstprint');
     pimgB.addEventListener('click', function () {
-      if (!shots.length) return;
-      pp.innerHTML = shots.map(function (sh) { return '<img alt="" src="' + sh.url + '">'; }).join('');
+      if (!shots.length || pimgB.disabled) return;
+      pimgB.disabled = true; var msg = stEl.textContent;
+      buildA4().then(function (urls) {
+      pimgB.disabled = false; stEl.textContent = msg;
+      pp.innerHTML = urls.map(function (u) { return '<img alt="" src="' + u + '">'; }).join('');
       var ims = $$('img', pp);
       Promise.all(ims.map(function (im) { return im.complete ? null : new Promise(function (ok) { im.onload = im.onerror = ok; }); })).then(function () {
         document.documentElement.classList.add('print-posters');
+        if (!$('#pp-style')) { var st = document.createElement('style'); st.id = 'pp-style'; st.textContent = '@page { size: A4; margin: 0; }'; document.head.appendChild(st); }
         setTimeout(function () { window.print(); }, 50);
       });
+      }).catch(function () { pimgB.disabled = false; stEl.textContent = 'เตรียมภาพสำหรับพิมพ์ไม่สำเร็จ ลองใหม่อีกครั้ง'; });
     });
-    window.addEventListener('afterprint', function () { document.documentElement.classList.remove('print-posters'); pp.innerHTML = ''; });
+    window.__buildA4 = buildA4;
+    window.addEventListener('afterprint', function () { document.documentElement.classList.remove('print-posters'); pp.innerHTML = ''; var st = $('#pp-style'); if (st) st.remove(); });
     $('#pv-prev').addEventListener('click', function () { show(at - 1, -1); });
     $('#pv-next').addEventListener('click', function () { show(at + 1, 1); });
     (function () {
