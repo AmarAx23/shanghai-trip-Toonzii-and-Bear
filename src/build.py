@@ -127,7 +127,7 @@ DAYS = [
    ev("08:00", "fly", "ไปสนามบินผู่ตง อาคาร 2", "Didi หรือแท็กซี่ ~1 ชม. · เช้าวันเสาร์รถไม่ค่อยติด · ถึงราว 9:00 ก่อนบิน 3 ชม.", None,
       [("🧭 เส้นทางจากที่พัก", apple_dir("Shanghai Pudong International Airport Terminal 2", "d")), ("🧭 Amap 高德", amap("浦东国际机场2号航站楼")), ("🚕 การ์ดให้คนขับ", "#taxi-pvg")]),
    ev("09:00", "food", "เช็คอิน + มื้อเช้าที่สนามบิน", "เช็คอินและโหลดกระเป๋าก่อน แล้วค่อยกินข้าวหลังผ่าน ตม. · เคาน์เตอร์ปิดก่อนบินราว 45–60 นาที"),
-   ev("12:05", "fly", "บิน PVG → BKK · 9C7289", "บินประมาณ 4 ชม. 40 น. ถึงสุวรรณภูมิ 15:45 (เวลาไทย)"),
+   ev("12:05", "fly", "บิน PVG → BKK · 9C7283", "บินประมาณ 4 ชม. 40 น. ถึงสุวรรณภูมิ 15:45 (เวลาไทย)"),
   ], note="ขากลับมีของฝาก ชั่งกระเป๋าก่อนออกจากที่พัก"),
 ]
 
@@ -277,7 +277,7 @@ ZH_EV = {
  (5, "18:00"): "园内晚餐", (5, "21:15"): "点亮奇梦 + 烟花表演", (5, "22:00"): "回酒店",
  (6, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）", (6, "10:45"): "出发去朱家角", (6, "11:45"): "朱家角古镇 · 放生桥", (6, "13:00"): "古镇午餐 · 粽子", (6, "15:30"): "回市区 去静安", (6, "16:45"): "PANE 球鞋（永源路店）", (6, "18:00"): "静安 南京西路 晚餐",
  (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "11:30"): "MANNER 咖啡（北外滩国客中心滨江店）", (7, "12:30"): "田子坊 买伴手礼", (7, "16:00"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
- (8, "07:30"): "亚朵X酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7289 上海浦东 → 曼谷",
+ (8, "07:30"): "亚朵X酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7283 上海浦东 → 曼谷",
 }
 for _d in DAYS:
     _d["zh"] = ZH_DAY.get(_d["n"], "")
@@ -382,7 +382,7 @@ PRINTDOC = f"""
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
-      <tr><td><b>ขากลับ</b> ส. 12 ธ.ค.</td><td class="p-mono">9C7289</td><td>PVG 12:05 → BKK 15:45</td></tr></tbody></table>
+      <tr><td><b>ขากลับ</b> ส. 12 ธ.ค.</td><td class="p-mono">9C7283</td><td>PVG 12:05 → BKK 15:45</td></tr></tbody></table>
       <div class="p-n">กระเป๋า: ถือขึ้น 1 ชิ้น ≤10 กก. (55×40×20 ซม.) · โหลด 20 กก. · ไม่มีอาหารฟรี</div></div>
     <div class="p-box"><h4>🏨 ที่พัก 7 คืน</h4><b>Atour X Hotel · Huaihai Middle Road</b><div lang="zh-CN" class="p-zh">亚朵X酒店 · 上海市徐汇区淮海中路1329号</div>
       <div class="p-n">ใกล้ MRT Changshu Road (สาย 1, 7) · โทร +86 150 0212 8856, +86 21 3356 1052 · เช็คอิน 14:00 เช็คเอาท์ 12:00</div></div>
@@ -497,18 +497,18 @@ page = f'''<!DOCTYPE html>
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
         <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T12:05:00+08:00" data-arr="2026-12-12T15:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 40 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
         <div class="times"><span>12:05</span><span>15:45</span></div>
-        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7289">📱 iPhone</button></div>
+        <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7283" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7283" target="_blank" rel="noopener">🛬 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7283">📱 iPhone</button></div>
       </div>
-      <div class="stub"><small>FLIGHT</small><b>9C7289</b><span class="flip-hint">แตะพลิก ↻</span></div>
+      <div class="stub"><small>FLIGHT</small><b>9C7283</b><span class="flip-hint">แตะพลิก ↻</span></div>
       </div>
-      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag gold">9C7289 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>⏰ ออกจากที่พัก</b>8:00 ให้ถึงสนามบินราว 9:00 ก่อนบิน 3 ชม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี · ชั่งกระเป๋าถือเข้ม</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
+      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag gold">9C7283 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>⏰ ออกจากที่พัก</b>8:00 ให้ถึงสนามบินราว 9:00 ก่อนบิน 3 ชม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี · ชั่งกระเป๋าถือเข้ม</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
     </div></div>
     <details class="card more">
       <summary>กระเป๋า เวลาออกจากที่พัก และวิธีเช็กไฟลท์</summary>
       <ul class="facts">
         <li><b>🧳 กระเป๋า (ต่อคน ทั้งไปและกลับ)</b>ถือขึ้นเครื่อง 1 ชิ้น ไม่เกิน 10 กก. ขนาดไม่เกิน 55×40×20 ซม. · โหลดรวม 20 กก. ขนาดแต่ละชิ้นไม่เกิน 100×60×40 ซม. · Spring Airlines ชั่งกระเป๋าถือค่อนข้างเข้ม และไม่มีอาหารฟรีบนเครื่อง</li>
         <li><b>⏰ ขากลับ</b>บิน 12:05 · ออกจากที่พักไปสนามบิน 8:00 (นั่งรถ ~1 ชม.) ให้ถึงก่อนบิน 3 ชม.</li>
-        <li><b>📱 เช็กไฟลท์บน iPhone</b>เปิดแอป Notes หรือ iMessage พิมพ์ <b class="mono">Fly 9C7284</b> หรือ <b class="mono">Fly 9C7289</b> แล้วกดค้างที่รหัสที่มีเส้นใต้ เลือก Preview Flight</li>
+        <li><b>📱 เช็กไฟลท์บน iPhone</b>เปิดแอป Notes หรือ iMessage พิมพ์ <b class="mono">Fly 9C7284</b> หรือ <b class="mono">Fly 9C7283</b> แล้วกดค้างที่รหัสที่มีเส้นใต้ เลือก Preview Flight</li>
       </ul>
     </details>
   </section>
@@ -555,7 +555,7 @@ page = f'''<!DOCTYPE html>
     <div class="taxi alt" id="taxi-pvg">
       <div class="tx-en">请带我去 · ขากลับไปสนามบิน</div>
       <div class="tx-zh">浦东国际机场<br>2号航站楼</div>
-      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7289 ออก 12:05</div>
+      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7283 ออก 12:05</div>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
     <h3 class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></h3>
