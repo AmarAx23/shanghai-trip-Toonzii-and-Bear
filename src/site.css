@@ -518,7 +518,7 @@
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
   .btn:disabled { opacity: .55; }
   .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
-  .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; }
+  .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 44%), 1fr)); gap: 16px; max-width: 1500px; margin: 0 auto; }
   .pst-grid figure { margin: 0; animation: trIn .4s ease both; }
   .pst-grid img { width: 100%; display: block; border-radius: 14px; box-shadow: 0 6px 18px rgba(15,58,84,.16); background: var(--card); }
   .pst-th { display: block; width: 100%; padding: 0; border: none; background: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
@@ -541,11 +541,15 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
   }
-  #printdoc { display: none; }
+  #printdoc, #pstprint { display: none; }
   @media print {
     @page { size: A4; margin: 10mm 11mm 11mm; }
     html, body { background: #fff !important; color: #111; overflow: visible !important; }
     body > *:not(#printdoc), body::before, body::after { display: none !important; }
+    html.print-posters #printdoc { display: none !important; }
+    html.print-posters body > #pstprint { display: block !important; }
+    #pstprint img { display: block; max-width: 100%; max-height: 274mm; width: auto; height: auto; margin: 0 auto; break-after: page; page-break-after: always; }
+    #pstprint img:last-child { break-after: auto; page-break-after: auto; }
     #printdoc, #printdoc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #printdoc { display: block; font-family: 'Noto Sans Thai', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 9.5pt; line-height: 1.38; color: #1B2730; }
     #printdoc h1 { font-family: var(--head); font-size: 22pt; margin: 2pt 0 0; color: #fff; }

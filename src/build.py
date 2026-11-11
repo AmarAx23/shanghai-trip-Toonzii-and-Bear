@@ -588,6 +588,7 @@ page = f'''<!DOCTYPE html>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: {E(_CRED["hero"][5])} · <a href="{E(commons_page(_CRED["hero"][3]))}" target="_blank" rel="noopener">{E(_CRED["hero"][4])}</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 {PRINTDOC}
+<div id="pstprint" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <nav class="bnav" aria-label="เมนูหลัก">
@@ -606,11 +607,11 @@ page = f'''<!DOCTYPE html>
 <div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
   <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
   <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
-  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
+  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>💾 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-pimg" disabled>🖼️ พิมพ์ภาพ A4</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
-    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
+    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-sh" id="pv-dl" aria-label="บันทึกภาพนี้ลงเครื่อง" hidden>💾</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
     <div class="pv-sc" id="pv-sc"><img id="pv-img" alt=""></div>
   </div>
 </div>

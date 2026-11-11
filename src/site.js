@@ -954,8 +954,8 @@
         });
         return chain;
       }).then(function () {
-        busy = false; if (myLang !== LANG) { generate(); return; } saveB.disabled = false;
-        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะที่ภาพเพื่อดูขยาย ปัดซ้าย-ขวาดูภาพถัดไป';
+        busy = false; if (myLang !== LANG) { generate(); return; } saveB.disabled = false; $('#pst-pimg').disabled = false;
+        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะที่ภาพเพื่อดูขยาย ปัดซ้าย-ขวาดูภาพถัดไป' + (MOBILE ? '' : ' · กด 💾 ในหน้าดูภาพเพื่อบันทึกทีละภาพ');
       }).catch(function () { busy = false; stEl.textContent = 'ทำภาพไม่สำเร็จ ลองใหม่อีกครั้ง'; });
     }
     function open() { ov.hidden = false; document.documentElement.style.overflow = 'hidden'; generate(); }
@@ -963,7 +963,7 @@
     $$('.pst-lang button').forEach(function (b) { b.addEventListener('click', function () {
       var l = b.getAttribute('data-lang'); if (l === LANG) return; LANG = l;
       $$('.pst-lang button').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
-      files = []; shots = []; grid.innerHTML = ''; saveB.disabled = true; if (!busy) generate();
+      files = []; shots = []; grid.innerHTML = ''; saveB.disabled = true; $('#pst-pimg').disabled = true; if (!busy) generate();
     }); });
     $('#print-btn').addEventListener('click', open);
     $('#pst-x').addEventListener('click', close);
@@ -975,6 +975,7 @@
       return navigator.share({ title: document.title, url: location.href.split('#')[0].split('?')[0] }).catch(function () {});
     }
     if (MOBILE) { printB.classList.remove('ghost'); printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
+    else { saveB.hidden = false; $('#pv-dl').hidden = false; }
     printB.addEventListener('click', function () {
       if (MOBILE) { if (files.length) share(files); else share([]); return; }
       close(); var t = setTimeout(go, 4000), done = false; function go() { if (done) return; done = true; clearTimeout(t); window.print(); } preparePrint().then(go);
@@ -991,6 +992,19 @@
     grid.addEventListener('click', function (e) { var b = e.target.closest('.pst-th'); if (!b) return; pv.hidden = false; show(+b.getAttribute('data-i')); });
     $('#pv-x').addEventListener('click', function () { pv.hidden = true; });
     $('#pv-sh').addEventListener('click', function () { if (files[at]) share([files[at]]); });
+    $('#pv-dl').addEventListener('click', function () { var sh = shots[at]; if (!sh) return; var a = document.createElement('a'); a.href = sh.url; a.download = sh.name; document.body.appendChild(a); a.click(); a.remove(); });
+    // Print the summary pictures themselves, one per A4 page
+    var pimgB = $('#pst-pimg'), pp = $('#pstprint');
+    pimgB.addEventListener('click', function () {
+      if (!shots.length) return;
+      pp.innerHTML = shots.map(function (sh) { return '<img alt="" src="' + sh.url + '">'; }).join('');
+      var ims = $$('img', pp);
+      Promise.all(ims.map(function (im) { return im.complete ? null : new Promise(function (ok) { im.onload = im.onerror = ok; }); })).then(function () {
+        document.documentElement.classList.add('print-posters');
+        setTimeout(function () { window.print(); }, 50);
+      });
+    });
+    window.addEventListener('afterprint', function () { document.documentElement.classList.remove('print-posters'); pp.innerHTML = ''; });
     $('#pv-prev').addEventListener('click', function () { show(at - 1, -1); });
     $('#pv-next').addEventListener('click', function () { show(at + 1, 1); });
     (function () {
@@ -1008,7 +1022,7 @@
       if (e.key === 'Escape' && !ov.hidden) close();
     });
     saveB.addEventListener('click', function () {
-      if (navigator.canShare && navigator.canShare({ files: files })) { navigator.share({ files: files, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {}); return; }
+      if (MOBILE && navigator.canShare && navigator.canShare({ files: files })) { navigator.share({ files: files, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {}); return; }
       shots.forEach(function (sh, i) { setTimeout(function () { var a = document.createElement('a'); a.href = sh.url; a.download = sh.name; document.body.appendChild(a); a.click(); a.remove(); }, i * 350); });
     });
     window.__posters = { open: open };

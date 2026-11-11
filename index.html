@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261103123329">
+<meta name="build" content="20261111130317">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -541,7 +541,7 @@
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
   .btn:disabled { opacity: .55; }
   .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
-  .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-width: 900px; margin: 0 auto; }
+  .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 44%), 1fr)); gap: 16px; max-width: 1500px; margin: 0 auto; }
   .pst-grid figure { margin: 0; animation: trIn .4s ease both; }
   .pst-grid img { width: 100%; display: block; border-radius: 14px; box-shadow: 0 6px 18px rgba(15,58,84,.16); background: var(--card); }
   .pst-th { display: block; width: 100%; padding: 0; border: none; background: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
@@ -564,11 +564,15 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
   }
-  #printdoc { display: none; }
+  #printdoc, #pstprint { display: none; }
   @media print {
     @page { size: A4; margin: 10mm 11mm 11mm; }
     html, body { background: #fff !important; color: #111; overflow: visible !important; }
     body > *:not(#printdoc), body::before, body::after { display: none !important; }
+    html.print-posters #printdoc { display: none !important; }
+    html.print-posters body > #pstprint { display: block !important; }
+    #pstprint img { display: block; max-width: 100%; max-height: 274mm; width: auto; height: auto; margin: 0 auto; break-after: page; page-break-after: always; }
+    #pstprint img:last-child { break-after: auto; page-break-after: auto; }
     #printdoc, #printdoc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     #printdoc { display: block; font-family: 'Noto Sans Thai', 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 9.5pt; line-height: 1.38; color: #1B2730; }
     #printdoc h1 { font-family: var(--head); font-size: 22pt; margin: 2pt 0 0; color: #fff; }
@@ -860,12 +864,12 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 3 พ.ย. 2026 12:33</small>
+    <small class="ver">อัปเดตล่าสุด 11 พ.ย. 2026 13:03</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 
 <div id="printdoc" aria-hidden="true">
-  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 3 พ.ย. 2026 12:33</p></div></header>
+  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 11 พ.ย. 2026 13:03</p></div></header>
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
@@ -892,6 +896,7 @@
     <h2>เช็กลิสต์ก่อนออกเดินทาง</h2><ul class="p-pack"><li>☐ ซิมต่างประเทศ / eSIM จีน</li><li>☐ Alipay / WeChat Pay ผูกบัตร</li><li>☐ Passport + สำเนา</li><li>☐ Power Bank ≤100Wh</li><li>☐ ยาแก้แพ้ / แก้ปวด</li><li>☐ หัวแปลงปลั๊กไฟ (Type A/I)</li><li>☐ เสื้อกันหนาว + ผ้าพันคอ + ถุงมือ</li><li>☐ ปริ้น Booking ทั้งหมด</li><li>☐ VPN (Google/LINE ใช้ไม่ได้)</li><li>☐ รองเท้าเดินสบาย (เดินเยอะ)</li><li>☐ เงินสดหยวนสำรอง</li><li>☐ ลิปมัน/โลชั่นกันผิวแห้ง</li><li>☐ ยาแก้เมารถ/เมาเครื่องบิน</li><li>☐ ชั่งกระเป๋า: โหลด ≤20 กก. / ถือขึ้น ≤10 กก.</li><li>☐ ร่มพับ/เสื้อกันลม</li><li>☐ โหลด Amap หรือใช้ Apple Maps (Google Maps ใช้ในจีนไม่ได้)</li></ul>
   </section>
 </div>
+<div id="pstprint" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <nav class="bnav" aria-label="เมนูหลัก">
@@ -910,11 +915,11 @@
 <div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
   <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
   <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
-  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>📥 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
+  <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>💾 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-pimg" disabled>🖼️ พิมพ์ภาพ A4</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>
-    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
+    <div class="pv-bar"><button type="button" id="pv-prev" aria-label="ภาพก่อนหน้า">‹</button><span id="pv-n"></span><button type="button" id="pv-next" aria-label="ภาพถัดไป">›</button><button type="button" class="pv-sh" id="pv-sh" aria-label="แชร์ภาพนี้" hidden>📤</button><button type="button" class="pv-sh" id="pv-dl" aria-label="บันทึกภาพนี้ลงเครื่อง" hidden>💾</button><button type="button" class="pv-x" id="pv-x" aria-label="ปิด">&times;</button></div>
     <div class="pv-sc" id="pv-sc"><img id="pv-img" alt=""></div>
   </div>
 </div>
@@ -1900,8 +1905,8 @@
         });
         return chain;
       }).then(function () {
-        busy = false; if (myLang !== LANG) { generate(); return; } saveB.disabled = false;
-        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะที่ภาพเพื่อดูขยาย ปัดซ้าย-ขวาดูภาพถัดไป';
+        busy = false; if (myLang !== LANG) { generate(); return; } saveB.disabled = false; $('#pst-pimg').disabled = false;
+        stEl.textContent = 'เสร็จแล้ว ' + total + ' ภาพ · แตะที่ภาพเพื่อดูขยาย ปัดซ้าย-ขวาดูภาพถัดไป' + (MOBILE ? '' : ' · กด 💾 ในหน้าดูภาพเพื่อบันทึกทีละภาพ');
       }).catch(function () { busy = false; stEl.textContent = 'ทำภาพไม่สำเร็จ ลองใหม่อีกครั้ง'; });
     }
     function open() { ov.hidden = false; document.documentElement.style.overflow = 'hidden'; generate(); }
@@ -1909,7 +1914,7 @@
     $$('.pst-lang button').forEach(function (b) { b.addEventListener('click', function () {
       var l = b.getAttribute('data-lang'); if (l === LANG) return; LANG = l;
       $$('.pst-lang button').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
-      files = []; shots = []; grid.innerHTML = ''; saveB.disabled = true; if (!busy) generate();
+      files = []; shots = []; grid.innerHTML = ''; saveB.disabled = true; $('#pst-pimg').disabled = true; if (!busy) generate();
     }); });
     $('#print-btn').addEventListener('click', open);
     $('#pst-x').addEventListener('click', close);
@@ -1921,6 +1926,7 @@
       return navigator.share({ title: document.title, url: location.href.split('#')[0].split('?')[0] }).catch(function () {});
     }
     if (MOBILE) { printB.classList.remove('ghost'); printB.innerHTML = '📤 แชร์'; printB.setAttribute('aria-label', 'แชร์ภาพสรุป'); $('#pv-sh').hidden = false; }
+    else { saveB.hidden = false; $('#pv-dl').hidden = false; }
     printB.addEventListener('click', function () {
       if (MOBILE) { if (files.length) share(files); else share([]); return; }
       close(); var t = setTimeout(go, 4000), done = false; function go() { if (done) return; done = true; clearTimeout(t); window.print(); } preparePrint().then(go);
@@ -1937,6 +1943,19 @@
     grid.addEventListener('click', function (e) { var b = e.target.closest('.pst-th'); if (!b) return; pv.hidden = false; show(+b.getAttribute('data-i')); });
     $('#pv-x').addEventListener('click', function () { pv.hidden = true; });
     $('#pv-sh').addEventListener('click', function () { if (files[at]) share([files[at]]); });
+    $('#pv-dl').addEventListener('click', function () { var sh = shots[at]; if (!sh) return; var a = document.createElement('a'); a.href = sh.url; a.download = sh.name; document.body.appendChild(a); a.click(); a.remove(); });
+    // Print the summary pictures themselves, one per A4 page
+    var pimgB = $('#pst-pimg'), pp = $('#pstprint');
+    pimgB.addEventListener('click', function () {
+      if (!shots.length) return;
+      pp.innerHTML = shots.map(function (sh) { return '<img alt="" src="' + sh.url + '">'; }).join('');
+      var ims = $$('img', pp);
+      Promise.all(ims.map(function (im) { return im.complete ? null : new Promise(function (ok) { im.onload = im.onerror = ok; }); })).then(function () {
+        document.documentElement.classList.add('print-posters');
+        setTimeout(function () { window.print(); }, 50);
+      });
+    });
+    window.addEventListener('afterprint', function () { document.documentElement.classList.remove('print-posters'); pp.innerHTML = ''; });
     $('#pv-prev').addEventListener('click', function () { show(at - 1, -1); });
     $('#pv-next').addEventListener('click', function () { show(at + 1, 1); });
     (function () {
@@ -1954,7 +1973,7 @@
       if (e.key === 'Escape' && !ov.hidden) close();
     });
     saveB.addEventListener('click', function () {
-      if (navigator.canShare && navigator.canShare({ files: files })) { navigator.share({ files: files, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {}); return; }
+      if (MOBILE && navigator.canShare && navigator.canShare({ files: files })) { navigator.share({ files: files, title: 'แผนเที่ยวเซี่ยงไฮ้' }).catch(function () {}); return; }
       shots.forEach(function (sh, i) { setTimeout(function () { var a = document.createElement('a'); a.href = sh.url; a.download = sh.name; document.body.appendChild(a); a.click(); a.remove(); }, i * 350); });
     });
     window.__posters = { open: open };
