@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261111131252">
+<meta name="build" content="20261111131416">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -540,6 +540,8 @@
   .pst-acts [hidden] { display: none; }
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
   .btn:disabled { opacity: .55; }
+  .pst-tip { font-size: 12.5px; color: #6b5313; background: var(--gold-soft); border: 1px solid var(--line); border-radius: 12px; padding: 6px 12px; margin: 8px 0 0; text-align: center; }
+  :root[data-theme="dark"] .pst-tip { color: var(--gold); }
   .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
   .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 44%), 1fr)); gap: 16px; max-width: 1500px; margin: 0 auto; }
   .pst-grid figure { margin: 0; animation: trIn .4s ease both; }
@@ -865,12 +867,12 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 11 พ.ย. 2026 13:12</small>
+    <small class="ver">อัปเดตล่าสุด 11 พ.ย. 2026 13:14</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 
 <div id="printdoc" aria-hidden="true">
-  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 11 พ.ย. 2026 13:12</p></div></header>
+  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 11 พ.ย. 2026 13:14</p></div></header>
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
@@ -917,6 +919,7 @@
   <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
   <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
   <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>💾 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-pimg" disabled>🖼️ พิมพ์ภาพ A4</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
+  <p class="pst-tip">🖨️ ตอนพิมพ์ใน Chrome: เปิด <b>"กราฟิกพื้นหลัง"</b> ในหัวข้อ <b>"การตั้งค่าเพิ่มเติม"</b> ไว้ด้วย ไม่งั้นสีพื้นหลังจะหาย</p>
   <p class="pst-st" id="pst-st"></p>
   <div class="pst-grid" id="pst-grid"></div>
   <div class="pv" id="pv" role="dialog" aria-label="ดูภาพขยาย" hidden>

@@ -517,6 +517,8 @@
   .pst-acts [hidden] { display: none; }
   .btn.ghost { background: var(--card); color: var(--navy-2); border: 1px solid var(--line); }
   .btn:disabled { opacity: .55; }
+  .pst-tip { font-size: 12.5px; color: #6b5313; background: var(--gold-soft); border: 1px solid var(--line); border-radius: 12px; padding: 6px 12px; margin: 8px 0 0; text-align: center; }
+  :root[data-theme="dark"] .pst-tip { color: var(--gold); }
   .pst-st { font-size: 13px; color: var(--muted); margin: 6px 0 10px; text-align: center; }
   .pst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 44%), 1fr)); gap: 16px; max-width: 1500px; margin: 0 auto; }
   .pst-grid figure { margin: 0; animation: trIn .4s ease both; }
