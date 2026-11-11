@@ -118,17 +118,15 @@ DAYS = [
    ev("17:30", "see", "เดินถ่ายรูป Lujiazui ตอนเปิดไฟ", "สะพานลอยวงกลม Lujiazui (陆家嘴环形天桥) มุมหอไข่มุก · หน้าห้าง IFC Mall (上海国金中心) · ตึก Jin Mao (金茂大厦) คู่ Shanghai Tower ถ่ายจากถนนด้านล่าง · ทั้งหมดเดินถึงกันจาก Superbrand · พระอาทิตย์ตก ~16:50 ตอนนี้ตึกเปิดไฟแล้ว", None, L("Lujiazui Circular Pedestrian Bridge, Shanghai", "陆家嘴环形天桥"), tag="ถ่ายรูป"),
    ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) ถนน Yincheng Road ย่าน Lujiazui ใกล้ Superbrand · ย้ายมาจากวัน Disney เพราะโชว์จบดึก · กินเสร็จนั่ง Didi หรือรถไฟฟ้าสาย 2 กลับที่พัก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场"), tag="มื้อเย็น"),
    ev("20:30", "stay", "เก็บกระเป๋า", "ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
-  ], note="พรุ่งนี้ต้องเช็คเอาท์ก่อน 12:00 และออกไปสนามบินประมาณ 13:00"),
+  ], note="พรุ่งนี้บิน 12:05 ต้องออกจากที่พัก 8:00 · เก็บกระเป๋าและชั่งน้ำหนักให้เสร็จคืนนี้ ตั้งนาฬิกาปลุก"),
 
- dict(n=8, iso="2026-12-12", dow="ส.", date="เสาร์ 12 ธ.ค.", title="Anfu Road + เดินทางกลับ", icon="✈️", wx="🌤️ 5–11°C",
+ dict(n=8, iso="2026-12-12", dow="ส.", date="เสาร์ 12 ธ.ค.", title="เดินทางกลับ", icon="✈️", wx="🌤️ 5–11°C",
   events=[
-   ev("10:00", "stay", "เช็คเอาท์ Atour X Hotel", "ต้องเช็คเอาท์ก่อน 12:00 · ฝากกระเป๋าที่ล็อบบี้ได้ถ้าจะออกไปเดินเล่นก่อน"),
-   ev("10:15", "shop", "เดินเล่นถนน Anfu Road (安福路)", "ถนนร่มไม้สายชิค คาเฟ่ ร้านแบรนด์ท้องถิ่น ร้านเสื้อผ้าเล็ก ๆ ถ่ายรูปสวย · เริ่มจากแถวสถานี Changshu Road เดินจากที่พักได้ · ร้านส่วนใหญ่เปิด 10:00–11:00 คาเฟ่เปิดก่อน · วันเสาร์คนเยอะขึ้นช่วงสาย", None, L("Anfu Road, Xuhui, Shanghai", "安福路"), tag="ช้อป"),
-   ev("11:00", "food", "มื้อสายแถว Huaihai Road", "กินใกล้ที่พัก ไม่ควรไปไกล"),
-   ev("12:30", "stay", "กลับมารับกระเป๋าที่ล็อบบี้", "ชั่งกระเป๋าอีกรอบ โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
-   ev("13:00", "fly", "ไปสนามบินผู่ตง อาคาร 2", "Didi หรือแท็กซี่ ~1 ชม. · ถึงก่อนบิน 2–3 ชม.", None,
+   ev("07:30", "stay", "เช็คเอาท์ Atour X Hotel", "ชั่งกระเป๋าอีกรอบ โหลดรวมไม่เกิน 20 กก. ถือขึ้น 1 ชิ้นไม่เกิน 10 กก. · ไปกินมื้อเช้าที่สนามบิน"),
+   ev("08:00", "fly", "ไปสนามบินผู่ตง อาคาร 2", "Didi หรือแท็กซี่ ~1 ชม. · เช้าวันเสาร์รถไม่ค่อยติด · ถึงราว 9:00 ก่อนบิน 3 ชม.", None,
       [("🧭 เส้นทางจากที่พัก", apple_dir("Shanghai Pudong International Airport Terminal 2", "d")), ("🧭 Amap 高德", amap("浦东国际机场2号航站楼")), ("🚕 การ์ดให้คนขับ", "#taxi-pvg")]),
-   ev("17:00", "fly", "บิน PVG → BKK · 9C7289", "บินประมาณ 4 ชม. 45 น. ถึงสุวรรณภูมิ 20:45 (เวลาไทย)"),
+   ev("09:00", "food", "เช็คอิน + มื้อเช้าที่สนามบิน", "เช็คอินและโหลดกระเป๋าก่อน แล้วค่อยกินข้าวหลังผ่าน ตม. · เคาน์เตอร์ปิดก่อนบินราว 45–60 นาที"),
+   ev("12:05", "fly", "บิน PVG → BKK · 9C7289", "บินประมาณ 4 ชม. 40 น. ถึงสุวรรณภูมิ 15:45 (เวลาไทย)"),
   ], note="ขากลับมีของฝาก ชั่งกระเป๋าก่อนออกจากที่พัก"),
 ]
 
@@ -193,7 +191,7 @@ GEO = {
  (6, "09:45"): ((31.2185, 121.4590), "Pushing Coffee"), (6, "11:45"): ((31.1136, 121.0515), "Zhujiajiao"), (6, "16:45"): ((31.2262, 121.4475), "Pane (โดยประมาณ)"), (6, "18:00"): ((31.2268, 121.4530), "มื้อเย็น Jing'an"),
  (7, "10:00"): ((31.2385, 121.4887), "Cocina 19"), 
  (7, "11:30"): ((31.2480, 121.4985), "Manner North Bund"), (7, "12:30"): ((31.2103, 121.4641), "Tianzifang"), (7, "16:30"): ((31.2387, 121.4947), "Superbrand Mall"), (7, "17:30"): ((31.2397, 121.5000), "สะพานลอยวงกลม"), (7, "18:30"): ((31.2370, 121.5010), "Long Time Ago"),
- (8, "10:15"): ((31.2193, 121.4415), "Anfu Road"), (8, "13:00"): (PVG_LL, "สนามบินผู่ตง T2"),
+ (8, "08:00"): (PVG_LL, "สนามบินผู่ตง T2"),
 }
 import json
 import sys as _sys, os as _os2; _sys.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__)))
@@ -256,7 +254,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(2, "13:30"): "peoplespark", (2, "17:30"): "waibaidu", (3, "14:30"): "westbund", (5, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "17:00"): "spring", (6, "13:00"): "zongzi", (6, "18:00"): "jingan", (7, "11:30"): "northbund", (7, "17:30"): "ljznight", (8, "11:00"): "huaihai", (8, "13:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "12:30"): "tianzifang"}
+HD_BY_SLOT = {(2, "13:30"): "peoplespark", (2, "17:30"): "waibaidu", (3, "14:30"): "westbund", (5, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (6, "13:00"): "zongzi", (6, "18:00"): "jingan", (7, "11:30"): "northbund", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "12:30"): "tianzifang"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -278,7 +276,7 @@ ZH_EV = {
  (5, "18:00"): "园内晚餐", (5, "21:15"): "点亮奇梦 + 烟花表演", (5, "22:00"): "回酒店",
  (6, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）", (6, "10:45"): "出发去朱家角", (6, "11:45"): "朱家角古镇 · 放生桥", (6, "13:00"): "古镇午餐 · 粽子", (6, "15:30"): "回市区 去静安", (6, "16:45"): "PANE 球鞋（永源路店）", (6, "18:00"): "静安 南京西路 晚餐",
  (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "11:30"): "MANNER 咖啡（北外滩国客中心滨江店）", (7, "12:30"): "田子坊 买伴手礼", (7, "16:00"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
- (8, "10:00"): "亚朵X酒店 退房", (8, "10:15"): "安福路 散步", (8, "11:00"): "淮海路 早午餐", (8, "12:30"): "回酒店取行李", (8, "13:00"): "去浦东国际机场 2号航站楼", (8, "17:00"): "航班 9C7289 上海浦东 → 曼谷",
+ (8, "07:30"): "亚朵X酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7289 上海浦东 → 曼谷",
 }
 for _d in DAYS:
     _d["zh"] = ZH_DAY.get(_d["n"], "")
@@ -383,7 +381,7 @@ PRINTDOC = f"""
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
-      <tr><td><b>ขากลับ</b> ส. 12 ธ.ค.</td><td class="p-mono">9C7289</td><td>PVG 17:00 → BKK 20:45</td></tr></tbody></table>
+      <tr><td><b>ขากลับ</b> ส. 12 ธ.ค.</td><td class="p-mono">9C7289</td><td>PVG 12:05 → BKK 15:45</td></tr></tbody></table>
       <div class="p-n">กระเป๋า: ถือขึ้น 1 ชิ้น ≤10 กก. (55×40×20 ซม.) · โหลด 20 กก. · ไม่มีอาหารฟรี</div></div>
     <div class="p-box"><h4>🏨 ที่พัก 7 คืน</h4><b>Atour X Hotel · Huaihai Middle Road</b><div lang="zh-CN" class="p-zh">亚朵X酒店 · 上海市徐汇区淮海中路1329号</div>
       <div class="p-n">ใกล้ MRT Changshu Road (สาย 1, 7) · โทร +86 150 0212 8856, +86 21 3356 1052 · เช็คอิน 14:00 เช็คเอาท์ 12:00</div></div>
@@ -496,19 +494,19 @@ page = f'''<!DOCTYPE html>
     <div class="pass back">
       <div class="pm">
         <span class="tag gold">ขากลับ · เสาร์ 12 ธ.ค. 2026</span>
-        <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T17:00:00+08:00" data-arr="2026-12-12T20:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 45 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
-        <div class="times"><span>17:00</span><span>20:45</span></div>
+        <div class="route"><div class="ap"><b>PVG</b><span>ผู่ตง อาคาร 2</span></div><div class="mid fly" data-dep="2026-12-12T12:05:00+08:00" data-arr="2026-12-12T15:45:00+07:00"><svg aria-hidden="true"><path/></svg><span class="plane" aria-hidden="true">✈️</span><span class="dur">4 ชม. 40 น.</span></div><div class="ap r"><b>BKK</b><span>สุวรรณภูมิ</span></div></div>
+        <div class="times"><span>12:05</span><span>15:45</span></div>
         <div class="links"><a href="https://www.flightradar24.com/data/flights/9c7289" target="_blank" rel="noopener">🛬 FR24</a><a href="https://www.flightaware.com/live/flight/CQH7289" target="_blank" rel="noopener">🛬 FlightAware</a><button type="button" class="fly-ip" data-fly="9C7289">📱 iPhone</button></div>
       </div>
       <div class="stub"><small>FLIGHT</small><b>9C7289</b><span class="flip-hint">แตะพลิก ↻</span></div>
       </div>
-      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag gold">9C7289 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>⏰ ออกจากที่พัก</b>ประมาณ 13:00 ให้ถึงก่อนบิน 2–3 ชม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี · ชั่งกระเป๋าถือเข้ม</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
+      <div class="pass-back" aria-hidden="true"><div class="pbk"><span class="tag gold">9C7289 · ข้อมูลเพิ่มเติม</span><ul><li><b>🧳 กระเป๋า (ต่อคน)</b>ถือขึ้นเครื่อง 1 ชิ้น ≤ 10 กก. · 55×40×20 ซม.</li><li><b>🧳 โหลด</b>รวม 20 กก. · แต่ละชิ้นไม่เกิน 100×60×40 ซม.</li><li><b>⏰ ออกจากที่พัก</b>8:00 ให้ถึงสนามบินราว 9:00 ก่อนบิน 3 ชม.</li><li><b>🍱 บนเครื่อง</b>ไม่มีอาหารฟรี · ชั่งกระเป๋าถือเข้ม</li></ul><small>แตะเพื่อพลิกกลับ ↻</small></div></div>
     </div></div>
     <details class="card more">
       <summary>กระเป๋า เวลาออกจากที่พัก และวิธีเช็กไฟลท์</summary>
       <ul class="facts">
         <li><b>🧳 กระเป๋า (ต่อคน ทั้งไปและกลับ)</b>ถือขึ้นเครื่อง 1 ชิ้น ไม่เกิน 10 กก. ขนาดไม่เกิน 55×40×20 ซม. · โหลดรวม 20 กก. ขนาดแต่ละชิ้นไม่เกิน 100×60×40 ซม. · Spring Airlines ชั่งกระเป๋าถือค่อนข้างเข้ม และไม่มีอาหารฟรีบนเครื่อง</li>
-        <li><b>⏰ ขากลับ</b>ออกจากที่พักไปสนามบินประมาณ 13:00 (นั่งรถ ~1 ชม.) ให้ถึงก่อนบิน 2–3 ชม.</li>
+        <li><b>⏰ ขากลับ</b>บิน 12:05 · ออกจากที่พักไปสนามบิน 8:00 (นั่งรถ ~1 ชม.) ให้ถึงก่อนบิน 3 ชม.</li>
         <li><b>📱 เช็กไฟลท์บน iPhone</b>เปิดแอป Notes หรือ iMessage พิมพ์ <b class="mono">Fly 9C7284</b> หรือ <b class="mono">Fly 9C7289</b> แล้วกดค้างที่รหัสที่มีเส้นใต้ เลือก Preview Flight</li>
       </ul>
     </details>
@@ -556,7 +554,7 @@ page = f'''<!DOCTYPE html>
     <div class="taxi alt" id="taxi-pvg">
       <div class="tx-en">请带我去 · ขากลับไปสนามบิน</div>
       <div class="tx-zh">浦东国际机场<br>2号航站楼</div>
-      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7289 ออก 17:00</div>
+      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7289 ออก 12:05</div>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
     <h3 class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></h3>
