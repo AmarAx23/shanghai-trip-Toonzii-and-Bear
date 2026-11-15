@@ -416,6 +416,11 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sh.hidden = true; });
   })();
 
+  // Open a collapsed help dropdown when something inside it is linked to (e.g. #taxi-pvg)
+  function openDrop(id) { var el = id && document.getElementById(id), d = el && el.closest('details.drop'); if (d && !d.open) d.open = true; }
+  document.addEventListener('click', function (e) { var a = e.target.closest('a[href^="#"]'); if (a) openDrop(a.getAttribute('href').slice(1)); }, true);
+  if (location.hash) openDrop(location.hash.slice(1));
+
   // ---- Install-as-app card ----
   (function () {
     var box = $('#install'); if (!box) return;

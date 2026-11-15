@@ -546,6 +546,7 @@ page = f'''<!DOCTYPE html>
 
   <section class="sec" id="sos" aria-labelledby="sos-h">
     <div class="sec-h"><h2 id="sos-h">🆘 ช่วยเหลือในจีน</h2></div>
+    <details class="drop" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
     <div class="taxi" id="taxi">
       <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
       <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br><span>亚朵X酒店</span></div>
@@ -558,7 +559,8 @@ page = f'''<!DOCTYPE html>
       <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7283 ออก 12:05</div>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
-    <h3 class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></h3>
+    </details>
+    <details class="drop" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>
     <div class="card tr" id="tr">
       <div class="tr-mics">
         <button type="button" class="tr-mic th" data-lang="th"><i aria-hidden="true">🎙️</i><b>พูดไทย</b><small>แปลเป็นจีนให้พนักงาน</small></button>
@@ -573,13 +575,17 @@ page = f'''<!DOCTYPE html>
       <div class="tr-log" id="tr-log"></div>
       <div class="tr-foot"><small id="tr-eng">ต้องต่ออินเทอร์เน็ต · ถ้าไม่มีเน็ตใช้ประโยคสำเร็จรูปด้านล่าง</small><button type="button" class="tr-clear" id="tr-clear" hidden>ล้างประวัติ</button></div>
     </div>
-    <h3 class="sub-h">ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></h3>
+    </details>
+    <details class="drop"><summary class="sub-h">💬 ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></summary>
     <div class="phrases">{phr_rows}</div>
-    <h3 class="sub-h">เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></h3>
+    </details>
+    <details class="drop"><summary class="sub-h">📞 เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></summary>
     <div class="sos-grid">{sos_rows}</div>
     <p class="hint">แนะนำแคปหน้านี้เก็บไว้ เผื่อไม่มีเน็ต</p>
-    <h3 class="sub-h">เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</h3>
+    </details>
+    <details class="drop"><summary class="sub-h">💡 เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</summary>
     <div class="tips">{tips_rows}</div>
+    </details>
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
