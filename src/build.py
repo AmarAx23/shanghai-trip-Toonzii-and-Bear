@@ -257,7 +257,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(2, "13:30"): "peoplespark", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "14:30"): "westbund", (5, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (6, "13:00"): "zongzi", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "11:30"): "tianzifang", (3, "10:00"): "anfu", (6, "15:30"): "jingan", (2, "15:45"): "bundday", (2, "20:00"): "yuxingji"}
+HD_BY_SLOT = {(2, "13:30"): "peoplespark", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "14:30"): "westbund", (5, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (6, "13:00"): "zongzi", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (7, "11:30"): "tianzifang", (3, "10:00"): "anfu", (6, "15:30"): "jingan", (2, "15:45"): "bundday", (2, "20:00"): "yuxingji", (2, "20:45"): "njnight"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
