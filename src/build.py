@@ -23,6 +23,7 @@ def amap(kw):
 def gmap(q):
     return "https://www.google.com/maps/search/?api=1&query=" + quote(q)
 
+PANE_LINK = [("👟 การ์ดยื่นพนักงาน", "#pane-card")]
 def L(apple_q=None, amap_kw=None, extra=None):
     out = []
     if apple_q: out.append(("🍎 Apple Maps", apple(apple_q)))
@@ -80,7 +81,7 @@ DAYS = [
    ev("09:30", "see", "Jade Buddha Temple (玉佛禅寺)", "เปิด 8:00–16:30 · ไปเช้าคนน้อย · ใช้เวลาราว 1 ชม. แล้ว Didi ไป Canton 8 ~25 นาที", None, L("Jade Buddha Temple, Shanghai", "玉佛禅寺")),
    ev("11:15", "food", "Canton 8 (喜粤8号) สาขา Runan Street", "ร้านอาหารกวางตุ้ง", "canton8", L("Canton 8 Runan Street, Shanghai", "喜粤8号"), tag="มื้อกลางวัน"),
    ev("12:45", "see", "Xintiandi (新天地)", "ตรอกอิฐแดงสไตล์ Shikumen ผสมจีน-ยุโรป · คาเฟ่ ร้านบูติก · แวะเดินถ่ายรูปสั้น ๆ ~30 นาที แล้วเดินไป TX Huaihai ~10 นาที", "xintiandi", L("Xintiandi, Shanghai", "新天地")),
-   ev("13:15", "shop", "รองเท้า Pane ที่ TX Huaihai", "แบรนด์รองเท้าผ้าใบเซี่ยงไฮ้ · ชั้น L1 ห้าง TX Huaihai, 523 Huaihai Middle Road (淮海中路523号 TX淮海) · เดินจาก Xintiandi ได้ · เปิด 10:00–22:00 · รุ่นยอดนิยม Aria, Zephyr Training · บางไซซ์หมดบ่อย · ออกจากร้านไม่เกิน 14:15 แล้วนั่ง Didi ไป Yu Garden ~10–15 นาที (ต้องเข้าก่อน 16:00) · ถ้าไซซ์หมด วันที่ 6 ไปอีกสาขา (Yongyuan Road) และวันที่ 7 แวะร้านนี้ซ้ำได้", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号"), tag="ช้อป"),
+   ev("13:15", "shop", "รองเท้า Pane ที่ TX Huaihai", "แบรนด์รองเท้าผ้าใบเซี่ยงไฮ้ · ชั้น L1 ห้าง TX Huaihai, 523 Huaihai Middle Road (淮海中路523号 TX淮海) · เดินจาก Xintiandi ได้ · เปิด 10:00–22:00 · รุ่นยอดนิยม Aria, Zephyr Training · บางไซซ์หมดบ่อย · ออกจากร้านไม่เกิน 14:15 แล้วนั่ง Didi ไป Yu Garden ~10–15 นาที (ต้องเข้าก่อน 16:00) · ถ้าไซซ์หมด วันที่ 6 ไปอีกสาขา (Yongyuan Road) และวันที่ 7 แวะร้านนี้ซ้ำได้", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号", PANE_LINK), tag="ช้อป"),
    ev("14:30", "see", "Yu Garden (豫园) เข้าชมในสวน", "สวนจีนโบราณกว่า 400 ปี · เปิด 8:45–16:45 ปิดวันจันทร์ ต้องเข้าก่อนบ่าย 4 · ซื้อตั๋วหน้างานหรือในแอป", "yu-garden", L("Yu Garden, Shanghai", "豫园")),
    ev("17:00", "shop", "Yuyuan Bazaar + City God Temple (城隍庙)", "ร้านค้าและแผงขนมรอบสวน เปิดไฟสวยตอนค่ำ · ซื้อของฝาก", None, L("Shanghai City God Temple", "上海城隍庙")),
    ev("18:30", "food", "New Sukiyaki (牛New寿喜烧) ใกล้ Yu Garden", "บุฟเฟต์สุกี้ยากี้ญี่ปุ่นชื่อดัง · เนื้อหลายเกรด ซีฟู้ด น้ำซุปหลายแบบ · เริ่ม ~149 หยวน", "new-sukiyaki", L("New Sukiyaki Yu Garden, Shanghai", "牛New寿喜烧 豫园"), tag="มื้อเย็น"),
@@ -108,7 +109,7 @@ DAYS = [
    ev("13:00", "food", "มื้อกลางวันในเมืองน้ำ", "ร้านริมคลองมีเยอะ ลองบ๊ะจ่าง (粽子) ของขึ้นชื่อ", tag="มื้อกลางวัน"),
    ev("15:30", "go", "กลับเข้าเมือง ไป Jing'an", "เรียก Didi จาก Zhujiajiao ตรงไปถนน Yongyuan Road เขต Jing'an ~1 ชม.", None,
       [("🧭 Amap 高德", amap("PANE 永源路22号"))]),
-   ev("16:45", "shop", "รองเท้า Pane สาขา Yongyuan Road", "แฟลกชิปสโตร์แรกของแบรนด์ ขายดีที่สุด สต๊อกคนละร้านกับ TX Huaihai · เลขที่ 22 Yongyuan Road (永源路22号) เขต Jing'an ระหว่าง Nanjing West Road กับ Yuyuan Road · เปิดเมื่อ มิ.ย. 2025 · ยังไม่ได้ยืนยันเวลาเปิด (ร้านแนวนี้ปกติราว 10:00–22:00) เช็กใน Amap/Dianping ก่อนไป · จากที่พักนั่งรถไฟฟ้าสาย 7 ไป Jing'an Temple 2 สถานี", "pane", L("PANE, 22 Yongyuan Road, Jing'an, Shanghai", "PANE 永源路22号"), tag="ช้อป"),
+   ev("16:45", "shop", "รองเท้า Pane สาขา Yongyuan Road", "แฟลกชิปสโตร์แรกของแบรนด์ ขายดีที่สุด สต๊อกคนละร้านกับ TX Huaihai · เลขที่ 22 Yongyuan Road (永源路22号) เขต Jing'an ระหว่าง Nanjing West Road กับ Yuyuan Road · เปิดเมื่อ มิ.ย. 2025 · ยังไม่ได้ยืนยันเวลาเปิด (ร้านแนวนี้ปกติราว 10:00–22:00) เช็กใน Amap/Dianping ก่อนไป · จากที่พักนั่งรถไฟฟ้าสาย 7 ไป Jing'an Temple 2 สถานี", "pane", L("PANE, 22 Yongyuan Road, Jing'an, Shanghai", "PANE 永源路22号", PANE_LINK), tag="ช้อป"),
    ev("18:00", "food", "Maotou Laodie Restaurant (毛头老爹饭店) สาขาวัด Jing'an", "อาหารเซี่ยงไฮ้ต้นตำรับ (本帮菜) · ลองข้าวคลุกหมูสามชั้นตุ๋นซีอิ๊ว (红烧肉) ในหม้อดิน · 愚园路246弄6号 · รถไฟฟ้าสถานี Jing'an Temple (สาย 2, 7) ทางออก 1 หรือ 2 เดินไปถนน Yuyuan Road เข้าซอย 246 เลขที่ 6 ~200 ม. · เดินจากร้าน Pane ได้ · เปิด 11:00–14:00, 16:30–21:30 · โทร +86 21 5292 0669 · ร้านดัง ไปเร็วหรือโทรจองก่อน · กินเสร็จ Didi ไป Tianzifang ~15 นาที", "maotou", L("Maotou Laodie Restaurant, Lane 246 Yuyuan Road, Jing'an, Shanghai", "毛头老爹饭店 静安寺店"), tag="มื้อเย็น"),
    ev("19:45", "shop", "Tianzifang (田子坊) เก็บของฝาก", "ตรอกซอกซอยร้านเล็ก ๆ ของฝาก คาเฟ่ · ปิดท้ายวัน · ร้านส่วนใหญ่เปิดถึงราว 20:00–22:00 ไปถึงแล้วเก็บของฝากก่อน · ตัวซอยเปิดตลอด เข้าฟรี · ใกล้ที่พัก Didi กลับ ~10 นาที", None, L("Tianzifang, Shanghai", "田子坊")),
   ], note="ถ้าวันนี้ฝนตก สลับกับวันพรุ่งนี้ได้"),
@@ -116,7 +117,7 @@ DAYS = [
  dict(n=7, iso="2026-12-11", dow="ศ.", date="ศุกร์ 11 ธ.ค.", title="The Bund brunch + Lujiazui", icon="🙏", wx="🌤️ 5–11°C",
   events=[
    ev("10:00", "food", "Cocina 19 ร้านอาหารสเปน ริม The Bund", "มื้อสาย ร้านเปิด 10:00 · 19 Fuzhou Road หัวมุมถนน Zhongshan East 1st Road (The Bund) · ตึกวิลล่าเก่า โต๊ะริมหน้าต่างวิวหอไข่มุก มีระเบียง · เมนูเด่น paella ซีฟู้ด · จองโต๊ะริมหน้าต่างล่วงหน้าได้ · กินแล้วเดินเล่นริม The Bund ต่อได้ · ช่วงบ่ายว่าง", "cocina19", L("Cocina 19, 19 Fuzhou Road, Shanghai", "Cocina 19西班牙餐厅 外滩"), tag="มื้อสาย"),
-   ev("16:00", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 4 และ 6 ยังไม่ได้ไซซ์ที่อยากได้ · 523 Huaihai Middle Road · จาก The Bund Didi ~15 นาที · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ ไป Superbrand ตรงได้เลย", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号"), tag="ถ้ายังไม่ได้ไซซ์"),
+   ev("16:00", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 4 และ 6 ยังไม่ได้ไซซ์ที่อยากได้ · 523 Huaihai Middle Road · จาก The Bund Didi ~15 นาที · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ ไป Superbrand ตรงได้เลย", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号", PANE_LINK), tag="ถ้ายังไม่ได้ไซซ์"),
    ev("16:30", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui · Didi จาก TX Huaihai ~20–25 นาที หรือจาก The Bund ~10 นาที · ซื้อของฝากรอบสุดท้าย · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้ · ร้านมื้อเย็นอยู่ย่านเดียวกัน", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
    ev("17:30", "see", "เดินถ่ายรูป Lujiazui ตอนเปิดไฟ", "สะพานลอยวงกลม Lujiazui (陆家嘴环形天桥) มุมหอไข่มุก · หน้าห้าง IFC Mall (上海国金中心) · ตึก Jin Mao (金茂大厦) คู่ Shanghai Tower ถ่ายจากถนนด้านล่าง · ทั้งหมดเดินถึงกันจาก Superbrand · พระอาทิตย์ตก ~16:50 ตอนนี้ตึกเปิดไฟแล้ว", None, L("Lujiazui Circular Pedestrian Bridge, Shanghai", "陆家嘴环形天桥"), tag="ถ่ายรูป"),
    ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) ถนน Yincheng Road ย่าน Lujiazui ใกล้ Superbrand · ย้ายมาจากวัน Disney เพราะโชว์จบดึก · กินเสร็จนั่ง Didi หรือรถไฟฟ้าสาย 2 กลับที่พัก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场"), tag="มื้อเย็น"),
@@ -340,6 +341,27 @@ sos_rows = "".join(f'<a class="sos" href="tel:{tel}"><span class="si" aria-hidde
 
 phr_rows = "".join(f'<button type="button" class="phr" data-say="{E(zh)}"><span><span class="zh">{E(zh)}</span><span class="th">{E(th)} · {E(py)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for zh, py, th in PHRASES)
 
+PANE_SIZES = [str(x) for x in range(35, 47)]
+PANE_PHR = [
+ ("你好，请问这款有 {s} 码吗？", "สวัสดี รุ่นนี้มีไซซ์ {s} ไหม"),
+ ("可以试穿吗？", "ขอลองใส่ได้ไหม"),
+ ("还有别的颜色吗？", "มีสีอื่นไหม"),
+ ("有大一码 / 小一码的吗？", "มีไซซ์ใหญ่ขึ้น / เล็กลงหนึ่งเบอร์ไหม"),
+ ("什么时候到货？", "ของจะเข้าวันไหน"),
+ ("其他门店有货吗？（TX淮海 / 永源路）", "สาขาอื่นมีของไหม (TX Huaihai / Yongyuan Road)"),
+ ("可以帮我留一双吗？我们 {d} 来拿。", "ช่วยเก็บไว้ให้ 1 คู่ได้ไหม เราจะมารับ{dt}"),
+ ("可以用支付宝吗？", "จ่ายด้วย Alipay ได้ไหม"),
+]
+PANE_DAYS = [("12月6日", "วันที่ 6 ธ.ค."), ("12月8日", "วันที่ 8 ธ.ค."), ("12月10日", "วันที่ 10 ธ.ค."), ("12月11日", "วันที่ 11 ธ.ค.")]
+def _pane_phr(zh, th):
+    z = zh.replace("{s}", '<b class="pn-s">40</b>').replace("{d}", '<b class="pn-d">12月10日</b>')
+    t = th.replace("{s}", '<b class="pn-s">40</b>').replace("{dt}", '<b class="pn-dt">วันที่ 10 ธ.ค.</b>')
+    say = zh.replace("{s}", "40").replace("{d}", "12月10日").replace(" ", "")
+    return (f'<button type="button" class="phr pn-phr" data-tpl="{E(zh)}" data-say="{E(say)}"><span><span class="zh">{z}</span>'
+            f'<span class="th">{t}</span></span><span class="spk" aria-hidden="true">🔊</span></button>')
+pane_rows = "".join(_pane_phr(z, t) for z, t in PANE_PHR)
+pane_size_opts = "".join(f'<option value="{x}"{" selected" if x == "40" else ""}>{x}</option>' for x in PANE_SIZES)
+pane_day_opts = "".join(f'<option value="{z}" data-th="{E(t)}"{" selected" if z == "12月10日" else ""}>{E(t)}</option>' for z, t in PANE_DAYS)
 tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
 
 import datetime as _dt
@@ -562,6 +584,16 @@ page = f'''<!DOCTYPE html>
       <div class="tx-zh">浦东国际机场<br>2号航站楼</div>
       <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7283 ออก 12:05</div>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
+    </div>
+    </details>
+    <details class="drop" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
+    <div class="pane-card">
+      <div class="pn-sel">
+        <label>ไซซ์ <select id="pn-size" aria-label="ไซซ์รองเท้า">{pane_size_opts}</select></label>
+        <label>มารับ <select id="pn-day" aria-label="วันที่จะมารับ">{pane_day_opts}</select></label>
+      </div>
+      <div class="tx-en">请给店员看 · ยื่นให้พนักงานดู</div>
+      <div class="phrases">{pane_rows}</div>
     </div>
     </details>
     <details class="drop" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>

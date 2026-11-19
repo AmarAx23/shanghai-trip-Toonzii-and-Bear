@@ -416,6 +416,23 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sh.hidden = true; });
   })();
 
+  // ---- Pane staff card: size / pickup-day dropdowns fill the sentences ----
+  (function () {
+    var sz = $('#pn-size'), dy = $('#pn-day'); if (!sz || !dy) return;
+    var v = store('pnSize'); if (v) sz.value = v;
+    var w = store('pnDay'); if (w) dy.value = w;
+    function upd() {
+      var s = sz.value, d = dy.value, opt = dy.options[dy.selectedIndex], dt = opt ? opt.getAttribute('data-th') : '';
+      $$('.pn-s').forEach(function (e) { e.textContent = s; });
+      $$('.pn-d').forEach(function (e) { e.textContent = d; });
+      $$('.pn-dt').forEach(function (e) { e.textContent = dt; });
+      $$('.pn-phr').forEach(function (b) { b.setAttribute('data-say', b.getAttribute('data-tpl').replace('{s}', s).replace('{d}', d).replace(/ /g, '')); });
+    }
+    sz.addEventListener('change', function () { store('pnSize', sz.value); upd(); });
+    dy.addEventListener('change', function () { store('pnDay', dy.value); upd(); });
+    upd();
+  })();
+
   // Open a collapsed help dropdown when something inside it is linked to (e.g. #taxi-pvg)
   function openDrop(id) { var el = id && document.getElementById(id), d = el && el.closest('details.drop'); if (d && !d.open) d.open = true; }
   document.addEventListener('click', function (e) { var a = e.target.closest('a[href^="#"]'); if (a) openDrop(a.getAttribute('href').slice(1)); }, true);

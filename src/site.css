@@ -617,3 +617,9 @@
   }
 
 
+
+  .pane-card { display: grid; gap: 10px; }
+  .pn-sel { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pn-sel label { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .pn-sel select { font: inherit; font-size: 17px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); min-width: 96px; }
+  .pn-phr .zh b, .pn-phr .th b { color: var(--red); }
