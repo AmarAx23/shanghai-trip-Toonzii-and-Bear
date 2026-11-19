@@ -926,7 +926,7 @@
       var cv = document.createElement('canvas'), c = cv.getContext('2d'), H = 670 + days.length * 150 + 330 + 160;
       cv.width = W; cv.height = H; background(c, H);
       var zh = LANG === 'zh';
-      var y = zh ? header(c, hero, 'SHANGHAI · 2026年12月', '上海', '8天7晚', '2026年12月5日–12日 · เซี่ยงไฮ้ 8 วัน 7 คืน', '🏨 亚朵X酒店 · 淮海中路1329号')
+      var y = zh ? header(c, hero, 'SHANGHAI · 2026年12月', '上海', '8天7晚', '2026年12月5日–12日 · เซี่ยงไฮ้ 8 วัน 7 คืน', '🏨 海玥名庭酒店 · 淮海中路1329号')
                  : header(c, hero, 'SHANGHAI · DECEMBER 2026', 'เซี่ยงไฮ้', '8 วัน 7 คืน', '5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland', '🏨 Atour X Hotel · Huaihai Rd');
       y += 10;
       days.forEach(function (d, i) {
@@ -984,7 +984,7 @@
       var keep = W; W = A4W;
       var cv = document.createElement('canvas'), c = cv.getContext('2d'); cv.width = W; cv.height = A4H; background(c, A4H);
       var zh = LANG === 'zh';
-      var y = (zh ? header(c, hero, 'SHANGHAI · 2026年12月', '上海', '8天7晚', '2026年12月5日–12日 · เซี่ยงไฮ้ 8 วัน 7 คืน', '🏨 亚朵X酒店 · 淮海中路1329号')
+      var y = (zh ? header(c, hero, 'SHANGHAI · 2026年12月', '上海', '8天7晚', '2026年12月5日–12日 · เซี่ยงไฮ้ 8 วัน 7 คืน', '🏨 海玥名庭酒店 · 淮海中路1329号')
                   : header(c, hero, 'SHANGHAI · DECEMBER 2026', 'เซี่ยงไฮ้', '8 วัน 7 คืน', '5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland', '🏨 Atour X Hotel · Huaihai Rd')) + 20;
       var gap = 30, rw = (W - 120 - gap) / 2, half = Math.ceil(days.length / 2);
       days.forEach(function (d, i) {

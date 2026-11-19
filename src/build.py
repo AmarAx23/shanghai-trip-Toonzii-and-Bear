@@ -212,7 +212,7 @@ def wgs2gcj(lat, lng):
 def _mk(t): return re.sub(r"[,|&#]", " ", t).strip()
 def day_all_links(stops, n):
     hotel = {"lat": HOTEL_LL[0], "lng": HOTEL_LL[1]}
-    pts = [dict(hotel, label="ที่พัก 亚朵X酒店")] + [dict(s, label=f'{k+1} {s["zh"] or s["name"]}') for k, s in enumerate(stops)]
+    pts = [dict(hotel, label="ที่พัก 海玥名庭酒店")] + [dict(s, label=f'{k+1} {s["zh"] or s["name"]}') for k, s in enumerate(stops)]
     if n == 8: pts = pts  # still show hotel as the start
     mk = "|".join(f'{g[1]:.6f},{g[0]:.6f},{_mk(p["label"])}' for p in pts[:10] for g in [wgs2gcj(p["lat"], p["lng"])])
     amap_url = "https://uri.amap.com/marker?markers=" + quote(mk, safe=",|") + "&src=shanghai-trip&callnative=1"
@@ -269,7 +269,7 @@ def credit_html(key):
 # Chinese names for the summary pictures (ไทย / 中文 switch)
 ZH_DAY = {1: "出发去上海", 2: "人民广场 + 外滩", 3: "武康路 + 西岸 + 陆家嘴", 4: "玉佛寺 + 老城厢 + 豫园", 5: "上海迪士尼乐园", 6: "朱家角古镇 + 静安 PANE", 7: "Cocina 19 + 田子坊 + 陆家嘴", 8: "回国"}
 ZH_EV = {
- (1, "13:45"): "曼谷素万那普机场 值机", (1, "16:45"): "航班 9C7284 曼谷 → 上海浦东", (1, "22:05"): "抵达浦东国际机场 2号航站楼", (1, "23:45"): "入住 亚朵X酒店 淮海中路",
+ (1, "13:45"): "曼谷素万那普机场 值机", (1, "16:45"): "航班 9C7284 曼谷 → 上海浦东", (1, "22:05"): "抵达浦东国际机场 2号航站楼", (1, "23:45"): "入住 海玥名庭酒店 淮海中路",
  (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "人民广场", (2, "14:30"): "上海博物馆（人民广场）", (2, "16:30"): "南京路步行街", (2, "17:30"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (2, "18:30"): "外滩 · 黄浦江夜景",
  (3, "10:00"): "安福路 散步", (3, "11:00"): "奶奶家（武康路店）", (3, "12:30"): "武康路 · 武康大楼", (3, "14:30"): "西岸梦中心 Gate M（徐汇滨江）", (3, "18:30"): "费大厨辣椒炒肉（陆家嘴）", (3, "21:00"): "淮海中路 散步",
  (4, "09:30"): "玉佛禅寺", (4, "11:15"): "喜粤8号（汝南街店）", (4, "12:45"): "新天地", (4, "13:45"): "PANE 球鞋（TX淮海 淮海中路523号）", (4, "15:00"): "豫园", (4, "17:00"): "豫园商城 · 上海城隍庙", (4, "18:30"): "牛New寿喜烧（豫园）",
@@ -277,7 +277,7 @@ ZH_EV = {
  (5, "18:00"): "园内晚餐", (5, "21:15"): "点亮奇梦 + 烟花表演", (5, "22:00"): "回酒店",
  (6, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）", (6, "10:45"): "出发去朱家角", (6, "11:45"): "朱家角古镇 · 放生桥", (6, "13:00"): "古镇午餐 · 粽子", (6, "15:30"): "回市区 去静安", (6, "16:45"): "PANE 球鞋（永源路店）", (6, "18:00"): "毛头老爹饭店（静安寺店 愚园路246弄6号）",
  (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "11:30"): "MANNER 咖啡（北外滩国客中心滨江店）", (7, "12:30"): "田子坊 买伴手礼", (7, "16:00"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
- (8, "07:30"): "亚朵X酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7283 上海浦东 → 曼谷",
+ (8, "07:30"): "海玥名庭酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7283 上海浦东 → 曼谷",
 }
 for _d in DAYS:
     _d["zh"] = ZH_DAY.get(_d["n"], "")
@@ -384,7 +384,7 @@ PRINTDOC = f"""
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
       <tr><td><b>ขากลับ</b> ส. 12 ธ.ค.</td><td class="p-mono">9C7283</td><td>PVG 12:05 → BKK 15:45</td></tr></tbody></table>
       <div class="p-n">กระเป๋า: ถือขึ้น 1 ชิ้น ≤10 กก. (55×40×20 ซม.) · โหลด 20 กก. · ไม่มีอาหารฟรี</div></div>
-    <div class="p-box"><h4>🏨 ที่พัก 7 คืน</h4><b>Atour X Hotel · Huaihai Middle Road</b><div lang="zh-CN" class="p-zh">亚朵X酒店 · 上海市徐汇区淮海中路1329号</div>
+    <div class="p-box"><h4>🏨 ที่พัก 7 คืน</h4><b>Atour X Hotel · Huaihai Middle Road</b><div lang="zh-CN" class="p-zh">海玥名庭酒店（上海静安寺淮海中路店）· 上海市徐汇区淮海中路1329号云海大厦</div>
       <div class="p-n">ใกล้ MRT Changshu Road (สาย 1, 7) · โทร +86 150 0212 8856, +86 21 3356 1052 · เช็คอิน 14:00 เช็คเอาท์ 12:00</div></div>
   </div>
   <h2>ภาพรวม 8 วัน</h2>
@@ -394,7 +394,7 @@ PRINTDOC = f"""
   <section class="p-help">
     <h2>ยื่นให้คนขับ · 请带我去</h2>
     <div class="p-grid">
-      <div class="p-taxi"><small>ไปที่พัก</small><div lang="zh-CN">上海市徐汇区<br>淮海中路1329号<br>亚朵X酒店</div></div>
+      <div class="p-taxi"><small>ไปที่พัก</small><div lang="zh-CN">上海市徐汇区<br>淮海中路1329号 云海大厦<br>海玥名庭酒店</div></div>
       <div class="p-taxi"><small>ไปสนามบิน (ขากลับ)</small><div lang="zh-CN">浦东国际机场<br>2号航站楼</div></div>
     </div>
     <div class="p-grid">
@@ -549,9 +549,9 @@ page = f'''<!DOCTYPE html>
     <details class="drop" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
     <div class="taxi" id="taxi">
       <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
-      <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br><span>亚朵X酒店</span></div>
-      <div class="tx-en">Atour X Hotel · 1329 Huaihai Middle Road · เทียบกับที่อยู่ภาษาจีนในใบจองอีกครั้ง</div>
-      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，亚朵X酒店">🔊 ให้เว็บพูดภาษาจีน</button>
+      <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br>云海大厦<br><span>海玥名庭酒店</span></div>
+      <div class="tx-en">Atour X Hotel (Haiyue Mingting) · Yunhai Building, 1329 Huaihai Middle Road · ใกล้ MRT Changshu Road</div>
+      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，云海大厦，海玥名庭酒店">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
     <div class="taxi alt" id="taxi-pvg">
       <div class="tx-en">请带我去 · ขากลับไปสนามบิน</div>
