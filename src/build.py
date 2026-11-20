@@ -23,6 +23,7 @@ def amap(kw):
 def gmap(q):
     return "https://www.google.com/maps/search/?api=1&query=" + quote(q)
 
+QUEUE_LINK = [("🎫 วิธีกดคิว", "#queue-card")]
 PANE_LINK = [("👟 การ์ดยื่นพนักงาน", "#pane-card")]
 def L(apple_q=None, amap_kw=None, extra=None):
     out = []
@@ -55,14 +56,14 @@ DAYS = [
    ev("11:00", "go", "ออกจากที่พัก ไป People's Square", "รถไฟฟ้าสาย 1 จาก Changshu Road ไป People's Square ~15 นาที หรือเรียก Didi",
       None, [("🧭 เส้นทางจากที่พัก", apple_dir("People's Square, Shanghai"))]),
    ev("11:30", "food", "Lai Lai Xiao Long Bao (莱莱小笼)", "เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People's Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing'an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)",
-      "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路"), tag="มื้อกลางวัน"),
+      "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路", QUEUE_LINK), tag="มื้อกลางวัน"),
    ev("13:30", "see", "People's Square", "เดินเล่นในสวน ถ่ายรูป แล้วเดินต่อไป Nanjing Road ได้เลย (ปลายถนนอยู่ติด People's Square)", None, L("People's Square, Shanghai", "人民广场")),
     ev("14:30", "shop", "Nanjing Road Pedestrian Street", "ถนนช้อปปิ้งหลัก เดินดูห้างและร้านแบรนด์จีนแบบไม่รีบ ไฟคริสต์มาสตามห้าง · ยาว ~1.2 กม. เดินสุดถนนก็ถึง The Bund", "nanjing-road", L("Nanjing Road Pedestrian Street, Shanghai", "南京路步行街")),
   ev("15:45", "see", "The Bund ถ่ายรูปตอนกลางวัน", "ได้รูปตึกเก่าสไตล์ยุโรปตอนฟ้าสว่าง · แดดเย็นช่วงก่อนพระอาทิตย์ตก (~16:50) แสงสวยที่สุด · เดินขึ้นเหนือไปทางสะพาน Waibaidu ถึง Rei Flower ได้เลย · 19:00 กลับมาดูอีกรอบตอนเปิดไฟ", None, L("The Bund, Shanghai", "外滩"), tag="ถ่ายรูป"),
    ev("17:00", "food", "Rei Flower Coffee Bar (汭REi·FLOWER COFFEE BAR)", "คาเฟ่ริมคลอง Suzhou Creek ย่าน North Bund · พักขาก่อนไป Manner North Bund · ลองลาเต้ดอกหอมหมื่นลี้ (桂花拿铁) ไอศกรีมมะพร้าว · ~¥55/คน · 234 North Suzhou Road (北苏州路234号) ใกล้สถานี Tiantong Road ทางออก 3 · จากปลาย Nanjing Road เดินข้ามสะพาน Waibaidu Bridge ไม่กี่นาที · เปิด 10:30–01:00 (ตาม Trip.com) · โทร +86 175 2118 7929", None, L("Rei Flower Coffee Bar, 234 North Suzhou Road, Shanghai", "汭REi FLOWER COFFEE BAR 北苏州路234号"), tag="คาเฟ่"),
    ev("18:00", "food", "Manner Coffee สาขา North Bund ริมแม่น้ำ", "ร้านกระจกใส 3 ด้าน ริมแม่น้ำหวงผู่ หันตรงหอไข่มุก · ท่าเรือสำราญนานาชาติ North Bund (北外滩国客中心码头) ใกล้ Dongdaming Road / Taiping Road เขต Hongkou · จาก Rei Flower เดินเลียบคลอง ~1.5 กม. (~20 นาที) หรือ Didi ~5 นาที · ช่วงนี้ฟ้ามืดแล้ว หอไข่มุกเปิดไฟ วิวสวยที่สุด · วันอาทิตย์คนเยอะ อาจต้องรอที่นั่งริมกระจก · เปิด 07:30–22:00 (ตาม Trip.com) · ร้านอยู่ริมแม่น้ำ ห่างตึก International Port Affairs Building (国际港务大厦) ไปทางใต้ ~60 ม. · แล้ว Didi/เดินข้ามสะพาน Waibaidu ไป The Bund ~10 นาที", None, L("Manner Coffee North Bund International Cruise Terminal, Shanghai", "MANNER 北外滩国客中心滨江店"), tag="คาเฟ่"),
   ev("19:00", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
-  ev("20:00", "food", "Yuxingji บะหมี่มันปู (裕兴记面馆 外滩店)", "บะหมี่มันปูชามเด่น (招牌蟹黄面) ¥118 (~550 บาท) · ได้รสปูขนโดยไม่ต้องแกะเอง · ราดซอสมันปูแล้วคลุกเร็ว ๆ เส้นจะไม่ติดกัน · 410 Sichuan Middle Road (四川中路410号) ห่าง Nanjing Road ~50 ม. · เปิด 10:00–23:00 · ช่วง 18:00–19:30 คิวยาว 30 นาที+ มา 20:00 น่าจะซาแล้ว · ปลายฤดูปู เช็กเมนู/ราคาใน Dianping ก่อน · แชร์ 1 ชามจะได้เหลือท้องไว้กินเล่นต่อ", None, L("Yuxingji Noodle House, 410 Sichuan Middle Road, Shanghai", "裕兴记面馆 外滩店 四川中路410号"), tag="มื้อเย็น"),
+  ev("20:00", "food", "Yuxingji บะหมี่มันปู (裕兴记面馆 外滩店)", "บะหมี่มันปูชามเด่น (招牌蟹黄面) ¥118 (~550 บาท) · ได้รสปูขนโดยไม่ต้องแกะเอง · ราดซอสมันปูแล้วคลุกเร็ว ๆ เส้นจะไม่ติดกัน · 410 Sichuan Middle Road (四川中路410号) ห่าง Nanjing Road ~50 ม. · เปิด 10:00–23:00 · ช่วง 18:00–19:30 คิวยาว 30 นาที+ มา 20:00 น่าจะซาแล้ว · ปลายฤดูปู เช็กเมนู/ราคาใน Dianping ก่อน · แชร์ 1 ชามจะได้เหลือท้องไว้กินเล่นต่อ", None, L("Yuxingji Noodle House, 410 Sichuan Middle Road, Shanghai", "裕兴记面馆 外滩店 四川中路410号", QUEUE_LINK), tag="มื้อเย็น"),
   ev("20:45", "food", "เดินกินเล่น ปลาย Nanjing Road ฝั่ง The Bund", "กินบะหมี่ปูเสร็จ เดินต่อในถนน Nanjing Road East · ลองเซิงเจียน ซาลาเปาทอด (生煎) · ขนมไหว้พระจันทร์ไส้หมูสด (鲜肉月饼) · ถ้ายังไม่อิ่ม ถนน Yunnan South Road (云南南路美食街) Didi ~5 นาที · กลับ: รถไฟฟ้าสาย 2 สถานี East Nanjing Road ไป People's Square ต่อสาย 1 ไป Changshu Road หรือ Didi ~20 นาที", None, L("East Nanjing Road, Shanghai", "南京东路 小吃"), tag="กินเล่น"),
    ev("21:15", "see", "ตลาดคริสต์มาส Christkindlmarkt on the Bund 🎄 บรรยากาศกลางคืน", "🌙 ไฮไลต์ตอนกลางคืน ไฟประดับเปิดเต็มที่ · ตลาดคริสต์มาสสไตล์เยอรมัน ร้านไม้ 45+ ร้าน ไวน์อุ่น (Glühwein) ไซเดอร์แอปเปิลร้อน ช็อกโกแลตร้อน ไส้กรอก ของขวัญทำมือ · ถนน Yuanmingyuan Road (北京东路99号 圆明园路步行街) เดินจาก Nanjing Road ฝั่ง The Bund ~10 นาที · วันอาทิตย์เปิด 12:00–22:00 · ค่าเข้า ¥38 ซื้อล่วงหน้า / ¥48 หน้างาน (มินิโปรแกรม SmTk ใน WeChat หรือแอป SmartShanghai) · วันอาทิตย์คนเยอะ ถ้าเหนื่อยข้ามได้ ไปวันที่ 7 แทน", None, L("Christkindlmarkt on the Bund, Yuanmingyuan Road, Shanghai", "外滩源 圣诞市集 圆明园路"), tag="กลางคืน"),
   ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ"),
@@ -71,7 +72,7 @@ DAYS = [
   events=[
    ev("10:00", "shop", "เดินเล่นถนน Anfu Road (安福路)", "ถนนร่มไม้สายชิค คาเฟ่ ร้านแบรนด์ท้องถิ่น ร้านเสื้อผ้าเล็ก ๆ ถ่ายรูปสวย · เริ่มจากแถวสถานี Changshu Road ใกล้ที่พัก แล้วเดินไปทางย่าน Wukang Road ได้เลย ~15 นาที · ร้านส่วนใหญ่เปิด 10:00–11:00 คาเฟ่เปิดก่อน · เช้าวันจันทร์คนน้อย", None, L("Anfu Road, Xuhui, Shanghai", "安福路"), tag="ช้อป"),
    ev("10:40", "food", "13DE MARZO คาเฟ่หมีแฟลกชิป 🧸", "ร้านหลักของแบรนด์ · 安福路322号 (322 Anfu Road) ช่วงปลายถนนฝั่ง Wukang Road · เครื่องดื่ม ~¥26–39 ทุกแก้วได้ตุ๊กตาหมี · ซื้อกลับเท่านั้น ไม่มีที่นั่ง · คิวยาวที่สุดในบรรดาสาขา บางช่วงเกิน 1 ชม. (วันธรรมดาช่วงเช้ารอ ~20 นาที) · สั่งล่วงหน้าผ่านมินิโปรแกรม 13DE MARZO ใน Alipay/WeChat ระหว่างเดิน Anfu Road ~10:20 ไปถึงรับได้เลย · ยังไม่ยืนยันเวลาเปิด เช็กใน Amap ก่อนไป · จากร้านเดินไป Grandma's Home ~5 นาที", None, L("13DE MARZO, 322 Anfu Road, Shanghai", "13DE MARZO 安福路322号"), tag="คาเฟ่"),
-   ev("11:00", "food", "Grandma's Home (奶奶家) สาขา Wukang Road", "ร้านอาหารเซี่ยงไฮ้ชื่อดัง", "grandmas-home", L("Grandma's Home Wukang Road, Shanghai", "奶奶家 武康路"), tag="มื้อกลางวัน"),
+   ev("11:00", "food", "Grandma's Home (奶奶家) สาขา Wukang Road", "ร้านอาหารเซี่ยงไฮ้ชื่อดัง", "grandmas-home", L("Grandma's Home Wukang Road, Shanghai", "奶奶家 武康路", QUEUE_LINK), tag="มื้อกลางวัน"),
    ev("12:30", "see", "เดินเล่น Wukang Road", "ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย", "wukang-road", L("Wukang Mansion, Shanghai", "武康大楼")),
    ev("14:30", "see", "Gate M West Bund Dream Center (西岸梦中心)", "โรงงานปูนซีเมนต์เก่าริมแม่น้ำหวงผู่ ปรับเป็นย่านคาเฟ่ ร้านอาหาร ร้านค้า ตึกอินดัสเทรียลถ่ายรูปสวย · ทางเดินริมน้ำ 800 ม. · ดูพระอาทิตย์ตกริมน้ำราว 16:50 · 2266 Longteng Avenue · Didi จาก Wukang Road ~15 นาที หรือรถไฟฟ้าสาย 11 สถานี Longyao Road · ฤดูหนาวที่แล้วมีลานสเก็ตน้ำแข็งริมแม่น้ำ (ปีนี้ยังไม่ยืนยัน) · 17:45 เรียก Didi ไป Lujiazui ~25 นาที", None, L("Gate M West Bund Dream Center, 2266 Longteng Avenue, Shanghai", "西岸梦中心")),
    ev("18:30", "food", "Chef Fei (费大厨)", "ร้านพริกผัดหมูชื่อดัง (辣椒炒肉) รสจัดจ้านสไตล์หูหนาน", "chef-fei", L("Chef Fei Lujiazui, Shanghai", "费大厨 陆家嘴"), tag="มื้อเย็น"),
@@ -120,11 +121,11 @@ DAYS = [
   events=[
    ev("10:00", "food", "Cocina 19 ร้านอาหารสเปน ริม The Bund", "มื้อสาย ร้านเปิด 10:00 · 19 Fuzhou Road หัวมุมถนน Zhongshan East 1st Road (The Bund) · ตึกวิลล่าเก่า โต๊ะริมหน้าต่างวิวหอไข่มุก มีระเบียง · เมนูเด่น paella ซีฟู้ด · จองโต๊ะริมหน้าต่างล่วงหน้าได้ · กินแล้วเดินไป Luneurs ~10–15 นาที", "cocina19", L("Cocina 19, 19 Fuzhou Road, Shanghai", "Cocina 19西班牙餐厅 外滩"), tag="มื้อสาย"),
    ev("12:00", "food", "Luneurs Boulanger & Glacier สาขาแฟลกชิป 🍦", "ร้านเบเกอรี่และไอศกรีมดัง · 圆明园路133号 (133 Yuanmingyuan Road) ย่าน The Bund ฝั่งเหนือ ใกล้สะพาน Waibaidu · จาก Cocina 19 เดิน ~10–15 นาที · ห้ามพลาดไอศกรีมคาราเมลเค็ม ลองรสพิสตาชิโอ เกาลัด ดาร์กช็อกโกแลต · ขนมฝรั่งเศส ครัวซองต์ ทาร์ตแอปเปิล ทาร์ตเลมอน · มีที่นั่งด้านนอก · เปิด 08:00–22:00 (ตามรีวิว) · บางแหล่งเขียนเลขที่ 115 เช็กใน Amap ก่อนไป · กินเสร็จเดินเล่น The Bund ต่อได้", None, L("Luneurs, 133 Yuanmingyuan Road, Shanghai", "Luneurs 圆明园路133号"), tag="ของหวาน"),
+   ev("13:30", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 4 และ 6 ยังไม่ได้ไซซ์ที่อยากได้ · 523 Huaihai Middle Road · จาก Luneurs Didi ~15 นาที · ออกจากร้านไม่เกิน 14:30 แล้ว Didi กลับไปตลาดคริสต์มาส ~15 นาที · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ เดินเล่น The Bund ต่อได้เลย", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号", PANE_LINK), tag="ถ้ายังไม่ได้ไซซ์"),
    ev("15:00", "see", "ตลาดคริสต์มาส Christkindlmarkt on the Bund 🎄", "ตลาดคริสต์มาสสไตล์เยอรมัน ร้านไม้ 45+ ร้าน ไวน์อุ่น (Glühwein) ไซเดอร์แอปเปิลร้อน ช็อกโกแลตร้อน ไส้กรอก ราเคล็ต ของขวัญทำมือ · ถนน Yuanmingyuan Road เส้นเดียวกับ Luneurs (北京东路99号 圆明园路步行街) · วันศุกร์เปิด 15:00–22:00 ไปตอนเปิดคนน้อย · ค่าเข้า ¥30 ซื้อล่วงหน้า / ¥40 หน้างาน (มินิโปรแกรม SmTk ใน WeChat หรือแอป SmartShanghai) · ช่วงนี้ฟ้ายังสว่าง ถ้าวันที่ 2 ได้ไปตอนกลางคืนแล้ว วันนี้ข้ามได้ · เสร็จแล้ว Didi ข้ามไป Superbrand ~10 นาที", None, L("Christkindlmarkt on the Bund, Yuanmingyuan Road, Shanghai", "外滩源 圣诞市集 圆明园路"), tag="ช้อป"),
-   ev("16:00", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 4 และ 6 ยังไม่ได้ไซซ์ที่อยากได้ · 523 Huaihai Middle Road · จาก The Bund Didi ~15 นาที · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ ไป Superbrand ตรงได้เลย", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号", PANE_LINK), tag="ถ้ายังไม่ได้ไซซ์"),
-   ev("16:30", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui · Didi จาก TX Huaihai ~20–25 นาที หรือจาก The Bund ~10 นาที · ซื้อของฝากรอบสุดท้าย · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้ · ร้านมื้อเย็นอยู่ย่านเดียวกัน", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
+   ev("16:30", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui · จากตลาดคริสต์มาส Didi ~10 นาที · ซื้อของฝากรอบสุดท้าย · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้ · ร้านมื้อเย็นอยู่ย่านเดียวกัน", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
    ev("17:30", "see", "เดินถ่ายรูป Lujiazui ตอนเปิดไฟ", "สะพานลอยวงกลม Lujiazui (陆家嘴环形天桥) มุมหอไข่มุก · หน้าห้าง IFC Mall (上海国金中心) · ตึก Jin Mao (金茂大厦) คู่ Shanghai Tower ถ่ายจากถนนด้านล่าง · ทั้งหมดเดินถึงกันจาก Superbrand · พระอาทิตย์ตก ~16:50 ตอนนี้ตึกเปิดไฟแล้ว", None, L("Lujiazui Circular Pedestrian Bridge, Shanghai", "陆家嘴环形天桥"), tag="ถ่ายรูป"),
-   ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) ถนน Yincheng Road ย่าน Lujiazui ใกล้ Superbrand · ย้ายมาจากวัน Disney เพราะโชว์จบดึก · กินเสร็จนั่ง Didi หรือรถไฟฟ้าสาย 2 กลับที่พัก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场"), tag="มื้อเย็น"),
+   ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) ถนน Yincheng Road ย่าน Lujiazui ใกล้ Superbrand · ย้ายมาจากวัน Disney เพราะโชว์จบดึก · กินเสร็จนั่ง Didi หรือรถไฟฟ้าสาย 2 กลับที่พัก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场", QUEUE_LINK), tag="มื้อเย็น"),
    ev("20:30", "stay", "เก็บกระเป๋า", "ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
   ], note="พรุ่งนี้บิน 12:05 ต้องออกจากที่พัก 8:00 · เก็บกระเป๋าและชั่งน้ำหนักให้เสร็จคืนนี้ ตั้งนาฬิกาปลุก"),
 
@@ -285,7 +286,7 @@ ZH_EV = {
  (5, "07:00"): "从酒店出发 去上海迪士尼", (5, "08:30"): "奇幻童话城堡", (5, "10:00"): "疯狂动物城 + 明日世界", (5, "13:00"): "探险岛", (5, "15:00"): "宝藏湾",
  (5, "18:00"): "园内晚餐", (5, "21:15"): "点亮奇梦 + 烟花表演", (5, "22:00"): "回酒店",
  (6, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）", (6, "10:45"): "出发去朱家角", (6, "11:45"): "朱家角古镇 · 放生桥", (6, "13:00"): "古镇午餐 · 粽子", (6, "15:30"): "回市区 去静安", (6, "16:45"): "PANE 球鞋（永源路22号）", (6, "18:00"): "毛头老爹饭店（静安寺店 愚园路246弄6号）", (6, "19:45"): "田子坊 买伴手礼",
- (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "12:00"): "Luneurs 面包冰淇淋（圆明园路133号）", (7, "15:00"): "外滩源 圣诞市集（圆明园路）", (2, "21:15"): "外滩源 圣诞市集 夜景", (7, "16:00"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
+ (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "12:00"): "Luneurs 面包冰淇淋（圆明园路133号）", (7, "15:00"): "外滩源 圣诞市集（圆明园路）", (2, "21:15"): "外滩源 圣诞市集 夜景", (7, "13:30"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
  (8, "07:30"): "海玥名庭酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7283 上海浦东 → 曼谷",
 }
 for _d in DAYS:
@@ -366,6 +367,17 @@ def _pane_phr(zh, th):
 pane_rows = "".join(_pane_phr(z, t) for z, t in PANE_PHR)
 pane_size_opts = "".join(f'<option value="{x}"{" selected" if x == "40" else ""}>{x}</option>' for x in PANE_SIZES)
 pane_day_opts = "".join(f'<option value="{z}" data-th="{E(t)}"{" selected" if z == "12月10日" else ""}>{E(t)}</option>' for z, t in PANE_DAYS)
+QUEUE_PHR = [
+ ("你好，我们两位，要排队吗？", "สวัสดี มา 2 คน ต้องต่อคิวไหม"),
+ ("请问在哪里取号？", "รับบัตรคิวที่ไหน"),
+ ("大概要等多久？", "ต้องรอประมาณนานเท่าไร"),
+ ("我们的号是 …", "คิวของเราเบอร์ … (ยื่นหน้าจอให้ดู)"),
+ ("过号了，还可以进吗？", "เลยคิวไปแล้ว ยังเข้าได้ไหม"),
+]
+queue_rows = "".join(f'<button type="button" class="phr" data-say="{E(z.replace(" …", ""))}"><span><span class="zh">{E(z)}</span><span class="th">{E(t)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for z, t in QUEUE_PHR)
+QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:00", "Yuxingji", "裕兴记面馆 外滩店"),
+               ("วันที่ 3 · 11:00", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 7 · 18:30", "Long Time Ago", "很久以前羊肉串 光音广场")]
+queue_shops = "".join(f'<li><b>{E(d)}</b> {E(n)} · ค้นว่า <span class="q-zh" lang="zh-CN">{E(z)}</span></li>' for d, n, z in QUEUE_SHOPS)
 tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
 
 import datetime as _dt
@@ -598,6 +610,21 @@ page = f'''<!DOCTYPE html>
       </div>
       <div class="tx-en">请给店员看 · ยื่นให้พนักงานดู</div>
       <div class="phrases">{pane_rows}</div>
+    </div>
+    </details>
+    <details class="drop" id="queue-card"><summary class="sub-h">🎫 วิธีกดรับบัตรคิวร้านดัง <small>Dianping / หน้าร้าน</small></summary>
+    <div class="queue-card">
+      <ol class="q-steps">
+        <li><b>ก่อนออกจากที่พัก</b> เปิดแอป <b>大众点评 Dianping</b> (หรือ <b>美团 Meituan</b>) ล็อกอินด้วย WeChat หรือ Alipay จะง่ายกว่าเบอร์ไทย ซึ่งบางครั้งไม่ได้รับ SMS</li>
+        <li>ค้นชื่อร้านภาษาจีนตามรายการด้านล่าง เลือกสาขาให้ถูก แล้วหาปุ่ม <b>排队 / 取号</b> (ต่อคิว / รับบัตรคิว) ถ้ามีจะเห็นจำนวนคิวและเวลารอโดยประมาณ</li>
+        <li>เลือกจำนวนคน <b>2位</b> (โต๊ะเล็กมักเป็นคิวกลุ่ม A / 小桌) แล้วกดรับคิว ทุกร้านไม่ได้เปิดคิวออนไลน์ และบางร้านเปิดให้กดเฉพาะตอนอยู่ใกล้ร้าน</li>
+        <li>เปิดการแจ้งเตือนของแอปไว้ ไปถึงร้านก่อนเลขคิวถึงสักหน่อย ถ้าเลยคิว (过号) ส่วนใหญ่ต้องกดคิวใหม่</li>
+        <li><b>ถ้ากดในแอปไม่ได้</b> ไปที่หน้าร้าน มักมีตู้กดบัตรคิวหรือ QR ให้สแกนด้วย WeChat หรือยื่นประโยคด้านล่างให้พนักงานดู</li>
+      </ol>
+      <ul class="q-shops">{queue_shops}</ul>
+      <div class="tx-en">ยื่นให้พนักงาน · 请给店员看</div>
+      <div class="phrases">{queue_rows}</div>
+      <p class="hint">ทดลองเปิดแอปและล็อกอินตั้งแต่อยู่ไทย จะได้ไม่ติดตอนหน้าร้าน</p>
     </div>
     </details>
     <details class="drop" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>

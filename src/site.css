@@ -623,3 +623,8 @@
   .pn-sel label { display: flex; align-items: center; gap: 8px; font-weight: 600; }
   .pn-sel select { font: inherit; font-size: 17px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); min-width: 96px; }
   .pn-phr .zh b, .pn-phr .th b { color: var(--red); }
+
+  .queue-card { display: grid; gap: 10px; }
+  .q-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; line-height: 1.55; }
+  .q-shops { margin: 0; padding: 10px 14px; list-style: none; background: var(--card); border: 1px solid var(--line); border-radius: 14px; display: grid; gap: 4px; }
+  .q-zh { font-weight: 700; color: var(--red); font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
