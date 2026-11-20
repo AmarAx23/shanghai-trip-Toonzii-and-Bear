@@ -53,6 +53,8 @@ const URLS_TO_CACHE = [
   './img/hd/jingan-640.webp',
   './img/hd/ljznight-1280.webp',
   './img/hd/ljznight-640.webp',
+  './img/hd/luneurs-1280.webp',
+  './img/hd/luneurs-640.webp',
   './img/hd/m50-1280.webp',
   './img/hd/m50-640.webp',
   './img/hd/marzo-1280.webp',
