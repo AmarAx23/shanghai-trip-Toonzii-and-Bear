@@ -670,3 +670,10 @@
     .bnav a { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px 0; font-size: 11px; }
     .bnav a i { display: inline; font-size: 15px; line-height: 1; }
   }
+
+  /* hero chips: three equal tiles in one row, icon above label */
+  .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 460px; }
+  .chip { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; padding: 7px 3px; border-radius: 14px; font-size: 11.5px; font-weight: 600; letter-spacing: -.1px; line-height: 1.25; min-width: 0; white-space: normal; }
+  .chip span { display: block; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+  .chip i { font-style: normal; font-size: 17px; line-height: 1.1; }
+  @media (max-width: 380px) { .chips { gap: 6px; } .chip { font-size: 11px; padding: 6px 4px; letter-spacing: -.1px; } }

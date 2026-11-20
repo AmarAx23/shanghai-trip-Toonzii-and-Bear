@@ -32,7 +32,6 @@ def L(apple_q=None, amap_kw=None, extra=None):
     if extra: out += extra
     return out
 
-TAXI_HOTEL = ("🚕 การ์ดให้คนขับ", "#taxi")
 
 def ev(t, kind, title, note="", img=None, links=None, tag=None, data_t=None, html_note=False):
     return dict(t=t, kind=kind, title=title, note=note, img=img, links=links or [], tag=tag,
@@ -45,10 +44,10 @@ DAYS = [
       [("📍 Google Maps", gmap("Suvarnabhumi Airport"))], data_t="14:45"),
    ev("16:45", "fly", "บิน BKK → PVG · 9C7284", "บินประมาณ 4 ชม. 20 น. · เวลาจีนเร็วกว่าไทย 1 ชม.", data_t="17:45"),
    ev("22:05", "fly", "ถึงสนามบินผู่ตง", "ผ่าน ตม. รับกระเป๋า แล้วเรียก Didi หรือต่อคิวแท็กซี่ · ยื่นการ์ดที่อยู่ภาษาจีนให้คนขับดูได้เลย", "pvg",
-      L("Shanghai Pudong International Airport Terminal 2", "浦东国际机场2号航站楼", [TAXI_HOTEL]), tag="อาคาร 2"),
+      L("Shanghai Pudong International Airport Terminal 2", "浦东国际机场2号航站楼"), tag="อาคาร 2"),
    ev("23:45", "stay", "เช็คอิน Atour X Hotel",
       'ชั้น 1 และ 6–11 อาคาร Yunhai, 1329 Huaihai Middle Road เขต Xuhui · เดิน ~160 ม. ถึง MRT Changshu Road (สาย 1, 7) · โทร <a href="tel:+8615002128856">+86 150 0212 8856</a>, <a href="tel:+862133561052">+86 21 3356 1052</a>',
-      None, L(HOTEL_Q, "淮海中路1329号", [TAXI_HOTEL]), tag="ที่พัก", html_note=True),
+      None, L(HOTEL_Q, "淮海中路1329号"), tag="ที่พัก", html_note=True),
   ], note="เครื่องลงค่ำ ถึงที่พักราว 23:45 (เช็คอินได้ตั้งแต่ 14:00 มาดึกได้) พักให้เต็มที่ พรุ่งนี้เริ่มสายได้"),
 
  dict(n=2, iso="2026-12-06", dow="อา.", date="อาทิตย์ 6 ธ.ค.", title="เที่ยวเบา ๆ + The Bund", icon="🌉", wx="⛅ 5–10°C",
@@ -133,7 +132,7 @@ DAYS = [
   events=[
    ev("07:30", "stay", "เช็คเอาท์ Atour X Hotel", "ชั่งกระเป๋าอีกรอบ โหลดรวมไม่เกิน 20 กก. ถือขึ้น 1 ชิ้นไม่เกิน 10 กก. · ไปกินมื้อเช้าที่สนามบิน"),
    ev("08:00", "fly", "ไปสนามบินผู่ตง อาคาร 2", "Didi หรือแท็กซี่ ~1 ชม. · เช้าวันเสาร์รถไม่ค่อยติด · ถึงราว 9:00 ก่อนบิน 3 ชม.", None,
-      [("🧭 เส้นทางจากที่พัก", apple_dir("Shanghai Pudong International Airport Terminal 2", "d")), ("🧭 Amap 高德", amap("浦东国际机场2号航站楼")), ("🚕 การ์ดให้คนขับ", "#taxi-pvg")]),
+      [("🧭 เส้นทางจากที่พัก", apple_dir("Shanghai Pudong International Airport Terminal 2", "d")), ("🧭 Amap 高德", amap("浦东国际机场2号航站楼"))]),
    ev("09:00", "food", "เช็คอิน + มื้อเช้าที่สนามบิน", "เช็คอินและโหลดกระเป๋าก่อน แล้วค่อยกินข้าวหลังผ่าน ตม. · เคาน์เตอร์ปิดก่อนบินราว 45–60 นาที"),
    ev("12:05", "fly", "บิน PVG → BKK · 9C7283", "บินประมาณ 4 ชม. 40 น. ถึงสุวรรณภูมิ 15:45 (เวลาไทย)"),
   ], note="ขากลับมีของฝาก ชั่งกระเป๋าก่อนออกจากที่พัก"),
@@ -506,7 +505,7 @@ page = f'''<!DOCTYPE html>
     <p class="sub">5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland</p>
     <div class="cd" id="cd" role="timer" aria-label="นับถอยหลังถึงวันเดินทาง"></div>
     <p class="cd-msg" id="cd-msg"></p>
-    <div class="chips"><span class="chip">🏨 Atour X Huaihai Rd</span><span class="chip">💰 {TOTAL:,} ฿/คน</span><span class="chip">🚇 Metro + Didi</span></div>
+    <div class="chips"><span class="chip"><i aria-hidden="true">🏨</i><span>Atour X Huaihai</span></span><span class="chip"><i aria-hidden="true">💰</i><span>{TOTAL:,} ฿/คน</span></span><span class="chip"><i aria-hidden="true">🚇</i><span>Metro + Didi</span></span></div>
     <div class="hero-actions">
       <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
       <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
