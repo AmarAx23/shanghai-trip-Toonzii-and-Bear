@@ -509,7 +509,7 @@ page = f'''<!DOCTYPE html>
     <div class="hero-actions">
       <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
       <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
-      <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖼️</span>ภาพสรุป</button>
+      <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖨️</span>แพลนเที่ยว + ปริ้น</button>
     </div>
   </header>
 
@@ -694,7 +694,7 @@ page = f'''<!DOCTYPE html>
   <div class="tb-acts"><button type="button" class="btn" id="tb-say">🔊 播放 ฟังอีกครั้ง</button><button type="button" class="btn alt" id="tb-reply">🎙️ 请用中文回答 ให้พนักงานตอบ</button></div>
 </div>
 <div class="pst" id="pst" role="dialog" aria-label="ภาพสรุปแผนเที่ยว" hidden>
-  <div class="pst-bar"><b>🖼️ ภาพสรุปทริป</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
+  <div class="pst-bar"><b>🖨️ แพลนเที่ยว + ปริ้น</b><button type="button" class="pst-x" id="pst-x" aria-label="ปิด">&times;</button></div>
   <div class="pst-lang" role="radiogroup" aria-label="ภาษาในภาพ"><button type="button" class="on" data-lang="th" role="radio" aria-checked="true">ไทย</button><button type="button" data-lang="zh" role="radio" aria-checked="false">中文 ชื่อจีน</button></div>
   <div class="pst-acts"><button type="button" class="btn" id="pst-save" disabled hidden>💾 บันทึกทั้งหมด</button><button type="button" class="btn ghost" id="pst-pimg" disabled>🖼️ พิมพ์ภาพ A4</button><button type="button" class="btn ghost" id="pst-print">🖨️ พิมพ์เป็นเอกสาร</button></div>
   <p class="pst-tip">🖨️ ตอนพิมพ์ใน Chrome: เปิด <b>"กราฟิกพื้นหลัง"</b> ในหัวข้อ <b>"การตั้งค่าเพิ่มเติม"</b> ไว้ด้วย ไม่งั้นสีพื้นหลังจะหาย</p>

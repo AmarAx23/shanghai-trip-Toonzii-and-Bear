@@ -684,3 +684,7 @@
   @media (max-width: 430px) { .links a:last-child:nth-child(odd):not(:first-child) { grid-column: 1 / -1; } }
 
   @media (min-width: 500px) { .chips { gap: 10px; } .chip { flex-direction: row; gap: 7px; padding: 9px 8px; font-size: 13px; } .chip i { font-size: 16px; } }
+  /* hero buttons: give the longer print label more room, keep every label on one line */
+  .hero-actions { grid-template-columns: 1fr 1fr 1.7fr; }
+  .hbtn { white-space: nowrap; min-width: 0; }
+  @media (max-width: 360px) { .hero-actions { grid-template-columns: 1fr 1fr 2.2fr; gap: 6px; } .hbtn { font-size: 11.5px; gap: 4px; } }
