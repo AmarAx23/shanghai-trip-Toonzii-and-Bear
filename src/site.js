@@ -296,7 +296,7 @@
         e.target.style.setProperty('--rd', (batch++ * 0.07) + 's');
         e.target.classList.add('in'); io.unobserve(e.target);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px -30px 0px' });
     items.forEach(function (it) { it.classList.add('reveal'); io.observe(it); });
     // events in a newly opened day: replay the rise
     document.addEventListener('daychange', function () {

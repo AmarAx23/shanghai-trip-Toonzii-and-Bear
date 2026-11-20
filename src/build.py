@@ -252,7 +252,7 @@ def day_geo(d):
     data.update(minZoom=tp["minZoom"], maxZoom=tp["maxZoom"], view=tp["bounds"])
     for t in tp["tiles"]:
         if t not in ALL_TILES: ALL_TILES.append(t)
-    legend = "".join(f'<button type="button" class="mleg" data-go="{s["id"]}"><b>{k+1}</b>{E(s["name"])}</button>' for k, s in enumerate(stops))
+    legend = "".join(f'<button type="button" class="mleg" data-go="{s["id"]}" title="{E(s["name"])}"><b>{k+1}</b><span>{E(s["name"])}</span></button>' for k, s in enumerate(stops))
     return (f'<figure class="dmap" data-geo="{E(json.dumps(data, ensure_ascii=False))}">'
             f'<button type="button" class="mfs" aria-label="ดูแผนที่ทั้งวันเต็มจอ"><span class="mfs-o">⛶ เต็มจอ</span><span class="mfs-c">✕ ปิด</span></button>'
             f'<div class="lmap" aria-label="แผนที่เส้นทางวันที่ {d["n"]}"></div>'
