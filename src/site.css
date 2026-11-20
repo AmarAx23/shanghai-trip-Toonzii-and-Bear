@@ -672,7 +672,7 @@
   }
 
   /* hero chips: three equal tiles in one row, icon above label */
-  .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-width: 460px; }
+  .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .chip { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; padding: 7px 3px; border-radius: 14px; font-size: 11.5px; font-weight: 600; letter-spacing: -.1px; line-height: 1.25; min-width: 0; white-space: normal; }
   .chip span { display: block; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
   .chip i { font-style: normal; font-size: 17px; line-height: 1.1; }
@@ -682,3 +682,5 @@
   .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 6px; }
   .links a { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 6px 8px; }
   @media (max-width: 430px) { .links a:last-child:nth-child(odd):not(:first-child) { grid-column: 1 / -1; } }
+
+  @media (min-width: 500px) { .chips { gap: 10px; } .chip { flex-direction: row; gap: 7px; padding: 9px 8px; font-size: 13px; } .chip i { font-size: 16px; } }
