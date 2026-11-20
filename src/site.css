@@ -606,6 +606,26 @@
     .p-body b { color: #0F3A54; font-family: var(--head); font-weight: 600; font-size: 10pt; }
     .p-tip { margin: 4pt 8pt 7pt; font-size: 8.3pt; color: #5A4515; background: #FFF6DF; border: 1pt solid #C79A3F; border-radius: 8pt; padding: 3pt 7pt; }
     .p-help { break-before: page; }
+    /* each day fills its A4 page: rows stretch, type and photos scale with the number of stops */
+    .p-day { display: flex; flex-direction: column; height: 271mm; margin: 0; break-before: page; break-inside: avoid; }
+    .p-day.p-d1 { height: 118mm; break-before: auto; margin-top: 6pt; }
+    .p-d1 .p-evs { font-size: 9.6pt; gap: 5pt; }
+    .p-d1 .p-n { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .p-day h3 { flex: none; padding: 9pt 12pt; font-size: 15pt; }
+    .p-day h3 small { font-size: 9pt; }
+    .p-num { width: 26pt; height: 26pt; font-size: 13pt; }
+    .p-dzh { font-size: 11pt; }
+    .p-evs { flex: 1; min-height: 0; grid-auto-rows: 1fr; gap: 6pt; padding: 8pt 9pt 3pt; font-size: clamp(8.8pt, calc(40pt / var(--n) + 6pt), 12.5pt); }
+    .p-ev { grid-template-columns: 42pt auto 1fr; gap: 9pt; align-items: stretch; padding: 5pt 9pt 5pt 6pt; min-height: 0; overflow: hidden; }
+    .p-time { align-self: center; font-size: 1em; padding: 2pt 0; }
+    .p-pic { height: 100%; width: auto; aspect-ratio: 3 / 2; max-width: 150pt; min-height: 0; }
+    .p-emo { font-size: 2em; }
+    .p-body { align-self: center; min-height: 0; }
+    .p-body b { font-size: 1.12em; }
+    .p-n { font-size: .9em; }
+    .p-zh { font-size: .95em; }
+    .p-tag { font-size: .75em; }
+    .p-tip { flex: none; font-size: 9pt; margin: 5pt 9pt 8pt; }
     .p-taxi { border: 2pt solid #C79A3F; background: #FFF8E6; border-radius: 12pt; padding: 8pt; text-align: center; break-inside: avoid; }
     .p-taxi + .p-taxi { border-color: #1D5C82; background: #EEF5FA; }
     .p-taxi small { color: #666; }

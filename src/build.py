@@ -415,16 +415,18 @@ def _ev_src(e):
     return ""
 def _pr_day(d):
     rows = []
+    cnt = len(d["events"])
+    keep = 2 if cnt >= 10 or d["n"] == 1 else 3 if cnt >= 7 else 5 if cnt >= 5 else 7
     for i, e in enumerate(d["events"]):
         tag = f' <span class="p-tag">{E(e["tag"])}</span>' if e["tag"] else ""
-        note = _short(e["note"])
+        note = _short(e["note"], keep)
         src = _ev_src(e)
         pic = f'<img class="p-pic" data-psrc="{src}" alt="">' if src else f'<span class="p-pic p-emo">{KIND_EMO.get(e["kind"], "📍")}</span>'
         zh = e.get("zh", "")
         rows.append(f'<div class="p-ev {"alt" if i % 2 else ""}"><span class="p-time">{E(e["t"])}</span>{pic}<div class="p-body"><b>{E(e["title"])}</b>{tag}'
                     + (f'<div class="p-n">{E(note)}</div>' if note else "") + (f'<div class="p-zh" lang="zh-CN">{E(zh)}</div>' if zh else "") + '</div></div>')
     disney = " · DISNEY DAY" if d.get("disney") else ""
-    return (f'<section class="p-day"><h3><span class="p-num">{d["n"]}</span><span class="p-dt"><small>{E(d["date"])} 2026{disney} · {E(d["wx"])}</small>{E(d["title"])}</span><span class="p-dzh" lang="zh-CN">{E(d.get("zh", ""))}</span></h3>'
+    return (f'<section class="p-day p-d{d["n"]}" style="--n:{cnt}"><h3><span class="p-num">{d["n"]}</span><span class="p-dt"><small>{E(d["date"])} 2026{disney} · {E(d["wx"])}</small>{E(d["title"])}</span><span class="p-dzh" lang="zh-CN">{E(d.get("zh", ""))}</span></h3>'
             f'<div class="p-evs">{"".join(rows)}</div>'
             + (f'<p class="p-tip">⭐ {E(_plain(d["note"]))}</p>' if d.get("note") else "") + '</section>')
 _pr_over = "".join(f'<tr><td class="p-t">{d["n"]}</td><td>{E(d["date"])}</td><td><b>{E(d["title"])}</b></td><td class="p-zh" lang="zh-CN">{E(d.get("zh", ""))}</td></tr>' for d in DAYS)
