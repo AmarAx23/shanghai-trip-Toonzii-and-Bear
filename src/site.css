@@ -665,7 +665,7 @@
   @media (min-width: 500px) { .mlegs { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); } }
 
   /* phone held sideways: slim one-line menu so it doesn't cover the plan */
-  @media (orientation: landscape) and (max-height: 500px) {
+  @media (orientation: landscape) and (max-height: 700px) {
     .bnav { bottom: calc(6px + env(safe-area-inset-bottom)); max-width: 520px; padding-top: 3px; padding-bottom: 3px; }
     .bnav a { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px 0; font-size: 11px; }
     .bnav a i { display: inline; font-size: 15px; line-height: 1; }
