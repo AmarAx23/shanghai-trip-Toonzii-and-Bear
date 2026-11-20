@@ -628,3 +628,8 @@
   .q-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; line-height: 1.55; }
   .q-shops { margin: 0; padding: 10px 14px; list-style: none; background: var(--card); border: 1px solid var(--line); border-radius: 14px; display: grid; gap: 4px; }
   .q-zh { font-weight: 700; color: var(--red); font-family: 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', var(--body); }
+
+  .skip { display: inline-block; margin: 4px 0 2px; padding: 2px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; background: var(--gold-soft); color: var(--gold); }
+  .skip small { font-weight: 500; }
+
+  .wx .avg { opacity: .55; }

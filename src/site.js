@@ -537,19 +537,31 @@
       return '<div class="trip"><div class="d">' + label(b.getAttribute('data-date')) + '</div><div class="i">' + ic + '</div><div class="t">' + tmp + '</div></div>';
     }).join('');
     var today = shNow().date;
-    var daysToTrip = (Date.parse(TRIP_START) - Date.parse(today)) / 864e5;
-    var inRange = daysToTrip <= 14 && today <= TRIP_END;
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=31.21&longitude=121.45&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai'
-      + (inRange ? '&start_date=' + (today > TRIP_START ? today : TRIP_START) + '&end_date=' + TRIP_END : '&forecast_days=7');
+    // Open-Meteo gives up to 16 days ahead: show trip days that are covered, keep averages for the rest
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=31.21&longitude=121.45&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai&forecast_days=16';
     fetch(url).then(function (r) { return r.json(); }).then(function (j) {
       var d = j && j.daily; if (!d || !d.time) return;
-      wx.innerHTML = d.time.map(function (t, i) {
+      var got = {}, n = 0;
+      d.time.forEach(function (t, i) {
+        if (t < TRIP_START || t > TRIP_END) return;
         var hi = Math.round(d.temperature_2m_max[i]), lo = Math.round(d.temperature_2m_min[i]), ic = icon(d.weathercode[i]);
-        var trip = t >= TRIP_START && t <= TRIP_END;
-        if (trip) $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.textContent = ic + ' ' + lo + '–' + hi + '°C (พยากรณ์)'; });
-        return '<div' + (trip ? ' class="trip"' : '') + '><div class="d">' + label(t) + '</div><div class="i">' + ic + '</div><div class="t">' + hi + '° <small>' + lo + '°</small></div></div>';
-      }).join('');
-      note.innerHTML = inRange ? 'พยากรณ์จริงช่วงทริป' : 'พยากรณ์ 7 วันข้างหน้า<small>ใกล้ทริปจะเปลี่ยนเป็นวันเที่ยวเอง</small>';
+        got[t] = { hi: hi, lo: lo, ic: ic }; n++;
+        $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.textContent = ic + ' ' + lo + '–' + hi + '°C (พยากรณ์)'; });
+      });
+      if (n) {
+        wx.innerHTML = $$('.wxb').filter(function (b, i, a) { return a.findIndex(function (x) { return x.getAttribute('data-date') === b.getAttribute('data-date'); }) === i; }).map(function (b) {
+          var t = b.getAttribute('data-date'), g = got[t];
+          if (g) return '<div class="trip live"><div class="d">' + label(t) + '</div><div class="i">' + g.ic + '</div><div class="t">' + g.hi + '° <small>' + g.lo + '°</small></div></div>';
+          var x = b.textContent, ic = x.split(' ')[0], tmp = x.replace(/^\S+\s*/, '').replace('กลางคืน', '').trim();
+          return '<div class="trip avg"><div class="d">' + label(t) + '</div><div class="i">' + ic + '</div><div class="t">' + tmp + '</div></div>';
+        }).join('');
+        note.innerHTML = n >= $$('.wxb').length ? 'พยากรณ์จริงช่วงทริป' : 'พยากรณ์จริง ' + n + ' วัน<small>วันที่จางยังเป็นค่าเฉลี่ย จะอัปเดตเองเมื่อใกล้วัน</small>';
+      } else if (today < TRIP_START) {
+        wx.innerHTML = d.time.slice(0, 7).map(function (t, i) {
+          return '<div><div class="d">' + label(t) + '</div><div class="i">' + icon(d.weathercode[i]) + '</div><div class="t">' + Math.round(d.temperature_2m_max[i]) + '° <small>' + Math.round(d.temperature_2m_min[i]) + '°</small></div></div>';
+        }).join('');
+        note.innerHTML = 'พยากรณ์ 7 วันข้างหน้า<small>ใกล้ทริปจะเปลี่ยนเป็นวันเที่ยวเอง</small>';
+      }
     }).catch(function () {});
   })();
 
