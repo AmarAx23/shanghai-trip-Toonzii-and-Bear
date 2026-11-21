@@ -63,7 +63,7 @@ DAYS = [
    ev("18:00", "food", "Manner Coffee สาขา North Bund ริมแม่น้ำ", "ร้านกระจกใส 3 ด้าน ริมแม่น้ำหวงผู่ หันตรงหอไข่มุก · ท่าเรือสำราญนานาชาติ North Bund (北外滩国客中心码头) ใกล้ Dongdaming Road / Taiping Road เขต Hongkou · จาก Rei Flower เดินเลียบคลอง ~1.5 กม. (~20 นาที) หรือ Didi ~5 นาที · ช่วงนี้ฟ้ามืดแล้ว หอไข่มุกเปิดไฟ วิวสวยที่สุด · วันอาทิตย์คนเยอะ อาจต้องรอที่นั่งริมกระจก · เปิด 07:30–22:00 (ตาม Trip.com) · ร้านอยู่ริมแม่น้ำ ห่างตึก International Port Affairs Building (国际港务大厦) ไปทางใต้ ~60 ม. · แล้ว Didi/เดินข้ามสะพาน Waibaidu ไป The Bund ~10 นาที", None, L("Manner Coffee North Bund International Cruise Terminal, Shanghai", "MANNER 北外滩国客中心滨江店"), tag="คาเฟ่"),
   ev("19:00", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
   ev("19:45", "food", "เดินกินเล่น Nanjing Road จาก The Bund ไป People's Square", "เดินถนนคนเดินช่วงไฟนีออนเปิด ~1.5 กม. ไปทางตะวันตก ปลายทางคือ Raffles City · กินเล่นพอรองท้อง แล้วไปกินมื้อเย็นต่อ · ลองเซิงเจียน ซาลาเปาทอด (生煎) หรือขนมไหว้พระจันทร์ไส้หมูสด (鲜肉月饼) · เดินช้า ๆ ~40 นาที", None, L("East Nanjing Road, Shanghai", "南京东路 小吃"), tag="กินเล่น"),
-  ev("20:30", "food", "Rged Ground Beef & Rice แฮมเบิร์กสเต็กกับข้าว", "ร้านแฮมเบิร์กสเต็กแบบญี่ปุ่นกินกับข้าว · Raffles City ชั้น 6–7 (来福士广场 西藏中路268号) ตรงสถานี People's Square · ห้างมักปิด ~22:00 ร้านอาจรับออเดอร์สุดท้ายก่อนนั้น เช็กเวลาและคิวใน Dianping/Amap ก่อน ถ้าคิวยาวกดคิวล่วงหน้าระหว่างเดิน Nanjing Road · กลับที่พัก: รถไฟฟ้าสาย 1 สถานี People's Square ไป Changshu Road ตรง ~15 นาที", None, L("Rged Ground Beef & Rice, Raffles City, 268 Xizang Middle Road, Shanghai", "来福士广场 西藏中路268号", QUEUE_LINK), tag="มื้อเย็น"),
+  ev("20:30", "food", "Aged Ground Beef & Rice แฮมเบิร์กสเต็กกับข้าว", "ร้านแฮมเบิร์กสเต็กแบบญี่ปุ่นกินกับข้าว · Raffles City ชั้น 6–7 (来福士广场 西藏中路268号) ตรงสถานี People's Square · ห้างมักปิด ~22:00 ร้านอาจรับออเดอร์สุดท้ายก่อนนั้น เช็กเวลาและคิวใน Dianping/Amap ก่อน ถ้าคิวยาวกดคิวล่วงหน้าระหว่างเดิน Nanjing Road · กลับที่พัก: รถไฟฟ้าสาย 1 สถานี People's Square ไป Changshu Road ตรง ~15 นาที", None, L("Aged Ground Beef & Rice, Raffles City, 268 Xizang Middle Road, Shanghai", "来福士广场 西藏中路268号", QUEUE_LINK), tag="มื้อเย็น"),
   ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ"),
 
  dict(n=3, iso="2026-12-07", dow="จ.", date="จันทร์ 7 ธ.ค.", title="Shanghai Disneyland", icon="🏰", wx="☁️ 4–8°C", disney=True,
@@ -392,7 +392,7 @@ QUEUE_PHR = [
  ("过号了，还可以进吗？", "เลยคิวไปแล้ว ยังเข้าได้ไหม"),
 ]
 queue_rows = "".join(f'<button type="button" class="phr" data-say="{E(z.replace(" …", ""))}"><span><span class="zh">{E(z)}</span><span class="th">{E(t)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for z, t in QUEUE_PHR)
-QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:30", "Rged (Raffles City)", "来福士 汉堡排"),
+QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:30", "Aged Ground Beef & Rice", "来福士 汉堡排"),
                ("วันที่ 5 · 11:00", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 7 · 18:30", "Long Time Ago", "很久以前羊肉串 光音广场")]
 queue_shops = "".join(f'<li><b>{E(d)}</b> {E(n)} · ค้นว่า <span class="q-zh" lang="zh-CN">{E(z)}</span></li>' for d, n, z in QUEUE_SHOPS)
 tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
