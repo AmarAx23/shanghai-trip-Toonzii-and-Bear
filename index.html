@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261121111508">
+<meta name="build" content="20261121111952">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -714,6 +714,19 @@
 
   .wx .w { font-size: 10.5px; line-height: 1.25; margin-top: 2px; opacity: .8; }
 
+  /* help dropdowns: each gets its own muted tone (left stripe, tinted header, icon chip) so they don't blend together */
+  details.drop { --tone: #8a9aa6; --tone-bg: rgba(138,154,166,.10); }
+  details.drop.t-taxi  { --tone: #c49a3a; --tone-bg: rgba(196,154,58,.11); }   /* ochre */
+  details.drop.t-pane  { --tone: #6f8fb0; --tone-bg: rgba(111,143,176,.11); }  /* dusty blue */
+  details.drop.t-queue { --tone: #b58463; --tone-bg: rgba(181,132,99,.11); }   /* clay */
+  details.drop.t-tr    { --tone: #7e9a7a; --tone-bg: rgba(126,154,122,.12); }  /* sage */
+  details.drop.t-phr   { --tone: #9a86ad; --tone-bg: rgba(154,134,173,.12); }  /* lavender */
+  details.drop.t-sos   { --tone: #b8676a; --tone-bg: rgba(184,103,106,.11); }  /* muted rose */
+  details.drop.t-tip   { --tone: #5f9c98; --tone-bg: rgba(95,156,152,.11); }   /* teal */
+  details.drop > summary.sub-h { background: linear-gradient(90deg, var(--tone-bg), transparent 70%), var(--card); border-color: color-mix(in srgb, var(--tone) 35%, var(--line)); box-shadow: inset 4px 0 0 var(--tone); padding-left: 16px; }
+  details.drop > summary.sub-h::after { color: var(--tone); }
+  details.drop[open] > summary.sub-h { border-color: var(--tone); }
+
 </style>
 </head>
 <body>
@@ -910,7 +923,7 @@
 
   <section class="sec" id="sos" aria-labelledby="sos-h">
     <div class="sec-h"><h2 id="sos-h">🆘 ช่วยเหลือในจีน</h2></div>
-    <details class="drop" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
+    <details class="drop t-taxi" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
     <div class="taxi" id="taxi">
       <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
       <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br>云海大厦<br><span>海玥名庭酒店</span></div>
@@ -924,7 +937,7 @@
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
     </details>
-    <details class="drop" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
+    <details class="drop t-pane" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
     <div class="pane-card">
       <div class="pn-sel">
         <label>ไซซ์ <select id="pn-size" aria-label="ไซซ์รองเท้า"><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40" selected>40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option></select></label>
@@ -934,7 +947,7 @@
       <div class="phrases"><button type="button" class="phr pn-phr" data-tpl="你好，请问这款有 {s} 码吗？" data-say="你好，请问这款有40码吗？"><span><span class="zh">你好，请问这款有 <b class="pn-s">40</b> 码吗？</span><span class="th">สวัสดี รุ่นนี้มีไซซ์ <b class="pn-s">40</b> ไหม</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="可以试穿吗？" data-say="可以试穿吗？"><span><span class="zh">可以试穿吗？</span><span class="th">ขอลองใส่ได้ไหม</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="还有别的颜色吗？" data-say="还有别的颜色吗？"><span><span class="zh">还有别的颜色吗？</span><span class="th">มีสีอื่นไหม</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="有大一码 / 小一码的吗？" data-say="有大一码/小一码的吗？"><span><span class="zh">有大一码 / 小一码的吗？</span><span class="th">มีไซซ์ใหญ่ขึ้น / เล็กลงหนึ่งเบอร์ไหม</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="什么时候到货？" data-say="什么时候到货？"><span><span class="zh">什么时候到货？</span><span class="th">ของจะเข้าวันไหน</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="其他门店有货吗？（TX淮海 / 永源路）" data-say="其他门店有货吗？（TX淮海/永源路）"><span><span class="zh">其他门店有货吗？（TX淮海 / 永源路）</span><span class="th">สาขาอื่นมีของไหม (TX Huaihai / Yongyuan Road)</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="可以帮我留一双吗？我们 {d} 来拿。" data-say="可以帮我留一双吗？我们12月10日来拿。"><span><span class="zh">可以帮我留一双吗？我们 <b class="pn-d">12月10日</b> 来拿。</span><span class="th">ช่วยเก็บไว้ให้ 1 คู่ได้ไหม เราจะมารับ<b class="pn-dt">วันที่ 10 ธ.ค.</b></span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr pn-phr" data-tpl="可以用支付宝吗？" data-say="可以用支付宝吗？"><span><span class="zh">可以用支付宝吗？</span><span class="th">จ่ายด้วย Alipay ได้ไหม</span></span><span class="spk" aria-hidden="true">🔊</span></button></div>
     </div>
     </details>
-    <details class="drop" id="queue-card"><summary class="sub-h">🎫 วิธีกดรับบัตรคิวร้านดัง <small>Dianping / หน้าร้าน</small></summary>
+    <details class="drop t-queue" id="queue-card"><summary class="sub-h">🎫 วิธีกดรับบัตรคิวร้านดัง <small>Dianping / หน้าร้าน</small></summary>
     <div class="queue-card">
       <ol class="q-steps">
         <li><b>ก่อนออกจากที่พัก</b> เปิดแอป <b>大众点评 Dianping</b> (หรือ <b>美团 Meituan</b>) ล็อกอินด้วย WeChat หรือ Alipay จะง่ายกว่าเบอร์ไทย ซึ่งบางครั้งไม่ได้รับ SMS</li>
@@ -949,7 +962,7 @@
       <p class="hint">ทดลองเปิดแอปและล็อกอินตั้งแต่อยู่ไทย จะได้ไม่ติดตอนหน้าร้าน</p>
     </div>
     </details>
-    <details class="drop" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>
+    <details class="drop t-tr" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>
     <div class="card tr" id="tr">
       <div class="tr-mics">
         <button type="button" class="tr-mic th" data-lang="th"><i aria-hidden="true">🎙️</i><b>พูดไทย</b><small>แปลเป็นจีนให้พนักงาน</small></button>
@@ -965,25 +978,25 @@
       <div class="tr-foot"><small id="tr-eng">ต้องต่ออินเทอร์เน็ต · ถ้าไม่มีเน็ตใช้ประโยคสำเร็จรูปด้านล่าง</small><button type="button" class="tr-clear" id="tr-clear" hidden>ล้างประวัติ</button></div>
     </div>
     </details>
-    <details class="drop"><summary class="sub-h">💬 ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></summary>
+    <details class="drop t-phr"><summary class="sub-h">💬 ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></summary>
     <div class="phrases"><button type="button" class="phr" data-say="多少钱？"><span><span class="zh">多少钱？</span><span class="th">เท่าไหร่ครับ/คะ · duō shǎo qián</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="不要辣"><span><span class="zh">不要辣</span><span class="th">ไม่เอาเผ็ด · bú yào là</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="少辣"><span><span class="zh">少辣</span><span class="th">เผ็ดน้อย · shǎo là</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="洗手间在哪里？"><span><span class="zh">洗手间在哪里？</span><span class="th">ห้องน้ำอยู่ไหน · xǐ shǒu jiān zài nǎ lǐ</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="可以用支付宝吗？"><span><span class="zh">可以用支付宝吗？</span><span class="th">จ่าย Alipay ได้ไหม · kě yǐ yòng zhī fù bǎo ma</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="这个"><span><span class="zh">这个</span><span class="th">อันนี้ (ชี้ที่เมนู) · zhè ge</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="买单"><span><span class="zh">买单</span><span class="th">เช็กบิล · mǎi dān</span></span><span class="spk" aria-hidden="true">🔊</span></button><button type="button" class="phr" data-say="谢谢"><span><span class="zh">谢谢</span><span class="th">ขอบคุณ · xiè xie</span></span><span class="spk" aria-hidden="true">🔊</span></button></div>
     </details>
-    <details class="drop"><summary class="sub-h">📞 เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></summary>
+    <details class="drop t-sos"><summary class="sub-h">📞 เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></summary>
     <div class="sos-grid"><a class="sos" href="tel:110"><span class="si" aria-hidden="true">👮</span><span><b>ตำรวจ</b><small>มีสายด่วนรองรับภาษาอังกฤษ</small><em>110</em></span></a><a class="sos" href="tel:120"><span class="si" aria-hidden="true">🚑</span><span><b>รถพยาบาล</b><small>เหตุฉุกเฉินทางการแพทย์</small><em>120</em></span></a><a class="sos" href="tel:119"><span class="si" aria-hidden="true">🚒</span><span><b>ดับเพลิง</b><small>ไฟไหม้ / เหตุฉุกเฉินอื่น ๆ</small><em>119</em></span></a><a class="sos" href="tel:+862164390630"><span class="si" aria-hidden="true">🌐</span><span><b>สายด่วนช่วยเหลือชาวต่างชาติ</b><small>ศูนย์บริการข้อมูลเซี่ยงไฮ้</small><em>+86 21 6439 0630</em></span></a><a class="sos" href="tel:+862152609899"><span class="si" aria-hidden="true">🇹🇭</span><span><b>สถานกงสุลใหญ่ไทย ณ เซี่ยงไฮ้</b><small>เวลาทำการ จ.–ศ. 09:30–12:00, 13:30–17:30 (ปิด จ. 7 ธ.ค.) · 18 Wanshan Road เขต Changning · ยื่นคนขับ: 长宁区万山路18号 泰国总领事馆</small><em>+86 21 5260 9899</em></span></a><a class="sos" href="tel:+8618516268776"><span class="si" aria-hidden="true">🆘</span><span><b>สายด่วนฉุกเฉินคนไทย (กงสุลเซี่ยงไฮ้)</b><small>นอกเวลาทำการ / เหตุด่วน · เบอร์จากประกาศปี 2022 ควรเช็กอีกครั้งก่อนไป</small><em>+86 185 1626 8776</em></span></a><a class="sos" href="tel:+862122163999"><span class="si" aria-hidden="true">🏥</span><span><b>รพ. United Family (Changning)</b><small>ห้องฉุกเฉิน 24 ชม. หมอพูดอังกฤษ · 699 Pingtang Rd · Didi ~20–30 นาที</small><em>+86 21 2216 3999</em></span></a><a class="sos" href="tel:+862162483986"><span class="si" aria-hidden="true">🏥</span><span><b>รพ. Huashan 华山医院</b><small>ใกล้ที่พักที่สุด ~1.5 กม. · 12 Middle Wulumuqi Rd · แผนกต่างชาติพูดอังกฤษ จ.–ศ. 8:00–17:00</small><em>+86 21 6248 3986</em></span></a></div>
     <p class="hint">แนะนำแคปหน้านี้เก็บไว้ เผื่อไม่มีเน็ต</p>
     </details>
-    <details class="drop"><summary class="sub-h">💡 เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</summary>
+    <details class="drop t-tip"><summary class="sub-h">💡 เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</summary>
     <div class="tips"><details class="tip"><summary><span aria-hidden="true">🛂</span>วีซ่า</summary><p>พาสปอร์ตไทยเข้าจีนแบบ Free Visa อยู่ได้สูงสุด 30 วัน (ไม่เกิน 90 วันใน 180 วัน) · ตั้งแต่ 1 มี.ค. 2026 ไทย-จีนยกเว้นวีซ่าให้กันแบบสองทาง มีผลถึง 31 ธ.ค. 2026 ครอบคลุมทริปนี้</p></details><details class="tip"><summary><span aria-hidden="true">🛂</span>พาสปอร์ตหาย ทำ 3 ขั้นตอน</summary><p>1) แจ้งความที่สถานีตำรวจ (派出所) ขอใบรับแจ้งความ 报案回执 · 2) ไปสำนักงานตรวจคนเข้าเมือง (出入境) ขอหนังสือรับรองการแจ้งพาสปอร์ตหาย 护照报失证明 และวีซ่าออกนอกประเทศ อาจใช้เวลาหลายวันทำการ · 3) ติดต่อสถานกงสุลใหญ่ไทย ณ เซี่ยงไฮ้ ขอเอกสารเดินทางฉุกเฉิน (ETD) กลับไทย · ถ่ายรูปหน้าพาสปอร์ตเก็บไว้ในมือถือและอีเมลก่อนเดินทาง</p></details><details class="tip"><summary><span aria-hidden="true">🔋</span>แบตสำรองขึ้นเครื่องในจีน</summary><p>ต้องมีตรา 3C (CCC) และตัวเลขความจุ (mAh หรือ Wh) พิมพ์ชัด ไม่ลอก ไม่งั้นถูกยึดที่จุดตรวจ · ใส่กระเป๋าถือเท่านั้น ห้ามโหลด · ไม่เกิน 100Wh (~27,000mAh) ไม่ต้องขออนุญาต · ห้ามใช้ชาร์จบนเครื่อง · ถ้าแบตไม่มี 3C ซื้อใหม่ในจีนก่อนวันกลับได้ (ร้านสะดวกซื้อ/ห้าง)</p></details><details class="tip"><summary><span aria-hidden="true">🧻</span>พกทิชชูติดตัว</summary><p>ห้องน้ำสาธารณะหลายที่ไม่มีกระดาษให้ บางที่เป็นแบบนั่งยอง · พกทิชชูแบบห่อเล็กกับเจลล้างมือ · ห้องน้ำในห้าง ร้านกาแฟ และสถานีใหญ่สะอาดกว่า</p></details><details class="tip"><summary><span aria-hidden="true">📷</span>สแกนเมนูด้วยมือถือ</summary><p>เมนูส่วนใหญ่เป็นภาษาจีนล้วน · iPhone: เปิดกล้องแล้วกดไอคอนข้อความ หรือแอป Translate โหมดกล้อง · Android: Google Lens (ต้องเปิด VPN) · แอปที่ใช้ได้ไม่ต้อง VPN: Alipay มีฟังก์ชันแปลในตัว · ร้านที่สั่งผ่าน QR บนโต๊ะ เปิดในมือถือแล้วแปลหน้าเว็บได้</p></details><details class="tip"><summary><span aria-hidden="true">🗺️</span>แผนที่ในจีน</summary><p>Google Maps ใช้ไม่ได้ถ้าไม่เปิด VPN · ลิงก์ในเว็บนี้ใช้ Apple Maps (ใช้ได้ในจีน) และ Amap 高德 ซึ่งคนท้องถิ่นใช้กัน</p></details><details class="tip"><summary><span aria-hidden="true">📱</span>จ่ายเงิน</summary><p>โหลด Alipay / WeChat Pay ผูกบัตรต่างชาติไว้ล่วงหน้า ร้านส่วนใหญ่ไม่รับเงินสด</p></details><details class="tip"><summary><span aria-hidden="true">🚇</span>รถไฟฟ้า</summary><p>ใช้ QR ในแอป Alipay หรือ Shanghai Public Transportation Card ครอบคลุมเกือบทุกจุดเที่ยว</p></details><details class="tip"><summary><span aria-hidden="true">🌐</span>อินเทอร์เน็ต</summary><p>Google / Facebook / LINE ใช้ไม่ได้ในจีน โหลด VPN หรือใช้ WeChat แทนก่อนเดินทาง</p></details><details class="tip"><summary><span aria-hidden="true">🧥</span>อากาศ</summary><p>หนาว 4–11°C ใส่เสื้อแบบหลายชั้น เพราะในห้างและร้านเปิดฮีตเตอร์ร้อน</p></details><details class="tip"><summary><span aria-hidden="true">🎡</span>Disneyland ครบ 10 ปี</summary><p>ปีนี้มีแคมเปญ &quot;With You, It&#x27;s Magic+&quot; โชว์หน้าปราสาทใหม่และขบวนพาเหรดพิเศษ · ซื้อตั๋วล่วงหน้าในเว็บหรือแอปทางการ</p></details><details class="tip"><summary><span aria-hidden="true">🎄</span>คริสต์มาส</summary><p>ธันวาคมมีไฟประดับตามห้างและ The Bund สวยเป็นพิเศษ</p></details></div>
     </details>
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 21 พ.ย. 2026 11:15</small>
+    <small class="ver">อัปเดตล่าสุด 21 พ.ย. 2026 11:19</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 
 <div id="printdoc" aria-hidden="true">
-  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 21 พ.ย. 2026 11:15</p></div></header>
+  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 21 พ.ย. 2026 11:19</p></div></header>
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>

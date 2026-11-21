@@ -610,7 +610,7 @@ page = f'''<!DOCTYPE html>
 
   <section class="sec" id="sos" aria-labelledby="sos-h">
     <div class="sec-h"><h2 id="sos-h">🆘 ช่วยเหลือในจีน</h2></div>
-    <details class="drop" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
+    <details class="drop t-taxi" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
     <div class="taxi" id="taxi">
       <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
       <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br>云海大厦<br><span>海玥名庭酒店</span></div>
@@ -624,7 +624,7 @@ page = f'''<!DOCTYPE html>
       <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
     </div>
     </details>
-    <details class="drop" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
+    <details class="drop t-pane" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
     <div class="pane-card">
       <div class="pn-sel">
         <label>ไซซ์ <select id="pn-size" aria-label="ไซซ์รองเท้า">{pane_size_opts}</select></label>
@@ -634,7 +634,7 @@ page = f'''<!DOCTYPE html>
       <div class="phrases">{pane_rows}</div>
     </div>
     </details>
-    <details class="drop" id="queue-card"><summary class="sub-h">🎫 วิธีกดรับบัตรคิวร้านดัง <small>Dianping / หน้าร้าน</small></summary>
+    <details class="drop t-queue" id="queue-card"><summary class="sub-h">🎫 วิธีกดรับบัตรคิวร้านดัง <small>Dianping / หน้าร้าน</small></summary>
     <div class="queue-card">
       <ol class="q-steps">
         <li><b>ก่อนออกจากที่พัก</b> เปิดแอป <b>大众点评 Dianping</b> (หรือ <b>美团 Meituan</b>) ล็อกอินด้วย WeChat หรือ Alipay จะง่ายกว่าเบอร์ไทย ซึ่งบางครั้งไม่ได้รับ SMS</li>
@@ -649,7 +649,7 @@ page = f'''<!DOCTYPE html>
       <p class="hint">ทดลองเปิดแอปและล็อกอินตั้งแต่อยู่ไทย จะได้ไม่ติดตอนหน้าร้าน</p>
     </div>
     </details>
-    <details class="drop" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>
+    <details class="drop t-tr" id="tr-drop"><summary class="sub-h" id="tr-h">🗣️ ล่ามแปล ไทย ⇄ จีน <small>กดไมค์แล้วพูด</small></summary>
     <div class="card tr" id="tr">
       <div class="tr-mics">
         <button type="button" class="tr-mic th" data-lang="th"><i aria-hidden="true">🎙️</i><b>พูดไทย</b><small>แปลเป็นจีนให้พนักงาน</small></button>
@@ -665,14 +665,14 @@ page = f'''<!DOCTYPE html>
       <div class="tr-foot"><small id="tr-eng">ต้องต่ออินเทอร์เน็ต · ถ้าไม่มีเน็ตใช้ประโยคสำเร็จรูปด้านล่าง</small><button type="button" class="tr-clear" id="tr-clear" hidden>ล้างประวัติ</button></div>
     </div>
     </details>
-    <details class="drop"><summary class="sub-h">💬 ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></summary>
+    <details class="drop t-phr"><summary class="sub-h">💬 ประโยคที่ใช้บ่อย <small>กดเพื่อฟังเสียง</small></summary>
     <div class="phrases">{phr_rows}</div>
     </details>
-    <details class="drop"><summary class="sub-h">📞 เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></summary>
+    <details class="drop t-sos"><summary class="sub-h">📞 เบอร์ฉุกเฉิน <small>แตะเพื่อโทร</small></summary>
     <div class="sos-grid">{sos_rows}</div>
     <p class="hint">แนะนำแคปหน้านี้เก็บไว้ เผื่อไม่มีเน็ต</p>
     </details>
-    <details class="drop"><summary class="sub-h">💡 เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</summary>
+    <details class="drop t-tip"><summary class="sub-h">💡 เคล็ดลับเที่ยวเซี่ยงไฮ้ 2026</summary>
     <div class="tips">{tips_rows}</div>
     </details>
   </section>

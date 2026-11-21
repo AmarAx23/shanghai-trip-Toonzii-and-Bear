@@ -690,3 +690,16 @@
   @media (max-width: 360px) { .hero-actions { grid-template-columns: 1fr 1fr 2.2fr; gap: 6px; } .hbtn { font-size: 11.5px; gap: 4px; } }
 
   .wx .w { font-size: 10.5px; line-height: 1.25; margin-top: 2px; opacity: .8; }
+
+  /* help dropdowns: each gets its own muted tone (left stripe, tinted header, icon chip) so they don't blend together */
+  details.drop { --tone: #8a9aa6; --tone-bg: rgba(138,154,166,.10); }
+  details.drop.t-taxi  { --tone: #c49a3a; --tone-bg: rgba(196,154,58,.11); }   /* ochre */
+  details.drop.t-pane  { --tone: #6f8fb0; --tone-bg: rgba(111,143,176,.11); }  /* dusty blue */
+  details.drop.t-queue { --tone: #b58463; --tone-bg: rgba(181,132,99,.11); }   /* clay */
+  details.drop.t-tr    { --tone: #7e9a7a; --tone-bg: rgba(126,154,122,.12); }  /* sage */
+  details.drop.t-phr   { --tone: #9a86ad; --tone-bg: rgba(154,134,173,.12); }  /* lavender */
+  details.drop.t-sos   { --tone: #b8676a; --tone-bg: rgba(184,103,106,.11); }  /* muted rose */
+  details.drop.t-tip   { --tone: #5f9c98; --tone-bg: rgba(95,156,152,.11); }   /* teal */
+  details.drop > summary.sub-h { background: linear-gradient(90deg, var(--tone-bg), transparent 70%), var(--card); border-color: color-mix(in srgb, var(--tone) 35%, var(--line)); box-shadow: inset 4px 0 0 var(--tone); padding-left: 16px; }
+  details.drop > summary.sub-h::after { color: var(--tone); }
+  details.drop[open] > summary.sub-h { border-color: var(--tone); }
