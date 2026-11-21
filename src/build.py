@@ -118,12 +118,12 @@ DAYS = [
   events=[
    ev("10:00", "food", "Cocina 19 ร้านอาหารสเปน ริม The Bund", "มื้อสาย ร้านเปิด 10:00 · 19 Fuzhou Road หัวมุมถนน Zhongshan East 1st Road (The Bund) · ตึกวิลล่าเก่า โต๊ะริมหน้าต่างวิวหอไข่มุก มีระเบียง · เมนูเด่น paella ซีฟู้ด · จองโต๊ะริมหน้าต่างล่วงหน้าได้ · กินแล้วเดินไป Luneurs ~10–15 นาที", "cocina19", L("Cocina 19, 19 Fuzhou Road, Shanghai", "Cocina 19西班牙餐厅 外滩"), tag="มื้อสาย"),
    ev("12:00", "food", "Luneurs Boulanger & Glacier สาขาแฟลกชิป 🍦", "ร้านเบเกอรี่และไอศกรีมดัง · 圆明园路133号 (133 Yuanmingyuan Road) ย่าน The Bund ฝั่งเหนือ ใกล้สะพาน Waibaidu · จาก Cocina 19 เดิน ~10–15 นาที · ห้ามพลาดไอศกรีมคาราเมลเค็ม ลองรสพิสตาชิโอ เกาลัด ดาร์กช็อกโกแลต · ขนมฝรั่งเศส ครัวซองต์ ทาร์ตแอปเปิล ทาร์ตเลมอน · มีที่นั่งด้านนอก · เปิด 08:00–22:00 (ตามรีวิว) · บางแหล่งเขียนเลขที่ 115 เช็กใน Amap ก่อนไป · กินเสร็จเดินเล่น The Bund ต่อได้", None, L("Luneurs, 133 Yuanmingyuan Road, Shanghai", "Luneurs 圆明园路133号"), tag="ของหวาน"),
-   ev("13:30", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 4 และ 6 ยังไม่ได้ไซซ์ที่อยากได้ · 523 Huaihai Middle Road · จาก Luneurs Didi ~15 นาที · ออกจากร้านไม่เกิน 14:30 แล้ว Didi กลับไปตลาดคริสต์มาส ~15 นาที · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ เดินเล่น The Bund ต่อได้เลย", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号", PANE_LINK), tag="ถ้ายังไม่ได้ไซซ์"),
-   ev("15:00", "see", "ตลาดคริสต์มาส Christkindlmarkt on the Bund 🎄", "ตลาดคริสต์มาสสไตล์เยอรมัน ร้านไม้ 45+ ร้าน ไวน์อุ่น (Glühwein) ไซเดอร์แอปเปิลร้อน ช็อกโกแลตร้อน ไส้กรอก ราเคล็ต ของขวัญทำมือ · ถนน Yuanmingyuan Road เส้นเดียวกับ Luneurs (北京东路99号 圆明园路步行街) · วันศุกร์เปิด 15:00–22:00 ไปตอนเปิดคนน้อย · ค่าเข้า ¥30 ซื้อล่วงหน้า / ¥40 หน้างาน (มินิโปรแกรม SmTk ใน WeChat หรือแอป SmartShanghai) · เสร็จแล้ว Didi ข้ามไป Superbrand ~10 นาที", None, L("Christkindlmarkt on the Bund, Yuanmingyuan Road, Shanghai", "外滩源 圣诞市集 圆明园路"), tag="ช้อป"),
-   ev("16:30", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui · จากตลาดคริสต์มาส Didi ~10 นาที · ซื้อของฝากรอบสุดท้าย · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้ · ร้านมื้อเย็นอยู่ย่านเดียวกัน", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
+   ev("13:30", "shop", "แวะ Pane ที่ TX Huaihai (สำรอง)", "เฉพาะถ้าวันที่ 5 ยังไม่ได้ไซซ์ที่อยากได้ · 523 Huaihai Middle Road · จาก Luneurs Didi ~15 นาที · ออกจากร้านไม่เกิน 14:30 แล้ว Didi กลับไปตลาดคริสต์มาส ~15 นาที · ถามพนักงานวันที่ 4 ได้ว่าของจะเข้าวันไหน · ถ้าไม่ต้องแวะ เดินเล่น The Bund ต่อได้เลย", "pane", L("TX Huaihai, 523 Middle Huaihai Road, Shanghai", "TX淮海 淮海中路523号", PANE_LINK), tag="ถ้ายังไม่ได้ไซซ์"),
+   ev("16:30", "shop", "Superbrand Mall (正大广场)", "ห้างใหญ่ฝั่ง Lujiazui · จาก TX Huaihai Didi ~20 นาที · ซื้อของฝากรอบสุดท้าย · ตอนค่ำออกมาดูวิว The Bund จากฝั่ง Pudong ได้ · ร้านมื้อเย็นอยู่ย่านเดียวกัน", "superbrand", L("Superbrand Mall, Shanghai", "正大广场")),
    ev("17:30", "see", "เดินถ่ายรูป Lujiazui ตอนเปิดไฟ", "สะพานลอยวงกลม Lujiazui (陆家嘴环形天桥) มุมหอไข่มุก · หน้าห้าง IFC Mall (上海国金中心) · ตึก Jin Mao (金茂大厦) คู่ Shanghai Tower ถ่ายจากถนนด้านล่าง · ทั้งหมดเดินถึงกันจาก Superbrand · พระอาทิตย์ตก ~16:50 ตอนนี้ตึกเปิดไฟแล้ว", None, L("Lujiazui Circular Pedestrian Bridge, Shanghai", "陆家嘴环形天桥"), tag="ถ่ายรูป"),
-   ev("18:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串)", "ร้านปิ้งย่างเนื้อแกะชื่อดัง สาขา Guangyin Square (光音广场店) ถนน Yincheng Road ย่าน Lujiazui ใกล้ Superbrand · ย้ายมาจากวัน Disney เพราะโชว์จบดึก · กินเสร็จนั่ง Didi หรือรถไฟฟ้าสาย 2 กลับที่พัก", "long-time-ago", L("Long Time Ago Mutton Shashlik Guangyin Square, Shanghai", "很久以前羊肉串 光音广场", QUEUE_LINK), tag="มื้อเย็น"),
-   ev("20:30", "stay", "เก็บกระเป๋า", "ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
+   ev("18:30", "food", "Chef Fei (费大厨)", "ร้านพริกผัดหมูชื่อดัง (辣椒炒肉) รสจัดจ้านสไตล์หูหนาน · สาขา Lujiazui เดินจากจุดถ่ายรูปได้ · ช่วงค่ำคิวยาว กดคิวล่วงหน้า", "chef-fei", L("Chef Fei Lujiazui, Shanghai", "费大厨 陆家嘴", QUEUE_LINK), tag="มื้อเย็น"),
+   ev("20:00", "see", "ตลาดคริสต์มาส Christkindlmarkt on the Bund 🎄 บรรยากาศกลางคืน", "ตลาดคริสต์มาสสไตล์เยอรมัน ร้านไม้ 45+ ร้าน ไวน์อุ่น (Glühwein) ไซเดอร์แอปเปิลร้อน ช็อกโกแลตร้อน ไส้กรอก ราเคล็ต ของขวัญทำมือ · ถนน Yuanmingyuan Road เส้นเดียวกับ Luneurs (北京东路99号 圆明园路步行街) · 🌙 ปิดท้ายทริปตอนไฟประดับเปิดเต็มที่ · วันศุกร์เปิดถึง 22:00 · ค่าเข้า ¥30 ซื้อล่วงหน้า / ¥40 หน้างาน (มินิโปรแกรม SmTk ใน WeChat หรือแอป SmartShanghai) · จาก Chef Fei Didi ข้ามแม่น้ำ ~15 นาที · กลับที่พัก Didi ~20 นาที", None, L("Christkindlmarkt on the Bund, Yuanmingyuan Road, Shanghai", "外滩源 圣诞市集 圆明园路"), tag="ช้อป"),
+   ev("21:45", "stay", "เก็บกระเป๋า", "ชั่งกระเป๋า โหลดไม่เกิน 20 กก. ถือขึ้นไม่เกิน 10 กก."),
   ], note="พรุ่งนี้บิน 12:05 ต้องออกจากที่พัก 8:00 · เก็บกระเป๋าและชั่งน้ำหนักให้เสร็จคืนนี้ ตั้งนาฬิกาปลุก"),
 
  dict(n=8, iso="2026-12-12", dow="ส.", date="เสาร์ 12 ธ.ค.", title="เดินทางกลับ", icon="✈️", wx="🌤️ 5–11°C",
@@ -206,7 +206,7 @@ GEO = {
  (3, "08:30"): ((31.1440, 121.6570), "Disneyland"),
 
  (7, "10:00"): ((31.2385, 121.4887), "Cocina 19"), 
- (7, "12:00"): ((31.2425, 121.4876), "Luneurs"), (7, "15:00"): ((31.2418, 121.4881), "Christmas Market"), (7, "16:30"): ((31.2387, 121.4947), "Superbrand Mall"), (7, "17:30"): ((31.2397, 121.5000), "สะพานลอยวงกลม"), (7, "18:30"): ((31.2370, 121.5010), "Long Time Ago"),
+ (7, "12:00"): ((31.2425, 121.4876), "Luneurs"), (7, "20:00"): ((31.2418, 121.4881), "Christmas Market"), (7, "16:30"): ((31.2387, 121.4947), "Superbrand Mall"), (7, "17:30"): ((31.2397, 121.5000), "สะพานลอยวงกลม"), (7, "18:30"): ((31.2372, 121.5000), "Chef Fei"),
  (8, "08:00"): (PVG_LL, "สนามบินผู่ตง T2"),
 }
 import json
@@ -270,7 +270,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(5, "20:00"): "huaihai", (5, "13:00"): "westbund", (4, "14:30"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "15:00"): "xmas",}
+HD_BY_SLOT = {(5, "20:00"): "huaihai", (5, "13:00"): "westbund", (4, "14:30"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "20:00"): "xmas",}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -291,7 +291,7 @@ SKIP = {
 
 
  (7, "13:30"): "แวะเฉพาะถ้ายังไม่ได้ไซซ์",
- (7, "15:00"): "เดินชิล ๆ ตอนกลางวัน ข้ามได้",
+ (7, "20:00"): "คืนสุดท้าย ถ้าเหนื่อยกลับไปเก็บกระเป๋าก่อน",
 }
 
 ZH_EV = {
@@ -307,7 +307,7 @@ ZH_EV = {
  (3, "07:00"): "从酒店出发 去上海迪士尼", (3, "08:30"): "奇幻童话城堡", (3, "10:00"): "疯狂动物城 + 明日世界", (3, "13:00"): "探险岛", (3, "15:00"): "宝藏湾",
  (3, "18:00"): "园内晚餐", (3, "21:15"): "点亮奇梦 + 烟花表演", (3, "22:00"): "回酒店",
 
- (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "12:00"): "Luneurs 面包冰淇淋（圆明园路133号）", (7, "15:00"): "外滩源 圣诞市集（圆明园路）", (7, "13:30"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "很久以前羊肉串（光音广场店）", (7, "20:30"): "整理行李",
+ (7, "10:00"): "Cocina 19 西班牙餐厅（外滩 福州路19号）", (7, "12:00"): "Luneurs 面包冰淇淋（圆明园路133号）", (7, "20:00"): "外滩源 圣诞市集 夜景", (7, "13:30"): "PANE（TX淮海）备选", (7, "16:30"): "正大广场（陆家嘴）", (7, "17:30"): "陆家嘴环形天桥 · 国金中心 · 金茂大厦 拍照", (7, "18:30"): "费大厨辣椒炒肉（陆家嘴）", (7, "21:45"): "整理行李",
  (8, "07:30"): "海玥名庭酒店 退房", (8, "08:00"): "去浦东国际机场 2号航站楼", (8, "09:00"): "机场 值机 + 早餐", (8, "12:05"): "航班 9C7283 上海浦东 → 曼谷",
 }
 for _d in DAYS:
@@ -400,7 +400,7 @@ QUEUE_PHR = [
 ]
 queue_rows = "".join(f'<button type="button" class="phr" data-say="{E(z.replace(" …", ""))}"><span><span class="zh">{E(z)}</span><span class="th">{E(t)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for z, t in QUEUE_PHR)
 QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:00", "Aged Ground Beef & Rice", "来福士 汉堡排"),
-               ("วันที่ 4 · 09:45", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 4 · 17:30", "Long Time Ago (818 Plaza)", "很久以前羊肉串 南京西路818"), ("วันที่ 7 · 18:30", "Long Time Ago", "很久以前羊肉串 光音广场")]
+               ("วันที่ 4 · 09:45", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 4 · 17:30", "Long Time Ago (818 Plaza)", "很久以前羊肉串 南京西路818"), ("วันที่ 7 · 18:30", "Chef Fei", "费大厨 陆家嘴")]
 queue_shops = "".join(f'<li><b>{E(d)}</b> {E(n)} · ค้นว่า <span class="q-zh" lang="zh-CN">{E(z)}</span></li>' for d, n, z in QUEUE_SHOPS)
 tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
 
