@@ -1,7 +1,7 @@
 // Offline support for the trip page.
 // The page itself is fetched network-first, so an installed iPhone/Android app always shows the newest
 // version when online and falls back to the saved copy when offline. Photos, fonts and Leaflet are cache-first.
-const CACHE_NAME = 'sh-trip-v202611211240';
+const CACHE_NAME = 'sh-trip-v202611211246';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -85,6 +85,22 @@ const URLS_TO_CACHE = [
   './img/hd/spring-640.webp',
   './img/hd/superbrand-1280.webp',
   './img/hd/superbrand-640.webp',
+  './img/hd/sz-fish-1280.webp',
+  './img/hd/sz-fish-640.webp',
+  './img/hd/sz-garden-1280.webp',
+  './img/hd/sz-garden-640.webp',
+  './img/hd/sz-noodle-1280.webp',
+  './img/hd/sz-noodle-640.webp',
+  './img/hd/sz-pingjiang-1280.webp',
+  './img/hd/sz-pingjiang-640.webp',
+  './img/hd/sz-shantang-1280.webp',
+  './img/hd/sz-shantang-640.webp',
+  './img/hd/sz-shstation-1280.webp',
+  './img/hd/sz-shstation-640.webp',
+  './img/hd/sz-station-1280.webp',
+  './img/hd/sz-station-640.webp',
+  './img/hd/sz-train-1280.webp',
+  './img/hd/sz-train-640.webp',
   './img/hd/tianzifang-1280.webp',
   './img/hd/tianzifang-640.webp',
   './img/hd/treasure-1280.webp',

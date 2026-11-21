@@ -116,7 +116,7 @@ DAYS = [
    ev("15:00", "see", "Shantang Street (山塘街)", "คืนชุดแล้ว Didi ~15 นาที · ถนนริมคลองเก่าแก่กว่า 1,000 ปี แขวนโคมแดง ร้านขนมและของฝาก · นั่งเรือในคลองได้ · อยู่ถึงช่วงค่ำ ตอนไฟโคมเปิด (~17:00) สวยที่สุด", None, L("Shantang Street, Suzhou", "山塘街"), tag="ถ่ายรูป"),
    ev("18:00", "food", "มื้อเย็นอาหารซูโจว", "ลองปลากระรอกราดซอส (松鼠桂鱼) เมนูขึ้นชื่อของซูโจว · มีร้านอาหารซูโจวแถว Shantang Street และ Guanqian Street (观前街)", None, L("Suzhou cuisine restaurant, Shantang Street", "山塘街 苏帮菜"), tag="มื้อเย็น"),
    ev("19:30", "go", "รถไฟกลับเซี่ยงไฮ้", "Didi ไปสถานีซูโจว ~10 นาที · รถไฟ ~30 นาที ถึงสถานีรถไฟเซี่ยงไฮ้ ~20:15 · ต่อรถไฟฟ้าสาย 1 กลับ Changshu Road ~20 นาที · จองตั๋วขากลับไว้ด้วย เผื่อรอบค่ำเต็ม", None, L("Shanghai Railway Station", "上海站")),
-  ], note="ต้องจองล่วงหน้า: ตั๋วรถไฟไป-กลับ ตั๋วสวน 拙政园 และร้านเช่าชุด · ถ้าวันนี้ฝนตก สลับกับวันพรุ่งนี้ได้"),
+  ], note="จองล่วงหน้าก่อนไป: ① ตั๋วรถไฟไป–กลับ ในแอป Trip.com ใช้พาสปอร์ต ② ตั๋วสวน 拙政园 ลงชื่อจริงด้วยพาสปอร์ต ③ ร้านเช่าชุดฮั่นฝู · ถ้าวันนี้ฝนตก สลับกับวันพรุ่งนี้ได้"),
 
  dict(n=7, iso="2026-12-11", dow="ศ.", date="ศุกร์ 11 ธ.ค.", title="The Bund brunch + Lujiazui", icon="🙏", wx="🌤️ 5–11°C",
   events=[
@@ -270,7 +270,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (5, "14:30"): "westbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (4, "09:30"): "jade", (5, "10:00"): "anfu", (2, "15:45"): "bundday", (5, "10:40"): "marzo", (7, "12:00"): "luneurs", (5, "19:45"): "xmas", (7, "15:00"): "xmas", (5, "16:30"): "ifc", (5, "17:15"): "skywalk"}
+HD_BY_SLOT = {(6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (5, "14:30"): "westbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (4, "09:30"): "jade", (5, "10:00"): "anfu", (2, "15:45"): "bundday", (5, "10:40"): "marzo", (7, "12:00"): "luneurs", (5, "19:45"): "xmas", (7, "15:00"): "xmas", (5, "16:30"): "ifc", (5, "17:15"): "skywalk"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -329,7 +329,7 @@ def event_html(e):
             + (f'<div class="skip">😮‍💨 ข้ามได้ถ้าเหนื่อย <small>· {E(e["skip"])}</small></div>' if e.get("skip") else "")
             + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
 
-DAY_COVER = {1: "spring", 2: "bund", 5: "wukang", 4: "yu", 3: "castle", 6: "zhujiajiao", 7: "ljznight", 8: "pvg"}
+DAY_COVER = {1: "spring", 2: "bund", 5: "wukang", 4: "yu", 3: "castle", 6: "sz-garden", 7: "ljznight", 8: "pvg"}
 def day_html(d):
     disney = ' <span class="tag gold">DISNEY DAY</span>' if d.get("disney") else ""
     mp = day_geo(d)
