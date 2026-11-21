@@ -537,32 +537,47 @@
       return '<div class="trip"><div class="d">' + label(b.getAttribute('data-date')) + '</div><div class="i">' + ic + '</div><div class="t">' + tmp + '</div></div>';
     }).join('');
     var today = shNow().date;
-    // Open-Meteo gives up to 16 days ahead: show trip days that are covered, keep averages for the rest
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=31.21&longitude=121.45&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai&forecast_days=16';
-    fetch(url).then(function (r) { return r.json(); }).then(function (j) {
-      var d = j && j.daily; if (!d || !d.time) return;
-      var got = {}, n = 0;
-      d.time.forEach(function (t, i) {
-        if (t < TRIP_START || t > TRIP_END) return;
-        var hi = Math.round(d.temperature_2m_max[i]), lo = Math.round(d.temperature_2m_min[i]), ic = icon(d.weathercode[i]);
-        got[t] = { hi: hi, lo: lo, ic: ic }; n++;
-        $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.textContent = ic + ' ' + lo + '–' + hi + '°C (พยากรณ์)'; });
+    // 中国天气网 (fetched every 6 h by a GitHub Action into data/cma-wx.json) comes first; Open-Meteo fills days it doesn't cover
+    var TH = [['雷阵雨', 'พายุฝน'], ['阵雨', 'ฝนเป็นช่วง'], ['暴雨', 'ฝนหนักมาก'], ['大雨', 'ฝนหนัก'], ['中雨', 'ฝนปานกลาง'], ['小雨', 'ฝนเล็กน้อย'], ['雨夹雪', 'ฝนปนหิมะ'], ['雪', 'หิมะ'], ['雨', 'ฝน'], ['多云', 'มีเมฆ'], ['阴', 'ครึ้ม'], ['晴', 'แดด'], ['雾', 'หมอก'], ['霾', 'ฝุ่นควัน']];
+    function thWx(z) { return (z || '').split('转').map(function (p) { for (var i = 0; i < TH.length; i++) if (p.indexOf(TH[i][0]) >= 0) return TH[i][1]; return p; }).filter(function (x, i, a) { return a.indexOf(x) === i; }).join(' → '); }
+    function zIcon(z) { var f = (z || '').split('转')[0]; return /雷/.test(f) ? '⛈️' : /雪/.test(f) ? '🌨️' : /小雨|阵雨/.test(f) ? '🌦️' : /雨/.test(f) ? '🌧️' : /雾|霾/.test(f) ? '🌫️' : /阴/.test(f) ? '☁️' : /多云/.test(f) ? '⛅' : /晴/.test(f) ? '☀️' : '⛅'; }
+    function tile(t, g, cls) {
+      return '<div class="trip ' + cls + '"' + (g.z ? ' title="' + g.z + '"' : '') + '><div class="d">' + label(t) + '</div><div class="i">' + g.ic + '</div><div class="t">↑' + g.hi + '° <small>↓' + g.lo + '°</small></div>' + (g.th ? '<div class="w">' + g.th + '</div>' : '') + '</div>';
+    }
+    var omUrl = 'https://api.open-meteo.com/v1/forecast?latitude=31.21&longitude=121.45&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai&forecast_days=16';
+    function js(u) { return fetch(u, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
+    Promise.all([js('data/cma-wx.json?t=' + Date.now()), js(omUrl)]).then(function (res) {
+      var cma = res[0], om = res[1], got = {}, src = {}, n = 0, nc = 0;
+      if (cma && cma.days) cma.days.forEach(function (x) {
+        if (x.date < TRIP_START || x.date > TRIP_END || x.hi == null) return;
+        got[x.date] = { hi: x.hi, lo: x.lo, ic: zIcon(x.wx), z: x.wx, th: thWx(x.wx) }; src[x.date] = 'cma'; nc++;
+      });
+      var d = om && om.daily;
+      if (d && d.time) d.time.forEach(function (t, i) {
+        if (t < TRIP_START || t > TRIP_END || got[t]) return;
+        got[t] = { hi: Math.round(d.temperature_2m_max[i]), lo: Math.round(d.temperature_2m_min[i]), ic: icon(d.weathercode[i]) }; src[t] = 'om';
+      });
+      Object.keys(got).forEach(function (t) {
+        var g = got[t]; n++;
+        $$('.wxb[data-date="' + t + '"]').forEach(function (b) { b.textContent = g.ic + ' ' + g.lo + '–' + g.hi + '°C' + (g.th ? ' ' + g.th : '') + ' (พยากรณ์)'; });
       });
       if (n) {
         wx.innerHTML = $$('.wxb').filter(function (b, i, a) { return a.findIndex(function (x) { return x.getAttribute('data-date') === b.getAttribute('data-date'); }) === i; }).map(function (b) {
           var t = b.getAttribute('data-date'), g = got[t];
-          if (g) return '<div class="trip live"><div class="d">' + label(t) + '</div><div class="i">' + g.ic + '</div><div class="t">' + g.hi + '° <small>' + g.lo + '°</small></div></div>';
-          var x = b.textContent, ic = x.split(' ')[0], tmp = x.replace(/^\S+\s*/, '').replace('กลางคืน', '').trim();
-          return '<div class="trip avg"><div class="d">' + label(t) + '</div><div class="i">' + ic + '</div><div class="t">' + tmp + '</div></div>';
+          if (g) return tile(t, g, 'live ' + src[t]);
+          var x = b.textContent, ic = x.split(' ')[0], m = x.match(/(-?\d+)\s*[–-]\s*(-?\d+)/);
+          return m ? tile(t, { ic: ic, lo: m[1], hi: m[2] }, 'avg') : '<div class="trip avg"><div class="d">' + label(t) + '</div><div class="i">' + ic + '</div><div class="t">' + x.replace(/^\S+\s*/, '').replace('กลางคืน', '').trim() + '</div></div>';
         }).join('');
-        note.innerHTML = n >= $$('.wxb').length ? 'พยากรณ์จริงช่วงทริป' : 'พยากรณ์จริง ' + n + ' วัน<small>วันที่จางยังเป็นค่าเฉลี่ย จะอัปเดตเองเมื่อใกล้วัน</small>';
-      } else if (today < TRIP_START) {
+        var up = cma && cma.updated ? ' · ' + cma.updated.slice(5).replace('-', '/') : '';
+        note.innerHTML = (nc ? '中国天气网' + up : 'พยากรณ์จริง ' + n + ' วัน') +
+          '<small>↑ สูงสุด ↓ ต่ำสุด' + (n < $$('.wxb').length ? ' · ช่องจาง = ค่าเฉลี่ย' : '') + (nc && n > nc ? ' · ช่องที่ไม่มีคำไทย = Open-Meteo' : '') + '</small>';
+      } else if (today < TRIP_START && d && d.time) {
         wx.innerHTML = d.time.slice(0, 7).map(function (t, i) {
-          return '<div><div class="d">' + label(t) + '</div><div class="i">' + icon(d.weathercode[i]) + '</div><div class="t">' + Math.round(d.temperature_2m_max[i]) + '° <small>' + Math.round(d.temperature_2m_min[i]) + '°</small></div></div>';
+          return tile(t, { hi: Math.round(d.temperature_2m_max[i]), lo: Math.round(d.temperature_2m_min[i]), ic: icon(d.weathercode[i]) }, '');
         }).join('');
-        note.innerHTML = 'พยากรณ์ 7 วันข้างหน้า<small>ใกล้ทริปจะเปลี่ยนเป็นวันเที่ยวเอง</small>';
+        note.innerHTML = 'พยากรณ์ 7 วันข้างหน้า<small>ใกล้ทริปจะเปลี่ยนเป็นวันเที่ยวเอง · ↑ สูงสุด ↓ ต่ำสุด</small>';
       }
-    }).catch(function () {});
+    });
   })();
 
   // ---- Lightbox ----

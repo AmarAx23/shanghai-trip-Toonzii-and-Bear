@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p data && python3 scripts/cma_wx.py --debug
+      - run: mkdir -p data && python3 scripts/cma_wx.py
       - name: Commit forecast
         run: |
           git config user.name "wx-bot"
