@@ -96,7 +96,8 @@ DAYS = [
    ev("11:15", "food", "Canton 8 (喜粤8号) สาขา Runan Street", "ร้านอาหารกวางตุ้งชื่อดัง ติดมิชลิน · ติ่มซำ ห่านย่าง · ร้านเปิด ~11:00 ไปตอนเปิดคิวสั้น · จากที่พัก Didi ~15 นาที · เช้านี้ว่าง นอนพักได้", "canton8", L("Canton 8 Runan Street, Shanghai", "喜粤8号"), tag="มื้อกลางวัน"),
    ev("13:00", "see", "Gate M West Bund Dream Center (西岸梦中心)", "โรงงานปูนซีเมนต์เก่าริมแม่น้ำหวงผู่ ปรับเป็นย่านคาเฟ่ ร้านอาหาร ร้านค้า ตึกอินดัสเทรียลถ่ายรูปสวย · ทางเดินริมน้ำ 800 ม. · 2266 Longteng Avenue · จาก Canton 8 Didi ~15 นาที · ริมน้ำลมแรง ใส่เสื้อกันลม · ฤดูหนาวที่แล้วมีลานสเก็ตน้ำแข็งริมแม่น้ำ (ปีนี้ยังไม่ยืนยัน)", None, L("Gate M West Bund Dream Center, 2266 Longteng Avenue, Shanghai", "西岸梦中心"), tag="ถ่ายรูป"),
    ev("16:00", "see", "Xintiandi (新天地)", "ตรอกอิฐแดงสไตล์ Shikumen ผสมจีน-ยุโรป · คาเฟ่ ร้านบูติก · จาก Gate M Didi ~20 นาที · เดินเล่นช่วงเย็นตอนไฟเปิด ร้านอาหาร บาร์ คาเฟ่เยอะ · ธันวาคมมักตกแต่งคริสต์มาส · เสร็จแล้วเดินไป New Sukiyaki ~10 นาที", "xintiandi", L("Xintiandi, Shanghai", "新天地")),
-   ev("18:30", "food", "New Sukiyaki (牛New寿喜烧) สาขา Huaihai Middle Road", "บุฟเฟต์สุกี้ยากี้ญี่ปุ่นชื่อดัง เนื้อไม่อั้น · ชั้น 3 ตึก Huaihai 755 (淮海中路755号 淮海755大厦3楼) ใกล้ถนน Ruijin 2nd Road · ราคาราว ¥118 / 158 / 208 ต่อคน ตามระดับเนื้อ · เปิด 16:30–22:00 (ตามรีวิว เช็กอีกครั้ง) · กลับที่พัก: รถไฟฟ้าสาย 1 สถานี South Huangpi Road ไป Changshu Road ตรง ~10 นาที", "new-sukiyaki", L("Niu New Sukiyaki, 755 Huaihai Middle Road, Shanghai", "牛New寿喜烧 淮海中路755号", QUEUE_LINK), tag="มื้อเย็น"),
+   ev("18:30", "food", "New Sukiyaki (牛New寿喜烧) สาขา Huaihai Middle Road", "บุฟเฟต์สุกี้ยากี้ญี่ปุ่นชื่อดัง เนื้อไม่อั้น · ชั้น 3 ตึก Huaihai 755 (淮海中路755号 淮海755大厦3楼) ใกล้ถนน Ruijin 2nd Road · ราคาราว ¥118 / 158 / 208 ต่อคน ตามระดับเนื้อ · เปิด 16:30–22:00 (ตามรีวิว เช็กอีกครั้ง) · กินเสร็จเดินถนน Huaihai กลับที่พัก", "new-sukiyaki", L("Niu New Sukiyaki, 755 Huaihai Middle Road, Shanghai", "牛New寿喜烧 淮海中路755号", QUEUE_LINK), tag="มื้อเย็น"),
+   ev("20:00", "shop", "เดินถนน Huaihai Road กลับที่พัก", "กินเสร็จเดินต่อไปทางตะวันตกตามถนน Huaihai Middle Road (淮海中路) ร้านแบรนด์ ห้าง ไฟประดับช่วงธันวาคม · จากร้านถึงที่พัก (淮海中路1329号) ~2.5 กม. เดินช้า ๆ ~40 นาที · ผ่านสถานี South Shaanxi Road กลางทาง ถ้าเมื่อยขึ้นรถไฟฟ้าสาย 1 ไป Changshu Road ได้", None, L("Huaihai Middle Road, Shanghai", "淮海中路"), tag="ช้อป"),
   ], note="ช่วงเช้าว่าง นอนพักได้เต็มที่ · Gate M ริมแม่น้ำลมแรง เตรียมเสื้อกันลม"),
 
  dict(n=6, iso="2026-12-10", dow="พฤ.", date="พฤหัส 10 ธ.ค.", title="ซูโจวเต็มวัน + ชุดฮั่นฝู", icon="🏯", wx="⛅ 4–10°C",
@@ -187,6 +188,7 @@ def links_html(links):
 HOTEL_LL = (31.2162, 121.4458)   # 1329 Middle Huaihai Rd, ~160 m from Changshu Rd station
 PVG_LL = (31.1525, 121.8018)
 GEO = {
+ (5, "20:00"): ((31.2165, 121.4590), "Huaihai Road"),
  (5, "11:15"): ((31.2046, 121.4793), "Canton 8"), (5, "13:00"): ((31.1730, 121.4620), "Gate M West Bund"), (5, "16:00"): ((31.2219, 121.4740), "Xintiandi"), (5, "18:30"): ((31.2190, 121.4680), "New Sukiyaki Huaihai"),
  (4, "13:00"): ((31.2235, 121.4459), "วัด Jing'an"), (4, "14:30"): ((31.2288, 121.4525), "West Nanjing Road"), (4, "17:30"): ((31.2322, 121.4618), "Long Time Ago 818"),
  (6, "08:00"): ((31.2497, 121.4559), "สถานีรถไฟเซี่ยงไฮ้"), (6, "08:40"): ((31.3301, 120.6109), "สถานีซูโจว"), (6, "09:30"): ((31.3256, 120.6286), "拙政园"), (6, "11:00"): ((31.3170, 120.6330), "Pingjiang Road"), (6, "13:00"): ((31.3150, 120.6320), "บะหมี่ซูโจว"), (6, "15:00"): ((31.3185, 120.6040), "Shantang Street"), (6, "18:00"): ((31.3190, 120.6060), "มื้อเย็นซูโจว"), (6, "19:30"): ((31.3301, 120.6109), "สถานีซูโจว"),
@@ -266,7 +268,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(5, "13:00"): "westbund", (4, "14:30"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "15:00"): "xmas",}
+HD_BY_SLOT = {(5, "20:00"): "huaihai", (5, "13:00"): "westbund", (4, "14:30"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "15:00"): "xmas",}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -291,6 +293,7 @@ SKIP = {
 }
 
 ZH_EV = {
+ (5, "20:00"): "淮海中路 散步回酒店",
  (5, "11:15"): "喜粤8号（汝南街）", (5, "13:00"): "西岸梦中心", (5, "16:00"): "新天地", (5, "18:30"): "牛New寿喜烧（淮海中路755号 3楼）",
  (4, "13:00"): "静安寺", (4, "14:30"): "南京西路 逛街", (4, "17:30"): "很久以前羊肉串（南京西路818广场店）",
  (6, "08:00"): "去上海站", (6, "08:40"): "高铁去苏州站", (6, "09:30"): "拙政园", (6, "11:00"): "平江路 · 租汉服拍照", (6, "13:00"): "苏式汤面（裕兴记）", (6, "15:00"): "山塘街 · 坐船", (6, "18:00"): "苏帮菜 · 松鼠桂鱼", (6, "19:30"): "高铁回上海",
