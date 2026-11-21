@@ -27,6 +27,8 @@ const URLS_TO_CACHE = [
   './img/pushing.jpg',
   './img/hd/adventure-1280.webp',
   './img/hd/adventure-640.webp',
+  './img/hd/agedbeef-1280.webp',
+  './img/hd/agedbeef-640.webp',
   './img/hd/anfu-1280.webp',
   './img/hd/anfu-640.webp',
   './img/hd/bkk-1280.webp',
