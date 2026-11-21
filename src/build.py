@@ -65,7 +65,7 @@ DAYS = [
   ev("17:00", "food", "Rei Flower Coffee Bar (汭REi·FLOWER COFFEE BAR)", "คาเฟ่ริมคลอง Suzhou Creek ย่าน North Bund · พักขาก่อนไป Manner North Bund · ลองลาเต้ดอกหอมหมื่นลี้ (桂花拿铁) ไอศกรีมมะพร้าว · ~¥55/คน · 234 North Suzhou Road (北苏州路234号) ใกล้สถานี Tiantong Road ทางออก 3 · จากปลาย Nanjing Road เดินข้ามสะพาน Waibaidu Bridge ไม่กี่นาที · เปิด 10:30–01:00 (ตาม Trip.com) · โทร +86 175 2118 7929", None, L("Rei Flower Coffee Bar, 234 North Suzhou Road, Shanghai", "汭REi FLOWER COFFEE BAR 北苏州路234号"), tag="คาเฟ่"),
    ev("18:00", "food", "Manner Coffee สาขา North Bund ริมแม่น้ำ", "ร้านกระจกใส 3 ด้าน ริมแม่น้ำหวงผู่ หันตรงหอไข่มุก · ท่าเรือสำราญนานาชาติ North Bund (北外滩国客中心码头) ใกล้ Dongdaming Road / Taiping Road เขต Hongkou · จาก Rei Flower เดินเลียบคลอง ~1.5 กม. (~20 นาที) หรือ Didi ~5 นาที · ช่วงนี้ฟ้ามืดแล้ว หอไข่มุกเปิดไฟ วิวสวยที่สุด · วันอาทิตย์คนเยอะ อาจต้องรอที่นั่งริมกระจก · เปิด 07:30–22:00 (ตาม Trip.com) · ร้านอยู่ริมแม่น้ำ ห่างตึก International Port Affairs Building (国际港务大厦) ไปทางใต้ ~60 ม. · แล้ว Didi/เดินข้ามสะพาน Waibaidu ไป The Bund ~10 นาที", None, L("Manner Coffee North Bund International Cruise Terminal, Shanghai", "MANNER 北外滩国客中心滨江店"), tag="คาเฟ่"),
   ev("19:00", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
-  ev("20:00", "food", "Aged Ground Beef & Rice แฮมเบิร์กสเต็กกับข้าว", "ร้านแฮมเบิร์กสเต็กแบบญี่ปุ่นกินกับข้าว · Raffles City ชั้น 6–7 (来福士广场 西藏中路268号) ตรงสถานี People's Square · ห้างมักปิด ~22:00 ร้านอาจรับออเดอร์สุดท้ายก่อนนั้น เช็กเวลาและคิวใน Dianping/Amap ก่อน จาก The Bund: รถไฟฟ้าสาย 2 สถานี East Nanjing Road ไป People's Square 1 สถานี หรือ Didi ~10 นาที · ถ้าคิวยาวกดคิวล่วงหน้าตอนอยู่ The Bund · กลับที่พัก: รถไฟฟ้าสาย 1 สถานี People's Square ไป Changshu Road ตรง ~15 นาที", None, L("Aged Ground Beef & Rice, Raffles City, 268 Xizang Middle Road, Shanghai", "来福士广场 西藏中路268号", QUEUE_LINK), tag="มื้อเย็น"),
+  ev("20:00", "food", "Dongsheng Self-service Cuisine (东盛自助料理) บุฟเฟต์", "บุฟเฟต์ชื่อดัง เรตติ้ง 4.6 ติดอันดับในแอป Amap · ชั้น 5 ห้าง Mosaic Plaza (悦荟广场) 南京东路353号 · ~¥129 ต่อคน · เปิด 10:30–22:30 · จาก The Bund เดิน ~10 นาที · ช่วงค่ำคิวยาว กดคิวล่วงหน้าตอนอยู่ The Bund · ใน Amap/Dianping มีดีลกลุ่ม (团购) ราคาถูกกว่าหน้าร้าน · กลับที่พัก: รถไฟฟ้าสาย 2 สถานี East Nanjing Road ไป People's Square ต่อสาย 1 ไป Changshu Road ~25 นาที หรือ Didi ~20 นาที", None, L("Dongsheng Self-service Cuisine, Mosaic Plaza, 353 East Nanjing Road, Shanghai", "东盛自助料理 悦荟广场店", QUEUE_LINK), tag="มื้อเย็น"),
   ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ"),
 
  dict(n=3, iso="2026-12-07", dow="จ.", date="จันทร์ 7 ธ.ค.", title="Shanghai Disneyland", icon="🏰", wx="☁️ 4–8°C", disney=True,
@@ -201,7 +201,7 @@ GEO = {
  (6, "08:00"): ((31.2497, 121.4559), "สถานีรถไฟเซี่ยงไฮ้"), (6, "08:40"): ((31.3301, 120.6109), "สถานีซูโจว"), (6, "09:30"): ((31.3256, 120.6286), "拙政园"), (6, "11:00"): ((31.3170, 120.6330), "Pingjiang Road"), (6, "13:00"): ((31.3150, 120.6320), "บะหมี่ซูโจว"), (6, "15:00"): ((31.3185, 120.6040), "Shantang Street"), (6, "18:00"): ((31.3190, 120.6060), "มื้อเย็นซูโจว"), (6, "19:30"): ((31.3301, 120.6109), "สถานีซูโจว"),
  (1, "22:05"): (PVG_LL, "สนามบินผู่ตง T2"),
  (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2357, 121.4743), "No.1 Shopping Center"),
- (2, "14:30"): ((31.2375, 121.4790), "Nanjing Road"), (2, "15:45"): ((31.2380, 121.4910), "The Bund (กลางวัน)"), (2, "16:15"): ((31.2420, 121.4878), "Rockbund"), (2, "17:00"): ((31.2445, 121.4880), "Rei Flower"), (2, "18:00"): ((31.2480, 121.4985), "Manner North Bund"), (2, "19:00"): ((31.2400, 121.4905), "The Bund"), (2, "20:00"): ((31.2325, 121.4764), "Raffles City"),
+ (2, "14:30"): ((31.2375, 121.4790), "Nanjing Road"), (2, "15:45"): ((31.2380, 121.4910), "The Bund (กลางวัน)"), (2, "16:15"): ((31.2420, 121.4878), "Rockbund"), (2, "17:00"): ((31.2445, 121.4880), "Rei Flower"), (2, "18:00"): ((31.2480, 121.4985), "Manner North Bund"), (2, "19:00"): ((31.2400, 121.4905), "The Bund"), (2, "20:00"): ((31.2393, 121.4845), "Dongsheng Buffet"),
  (4, "09:45"): ((31.2068, 121.4352), "Grandma's Home"), (4, "12:00"): ((31.2187, 121.4384), "13DE MARZO"), (4, "11:00"): ((31.2063, 121.4337), "Wukang Mansion"),
 
 
@@ -275,7 +275,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(4, "16:45"): "butterful", (5, "16:45"): "bagel", (5, "20:00"): "huaihai", (5, "13:00"): "westbund", (4, "14:30"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "20:00"): "agedbeef", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "20:00"): "xmas",}
+HD_BY_SLOT = {(4, "16:45"): "butterful", (5, "16:45"): "bagel", (5, "20:00"): "huaihai", (5, "13:00"): "westbund", (4, "14:30"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "20:00"): "xmas",}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -308,7 +308,7 @@ ZH_EV = {
  (4, "13:00"): "静安寺", (4, "14:30"): "南京西路 逛街", (4, "17:30"): "很久以前羊肉串（南京西路818广场店）",
  (6, "08:00"): "去上海站", (6, "08:40"): "高铁去苏州站", (6, "09:30"): "拙政园", (6, "11:00"): "平江路 · 租汉服拍照", (6, "13:00"): "苏式汤面（裕兴记）", (6, "15:00"): "山塘街 · 坐船", (6, "18:00"): "苏帮菜 · 松鼠桂鱼", (6, "19:30"): "高铁回上海",
  (1, "13:45"): "曼谷素万那普机场 值机", (1, "16:45"): "航班 9C7284 曼谷 → 上海浦东", (1, "22:05"): "抵达浦东国际机场 2号航站楼", (1, "23:45"): "入住 海玥名庭酒店 淮海中路",
- (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "第一百货商业中心（南京东路830号）", (2, "14:30"): "南京路步行街", (2, "15:45"): "外滩 · 白天拍照", (2, "16:15"): "外滩源（圆明园路 · 虎丘路）", (2, "17:00"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (2, "18:00"): "MANNER 咖啡（北外滩国客中心滨江店）", (2, "19:00"): "外滩 · 黄浦江夜景", (2, "20:00"): "来福士广场 6–7楼 汉堡排饭",
+ (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "第一百货商业中心（南京东路830号）", (2, "14:30"): "南京路步行街", (2, "15:45"): "外滩 · 白天拍照", (2, "16:15"): "外滩源（圆明园路 · 虎丘路）", (2, "17:00"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (2, "18:00"): "MANNER 咖啡（北外滩国客中心滨江店）", (2, "19:00"): "外滩 · 黄浦江夜景", (2, "20:00"): "东盛自助料理（悦荟广场店 南京东路353号 5楼）",
  (4, "12:00"): "13DE MARZO 小熊咖啡（安福路322号）", (4, "09:45"): "奶奶家（武康路店）", (4, "11:00"): "武康路 · 武康大楼",
 
  (3, "07:00"): "从酒店出发 去上海迪士尼", (3, "08:30"): "奇幻童话城堡", (3, "10:00"): "疯狂动物城 + 明日世界", (3, "13:00"): "探险岛", (3, "15:00"): "宝藏湾",
@@ -406,7 +406,7 @@ QUEUE_PHR = [
  ("过号了，还可以进吗？", "เลยคิวไปแล้ว ยังเข้าได้ไหม"),
 ]
 queue_rows = "".join(f'<button type="button" class="phr" data-say="{E(z.replace(" …", ""))}"><span><span class="zh">{E(z)}</span><span class="th">{E(t)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for z, t in QUEUE_PHR)
-QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:00", "Aged Ground Beef & Rice", "来福士 汉堡排"),
+QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:00", "Dongsheng Buffet", "东盛自助料理 悦荟广场"),
                ("วันที่ 4 · 09:45", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 4 · 17:30", "Long Time Ago (818 Plaza)", "很久以前羊肉串 南京西路818"), ("วันที่ 7 · 18:30", "Chef Fei", "费大厨 陆家嘴")]
 queue_shops = "".join(f'<li><b>{E(d)}</b> {E(n)} · ค้นว่า <span class="q-zh" lang="zh-CN">{E(z)}</span></li>' for d, n, z in QUEUE_SHOPS)
 tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
