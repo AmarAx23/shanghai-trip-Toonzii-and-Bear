@@ -703,3 +703,11 @@
   details.drop > summary.sub-h { background: linear-gradient(90deg, var(--tone-bg), transparent 70%), var(--card); border-color: color-mix(in srgb, var(--tone) 35%, var(--line)); box-shadow: inset 4px 0 0 var(--tone); padding-left: 16px; }
   details.drop > summary.sub-h::after { color: var(--tone); }
   details.drop[open] > summary.sub-h { border-color: var(--tone); }
+
+  /* packing list in two columns */
+  .pack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+  .packing-item label { gap: 8px; padding: 9px 0; font-size: 13px; line-height: 1.35; height: 100%; box-sizing: border-box; }
+  .packing-item:last-child label { border-bottom: 1px solid var(--line); }
+  .packing-item:nth-last-child(-n+2) label { border-bottom: none; }
+  .pack-box { width: 20px; height: 20px; }
+  @media (max-width: 340px) { .pack { grid-template-columns: 1fr; } .packing-item:nth-last-child(2) label { border-bottom: 1px solid var(--line); } }
