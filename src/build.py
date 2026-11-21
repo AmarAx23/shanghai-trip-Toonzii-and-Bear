@@ -56,7 +56,7 @@ DAYS = [
       None, [("🧭 เส้นทางจากที่พัก", apple_dir("People's Square, Shanghai"))]),
    ev("11:30", "food", "Lai Lai Xiao Long Bao (莱莱小笼)", "เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People's Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing'an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)",
       "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路", QUEUE_LINK), tag="มื้อกลางวัน"),
-   ev("13:30", "see", "People's Square", "เดินเล่นในสวน ถ่ายรูป แล้วเดินต่อไป Nanjing Road ได้เลย (ปลายถนนอยู่ติด People's Square)", None, L("People's Square, Shanghai", "人民广场")),
+   ev("13:30", "shop", "No.1 Shopping Center (第一百货商业中心)", "ห้างเก่าแก่หัวมุม Nanjing Road ฝั่ง People's Square (南京东路830号) · เดินจาก Lai Lai ~10 นาที · เดินห้าง พักขา เข้าห้องน้ำ แล้วออกประตูฝั่ง Nanjing Road เดินต่อไปทาง The Bund ได้เลย · เวลาเปิด-ปิดเช็กใน Amap ก่อน", None, L("Shanghai No.1 Shopping Center, 830 East Nanjing Road", "第一百货商业中心 南京东路830号"), tag="ช้อป"),
     ev("14:30", "shop", "Nanjing Road Pedestrian Street", "ถนนช้อปปิ้งหลัก เดินดูห้างและร้านแบรนด์จีนแบบไม่รีบ ไฟคริสต์มาสตามห้าง · ยาว ~1.2 กม. เดินสุดถนนก็ถึง The Bund", "nanjing-road", L("Nanjing Road Pedestrian Street, Shanghai", "南京路步行街")),
   ev("15:45", "see", "The Bund ถ่ายรูปตอนกลางวัน", "ได้รูปตึกเก่าสไตล์ยุโรปตอนฟ้าสว่าง · แดดเย็นช่วงก่อนพระอาทิตย์ตก (~16:50) แสงสวยที่สุด · เดินขึ้นเหนือไปทางสะพาน Waibaidu ถึง Rei Flower ได้เลย · 19:00 กลับมาดูอีกรอบตอนเปิดไฟ", None, L("The Bund, Shanghai", "外滩"), tag="ถ่ายรูป"),
    ev("17:00", "food", "Rei Flower Coffee Bar (汭REi·FLOWER COFFEE BAR)", "คาเฟ่ริมคลอง Suzhou Creek ย่าน North Bund · พักขาก่อนไป Manner North Bund · ลองลาเต้ดอกหอมหมื่นลี้ (桂花拿铁) ไอศกรีมมะพร้าว · ~¥55/คน · 234 North Suzhou Road (北苏州路234号) ใกล้สถานี Tiantong Road ทางออก 3 · จากปลาย Nanjing Road เดินข้ามสะพาน Waibaidu Bridge ไม่กี่นาที · เปิด 10:30–01:00 (ตาม Trip.com) · โทร +86 175 2118 7929", None, L("Rei Flower Coffee Bar, 234 North Suzhou Road, Shanghai", "汭REi FLOWER COFFEE BAR 北苏州路234号"), tag="คาเฟ่"),
@@ -193,7 +193,7 @@ HOTEL_LL = (31.2162, 121.4458)   # 1329 Middle Huaihai Rd, ~160 m from Changshu 
 PVG_LL = (31.1525, 121.8018)
 GEO = {
  (1, "22:05"): (PVG_LL, "สนามบินผู่ตง T2"),
- (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2339, 121.4710), "People's Square"),
+ (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2357, 121.4743), "No.1 Shopping Center"),
  (2, "14:30"): ((31.2375, 121.4790), "Nanjing Road"), (2, "15:45"): ((31.2380, 121.4910), "The Bund (กลางวัน)"), (2, "17:00"): ((31.2445, 121.4880), "Rei Flower"), (2, "18:00"): ((31.2480, 121.4985), "Manner North Bund"), (2, "19:00"): ((31.2400, 121.4905), "The Bund"), (2, "20:30"): ((31.2325, 121.4764), "Raffles City"), (2, "19:45"): ((31.2365, 121.4815), "Nanjing Road (ค่ำ)"),
  (5, "10:00"): ((31.2193, 121.4415), "Anfu Road"), (5, "11:00"): ((31.2068, 121.4352), "Grandma's Home"), (5, "10:40"): ((31.2187, 121.4384), "13DE MARZO"), (5, "12:30"): ((31.2063, 121.4337), "Wukang Mansion"),
  (5, "14:30"): ((31.1700, 121.4632), "Gate M West Bund"), (5, "16:30"): ((31.2366, 121.5017), "IFC Mall"), (5, "17:15"): ((31.2392, 121.5004), "Lujiazui Skywalk"), (5, "18:30"): ((31.2372, 121.5000), "Chef Fei"),
@@ -268,7 +268,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(2, "13:30"): "peoplespark", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (5, "14:30"): "westbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (6, "13:00"): "zongzi", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (6, "19:45"): "tianzifang", (5, "10:00"): "anfu", (6, "15:30"): "jingan", (2, "15:45"): "bundday", (2, "19:45"): "njnight", (6, "10:45"): "zjjgo", (5, "10:40"): "marzo", (7, "12:00"): "luneurs", (5, "19:45"): "xmas", (7, "15:00"): "xmas", (5, "16:30"): "ifc", (5, "17:15"): "skywalk"}
+HD_BY_SLOT = {(2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (5, "14:30"): "westbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (6, "13:00"): "zongzi", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "17:00"): "citygod", (6, "11:45"): "zhujiajiao", (4, "09:30"): "jade", (6, "19:45"): "tianzifang", (5, "10:00"): "anfu", (6, "15:30"): "jingan", (2, "15:45"): "bundday", (2, "19:45"): "njnight", (6, "10:45"): "zjjgo", (5, "10:40"): "marzo", (7, "12:00"): "luneurs", (5, "19:45"): "xmas", (7, "15:00"): "xmas", (5, "16:30"): "ifc", (5, "17:15"): "skywalk"}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -294,7 +294,7 @@ SKIP = {
 
 ZH_EV = {
  (1, "13:45"): "曼谷素万那普机场 值机", (1, "16:45"): "航班 9C7284 曼谷 → 上海浦东", (1, "22:05"): "抵达浦东国际机场 2号航站楼", (1, "23:45"): "入住 海玥名庭酒店 淮海中路",
- (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "人民广场", (2, "14:30"): "南京路步行街", (2, "15:45"): "外滩 · 白天拍照", (2, "17:00"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (2, "18:00"): "MANNER 咖啡（北外滩国客中心滨江店）", (2, "19:00"): "外滩 · 黄浦江夜景", (2, "19:45"): "南京东路 步行街 小吃（生煎 · 鲜肉月饼）", (2, "20:30"): "来福士广场 6–7楼 汉堡排饭",
+ (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "第一百货商业中心（南京东路830号）", (2, "14:30"): "南京路步行街", (2, "15:45"): "外滩 · 白天拍照", (2, "17:00"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (2, "18:00"): "MANNER 咖啡（北外滩国客中心滨江店）", (2, "19:00"): "外滩 · 黄浦江夜景", (2, "19:45"): "南京东路 步行街 小吃（生煎 · 鲜肉月饼）", (2, "20:30"): "来福士广场 6–7楼 汉堡排饭",
  (5, "10:00"): "安福路 散步", (5, "10:40"): "13DE MARZO 小熊咖啡（安福路322号）", (5, "11:00"): "奶奶家（武康路店）", (5, "12:30"): "武康路 · 武康大楼", (5, "14:30"): "西岸梦中心 Gate M（徐汇滨江）", (5, "16:30"): "上海国金中心商场（IFC）", (5, "17:15"): "陆家嘴环形天桥", (5, "18:30"): "费大厨辣椒炒肉（陆家嘴）",
  (4, "09:30"): "玉佛禅寺", (4, "11:15"): "喜粤8号（汝南街店）", (4, "12:45"): "新天地", (4, "13:15"): "PANE 球鞋（TX淮海 淮海中路523号）", (4, "14:30"): "豫园", (4, "17:00"): "豫园商城 · 上海城隍庙", (4, "18:30"): "牛New寿喜烧（豫园）",
  (3, "07:00"): "从酒店出发 去上海迪士尼", (3, "08:30"): "奇幻童话城堡", (3, "10:00"): "疯狂动物城 + 明日世界", (3, "13:00"): "探险岛", (3, "15:00"): "宝藏湾",
