@@ -416,6 +416,23 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sh.hidden = true; });
   })();
 
+  // ---- Driver cards: tap the address to show it full screen (a copy on <body>, so card transforms can't trap it) ----
+  (function () {
+    var ov = null;
+    function close() { if (ov) { ov.remove(); ov = null; document.documentElement.style.overflow = ''; } }
+    $$('.taxis .tx-zh').forEach(function (z) {
+      z.addEventListener('click', function () {
+        close();
+        ov = z.closest('.taxi').cloneNode(true); ov.removeAttribute('id'); ov.classList.add('zoom');
+        var x = document.createElement('button'); x.type = 'button'; x.className = 'tx-x'; x.setAttribute('aria-label', 'ปิด'); x.textContent = '×'; ov.appendChild(x);
+        ov.addEventListener('click', function (e) { if (!e.target.closest('[data-say]')) close(); });
+        $$('[data-say]', ov).forEach(function (btn) { btn.addEventListener('click', function (e) { e.stopPropagation(); var o = z.closest('.taxi').querySelector('[data-say]'); if (o) o.click(); }); });
+        document.body.appendChild(ov); document.documentElement.style.overflow = 'hidden';
+      });
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  })();
+
   // ---- Pane staff card: size / pickup-day dropdowns fill the sentences ----
   (function () {
     var sz = $('#pn-size'), dy = $('#pn-day'); if (!sz || !dy) return;

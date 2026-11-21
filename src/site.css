@@ -711,3 +711,18 @@
   .packing-item:nth-last-child(-n+2) label { border-bottom: none; }
   .pack-box { width: 20px; height: 20px; }
   @media (max-width: 340px) { .pack { grid-template-columns: 1fr; } .packing-item:nth-last-child(2) label { border-bottom: 1px solid var(--line); } }
+
+  /* driver cards side by side, compact; tap the address to show it full screen */
+  .taxis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+  .taxis .taxi { margin: 0; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between; }
+  .taxis .tx-en { font-size: 11px; line-height: 1.35; }
+  .taxis .tx-zh { font-size: 19px; line-height: 1.35; margin: 6px 0; cursor: zoom-in; }
+  .taxis .tx-zh span { font-size: 15px; }
+  .taxis .taxi .btn { margin-top: 8px; padding: 7px 10px; font-size: 12.5px; align-self: center; }
+  .tx-hint { text-align: center; margin: 6px 0 0; }
+  .taxi.zoom { position: fixed; inset: 0; z-index: 9999; margin: 0; border-radius: 0; display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+  .taxi.zoom .tx-zh { font-size: clamp(34px, 11vw, 64px); cursor: zoom-out; }
+  .taxi.zoom .tx-zh span { font-size: .8em; }
+  .taxi.zoom .tx-en { font-size: 15px; }
+  @media (orientation: landscape) and (max-height: 500px) { .taxi.zoom .tx-zh { font-size: clamp(28px, 8vh, 48px); } }
+  .tx-x { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 14px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0,0,0,.12); color: inherit; font-size: 26px; line-height: 1; cursor: pointer; }

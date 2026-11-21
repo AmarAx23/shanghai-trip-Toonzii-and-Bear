@@ -611,18 +611,21 @@ page = f'''<!DOCTYPE html>
   <section class="sec" id="sos" aria-labelledby="sos-h">
     <div class="sec-h"><h2 id="sos-h">🆘 ช่วยเหลือในจีน</h2></div>
     <details class="drop t-taxi" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
+    <div class="taxis">
     <div class="taxi" id="taxi">
-      <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
+      <div class="tx-en">🏨 ที่พัก · 请带我去</div>
       <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br>云海大厦<br><span>海玥名庭酒店</span></div>
-      <div class="tx-en">Atour X Hotel (Haiyue Mingting) · Yunhai Building, 1329 Huaihai Middle Road · ใกล้ MRT Changshu Road</div>
-      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，云海大厦，海玥名庭酒店">🔊 ให้เว็บพูดภาษาจีน</button>
+      <div class="tx-en">Atour X Hotel · 1329 Huaihai Middle Rd · ใกล้ MRT Changshu Road</div>
+      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，云海大厦，海玥名庭酒店">🔊 พูดจีน</button>
     </div>
     <div class="taxi alt" id="taxi-pvg">
-      <div class="tx-en">请带我去 · ขากลับไปสนามบิน</div>
+      <div class="tx-en">✈️ สนามบินขากลับ · 请带我去</div>
       <div class="tx-zh">浦东国际机场<br>2号航站楼</div>
-      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7283 ออก 12:05</div>
-      <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
+      <div class="tx-en">Pudong Airport T2 · 9C7283 ออก 12:05</div>
+      <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 พูดจีน</button>
     </div>
+    </div>
+    <p class="hint tx-hint">แตะที่อยู่เพื่อขยายเต็มจอให้คนขับดู</p>
     </details>
     <details class="drop t-pane" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
     <div class="pane-card">

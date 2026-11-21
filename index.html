@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<meta name="build" content="20261121112045">
+<meta name="build" content="20261121112405">
 <link rel="preload" href="fonts/noto-sans-thai-thai-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css" media="print" onload="this.media='all'">
 <link rel="preload" href="fonts/kanit-thai-600-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -735,6 +735,21 @@
   .pack-box { width: 20px; height: 20px; }
   @media (max-width: 340px) { .pack { grid-template-columns: 1fr; } .packing-item:nth-last-child(2) label { border-bottom: 1px solid var(--line); } }
 
+  /* driver cards side by side, compact; tap the address to show it full screen */
+  .taxis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+  .taxis .taxi { margin: 0; padding: 12px 10px; display: flex; flex-direction: column; justify-content: space-between; }
+  .taxis .tx-en { font-size: 11px; line-height: 1.35; }
+  .taxis .tx-zh { font-size: 19px; line-height: 1.35; margin: 6px 0; cursor: zoom-in; }
+  .taxis .tx-zh span { font-size: 15px; }
+  .taxis .taxi .btn { margin-top: 8px; padding: 7px 10px; font-size: 12.5px; align-self: center; }
+  .tx-hint { text-align: center; margin: 6px 0 0; }
+  .taxi.zoom { position: fixed; inset: 0; z-index: 9999; margin: 0; border-radius: 0; display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+  .taxi.zoom .tx-zh { font-size: clamp(34px, 11vw, 64px); cursor: zoom-out; }
+  .taxi.zoom .tx-zh span { font-size: .8em; }
+  .taxi.zoom .tx-en { font-size: 15px; }
+  @media (orientation: landscape) and (max-height: 500px) { .taxi.zoom .tx-zh { font-size: clamp(28px, 8vh, 48px); } }
+  .tx-x { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 14px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(0,0,0,.12); color: inherit; font-size: 26px; line-height: 1; cursor: pointer; }
+
 </style>
 </head>
 <body>
@@ -932,18 +947,21 @@
   <section class="sec" id="sos" aria-labelledby="sos-h">
     <div class="sec-h"><h2 id="sos-h">🆘 ช่วยเหลือในจีน</h2></div>
     <details class="drop t-taxi" open><summary class="sub-h">🚕 ยื่นให้คนขับ <small>ที่พัก / สนามบิน</small></summary>
+    <div class="taxis">
     <div class="taxi" id="taxi">
-      <div class="tx-en">请带我去 · ยื่นให้คนขับดู</div>
+      <div class="tx-en">🏨 ที่พัก · 请带我去</div>
       <div class="tx-zh">上海市徐汇区<br>淮海中路1329号<br>云海大厦<br><span>海玥名庭酒店</span></div>
-      <div class="tx-en">Atour X Hotel (Haiyue Mingting) · Yunhai Building, 1329 Huaihai Middle Road · ใกล้ MRT Changshu Road</div>
-      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，云海大厦，海玥名庭酒店">🔊 ให้เว็บพูดภาษาจีน</button>
+      <div class="tx-en">Atour X Hotel · 1329 Huaihai Middle Rd · ใกล้ MRT Changshu Road</div>
+      <button type="button" class="btn" data-say="请带我去上海市徐汇区淮海中路1329号，云海大厦，海玥名庭酒店">🔊 พูดจีน</button>
     </div>
     <div class="taxi alt" id="taxi-pvg">
-      <div class="tx-en">请带我去 · ขากลับไปสนามบิน</div>
+      <div class="tx-en">✈️ สนามบินขากลับ · 请带我去</div>
       <div class="tx-zh">浦东国际机场<br>2号航站楼</div>
-      <div class="tx-en">Pudong Airport Terminal 2 · เที่ยวบิน 9C7283 ออก 12:05</div>
-      <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 ให้เว็บพูดภาษาจีน</button>
+      <div class="tx-en">Pudong Airport T2 · 9C7283 ออก 12:05</div>
+      <button type="button" class="btn" data-say="请带我去浦东国际机场2号航站楼">🔊 พูดจีน</button>
     </div>
+    </div>
+    <p class="hint tx-hint">แตะที่อยู่เพื่อขยายเต็มจอให้คนขับดู</p>
     </details>
     <details class="drop t-pane" id="pane-card"><summary class="sub-h">👟 ยื่นให้พนักงานร้าน Pane <small>เลือกไซซ์ · กดเพื่อฟังเสียง</small></summary>
     <div class="pane-card">
@@ -999,12 +1017,12 @@
   </section>
 
   <footer class="foot">🎄 Merry Christmas & Happy Shanghai Trip 🦌
-    <small class="ver">อัปเดตล่าสุด 21 พ.ย. 2026 11:20</small>
+    <small class="ver">อัปเดตล่าสุด 21 พ.ย. 2026 11:24</small>
     <small>ภาพสถานที่จาก Wikimedia Commons ตามสัญญาอนุญาต Creative Commons · ภาพหัวเว็บ: David Zhang from Canada · <a href="https://commons.wikimedia.org/wiki/File:Pudong_night_skyline_viewed_from_the_Bund_in_Shanghai_%2841199899084%29.jpg" target="_blank" rel="noopener">CC BY-SA 2.0</a> · แผนที่ © OpenStreetMap contributors</small></footer>
 </main>
 
 <div id="printdoc" aria-hidden="true">
-  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 21 พ.ย. 2026 11:20</p></div></header>
+  <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต 21 พ.ย. 2026 11:24</p></div></header>
   <div class="p-grid">
     <div class="p-box"><h4>✈️ เที่ยวบิน Spring Airlines</h4><table class="p-tbl"><tbody>
       <tr><td><b>ขาไป</b> ส. 5 ธ.ค.</td><td class="p-mono">9C7284</td><td>BKK 16:45 → PVG 22:05</td></tr>
@@ -1501,6 +1519,23 @@
     $('#fs-x').addEventListener('click', function () { sh.hidden = true; });
     sh.addEventListener('click', function (e) { if (e.target === sh) sh.hidden = true; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sh.hidden = true; });
+  })();
+
+  // ---- Driver cards: tap the address to show it full screen (a copy on <body>, so card transforms can't trap it) ----
+  (function () {
+    var ov = null;
+    function close() { if (ov) { ov.remove(); ov = null; document.documentElement.style.overflow = ''; } }
+    $$('.taxis .tx-zh').forEach(function (z) {
+      z.addEventListener('click', function () {
+        close();
+        ov = z.closest('.taxi').cloneNode(true); ov.removeAttribute('id'); ov.classList.add('zoom');
+        var x = document.createElement('button'); x.type = 'button'; x.className = 'tx-x'; x.setAttribute('aria-label', 'ปิด'); x.textContent = '×'; ov.appendChild(x);
+        ov.addEventListener('click', function (e) { if (!e.target.closest('[data-say]')) close(); });
+        $$('[data-say]', ov).forEach(function (btn) { btn.addEventListener('click', function (e) { e.stopPropagation(); var o = z.closest('.taxi').querySelector('[data-say]'); if (o) o.click(); }); });
+        document.body.appendChild(ov); document.documentElement.style.overflow = 'hidden';
+      });
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
   })();
 
   // ---- Pane staff card: size / pickup-day dropdowns fill the sentences ----
