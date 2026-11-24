@@ -235,6 +235,25 @@ body.incity #map{background:#f4eee2}
 .plane3 svg{width:100%;height:100%;display:block}
 .trav{width:16px;height:16px;border-radius:50%;background:var(--gold2);border:2px solid #fff;box-shadow:0 0 0 6px #e9cf9555,0 4px 10px #0008;display:grid;place-items:center;font-size:15px;line-height:1}
 .trav span{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:20px;filter:drop-shadow(0 2px 3px #0008)}
+/* the two of us: head stickers riding the route */
+.duo{position:relative;width:96px;height:78px;pointer-events:none;transition:translate .5s cubic-bezier(.3,1.3,.5,1)}
+.duo.at{translate:-64px 40px}
+.duo .dot{position:absolute;left:50%;bottom:-6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--gold2);border:2px solid #fff;box-shadow:0 0 0 5px #e9cf9555,0 3px 8px #0007}
+.duo img{position:absolute;bottom:8px;height:58px;width:auto;filter:drop-shadow(0 4px 5px #0007);transform-origin:50% 100%;transition:bottom .35s,height .35s}
+.duo .ha{left:2px;z-index:1}
+.duo .hb{left:40px;z-index:2}
+.duo .veh{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%) scale(0);font-size:42px;line-height:1;filter:drop-shadow(0 3px 4px #0007);transition:transform .35s cubic-bezier(.3,1.5,.5,1);z-index:3}
+.duo.walk .ha{animation:bob .38s ease-in-out infinite alternate}
+.duo.walk .hb{animation:bob .38s .19s ease-in-out infinite alternate}
+.duo.car img{bottom:26px;height:44px}
+.duo.car .veh{transform:translateX(-50%) scale(1)}
+.duo.car{animation:rumble .25s linear infinite alternate}
+.duo.hop img{animation:hop .55s cubic-bezier(.3,1.6,.5,1)}
+.duo.hop .hb{animation-delay:.08s}
+.duo.at .dot{opacity:0}
+@keyframes bob{from{transform:translateY(0) rotate(-7deg)}to{transform:translateY(-7px) rotate(7deg)}}
+@keyframes rumble{from{transform:translateY(0)}to{transform:translateY(-1.5px)}}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-14px) scale(1.08)}100%{transform:translateY(0)}}
 .chapter{position:fixed;inset:0;z-index:640;display:grid;place-items:center;pointer-events:none;text-align:center;opacity:0;transition:opacity .7s}
 .chapter.on{opacity:1}
 .chapter div{transform:translateY(14px);transition:transform 1.4s cubic-bezier(.2,.8,.25,1)}
@@ -591,7 +610,7 @@ function story(doneCb) {
   if (head) head.insertAdjacentHTML('beforeend', '<div class="prog">' + stops.map(function () { return '<i><b></b></i>'; }).join('') + '</div>');
   var bars = document.querySelectorAll('.prog b');
   var k = 0, from = d.suzhou ? null : LL(HOTEL), bear = map.getBearing();
-  if (trav) trav.remove(); trav = mk(from || LL(d.pins[0]), '<div class="trav"><span></span></div>');
+  if (trav) trav.remove(); trav = mk(from || LL(d.pins[0]), '<div class="duo"><i class="dot"></i><img class="ha" alt="" src="img/present/head-a.webp"><img class="hb" alt="" src="img/present/head-b.webp"><span class="veh"></span></div>', { anchor: 'bottom', offset: [0, 6] });
   function finish() {
     if (sb && my === gen) sb.textContent = '▶ เล่นทีละจุด'; document.body.classList.remove('storying');
     var pg = $('.prog'); if (pg && my === gen) { pg.classList.add('done'); setTimeout(function () { pg.remove(); }, 500); }
@@ -610,7 +629,8 @@ function story(doneCb) {
     highlight(x.pin, false); scrollRow(rowFor(x.pin)); closePop();
     var sj = seg(from, to), mode = sj >= 0 ? d.segs[sj].m : '';
     segEls.forEach(function (s, j) { var e = s.getElement().firstChild; if (e) e.classList.toggle('act', j === sj); });
-    trav.getElement().querySelector('span').textContent = mode;
+    var duo = trav.getElement().firstChild, isCar = mode && mode !== '🚶';
+    duo.querySelector('.veh').textContent = isCar ? mode : ''; duo.className = 'duo ' + (isCar ? 'car' : 'walk');
     bear += 22;
     map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: P_(innerWidth <= 820 ? 48 : 60), bearing: P_(bear), padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2200, curve: 1.25, easing: eio, essential: true });
     var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800, path = null;
@@ -619,7 +639,7 @@ function story(doneCb) {
       if (my !== gen) return;
       var p = Math.min(1, (now - t0) / dur), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
       trav.setLngLat(path ? along(path, e) : [a[0] + (to[0] - a[0]) * e, a[1] + (to[1] - a[1]) * e]);
-      if (p < 1) requestAnimationFrame(run);
+      if (p < 1) requestAnimationFrame(run); else { duo.className = 'duo'; void duo.offsetWidth; duo.className = 'duo hop at'; }
     })(t0);
     from = to;
     setTimeout(function () {
