@@ -56,8 +56,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
 .row .th{border-radius:50%;flex:none;position:relative;z-index:2;transition:transform .45s cubic-bezier(.3,1.4,.5,1);background:#dfe5ef center/cover no-repeat;border:2px solid var(--gold);display:grid;place-items:center}
 .row .th img{width:58%;height:58%}
 .row.act .th{transform:scale(1.14)}
-.tl{position:absolute;width:2px;margin-left:-1px;border-radius:2px;opacity:.8;z-index:1;transform-origin:top;animation:tl 1.5s .45s cubic-bezier(.45,0,.2,1) backwards}
-@keyframes tl{from{transform:scaleY(0)}}
 .row .tm{font-family:var(--serif);font-weight:600;flex:none;color:#a7823c;letter-spacing:.02em}
 .row .tx{font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .in{animation:pin .7s cubic-bezier(.2,.8,.25,1) backwards}
@@ -141,7 +139,7 @@ fit(); addEventListener('resize', function () { fit(); measure(); render(cur); }
 /* ---------- geometry (design units, taken from the deck) ---------- */
 var CX = -192, CY = 450, R = 480, STEP = 38 * Math.PI / 180;
 var ROW_X0 = 172.8, ROW_DX = 179.2, ROW_Y = 425.6, ROW_S = 147;
-var BADGE = 124.6, BADGE_S = 136;
+var BADGE = 134, BADGE_S = 98;
 function sizeFor(a) { return a <= 1 ? 352 + (160 - 352) * a : a <= 2 ? 160 + (112 - 160) * (a - 1) : 112; }
 function lerp(a, b, t) { return a + (b - a) * t; }
 
@@ -219,8 +217,7 @@ var panels = $('#panels');
 function dayPanel(d) {
   var n = d.rows.length, gap = n <= 5 ? 22 : 8, top = 248, avail = 632;
   var rh = Math.min(83, (avail + gap) / n - gap), th = rh * .8;
-  var x0 = rh * .2 + th / 2, y0 = top + rh / 2, y1 = top + (n - 1) * (rh + gap) + rh / 2;
-  var h = '<div class="panel" style="--c:' + d.c + '"><div class="tl" style="left:' + x0 + 'px;top:' + y0 + 'px;height:' + (y1 - y0) + 'px;background:var(--gold)"></div><div class="ph-head in" style="animation-delay:.25s"><span class="ic"><img alt="" src="' + d.icon + '"></span><div><h2>' + esc(d.h) + '</h2><i class="acc" style="background:' + d.c + '"></i><p><span class="ey">DAY ' + (d.n < 10 ? '0' : '') + d.n + '</span>' + esc(d.dt) + '</p></div></div>';
+  var h = '<div class="panel" style="--c:' + d.c + '"><div class="ph-head in" style="animation-delay:.25s"><span class="ic"><img alt="" src="' + d.icon + '"></span><div><h2>' + esc(d.h) + '</h2><i class="acc" style="background:' + d.c + '"></i><p><span class="ey">DAY ' + (d.n < 10 ? '0' : '') + d.n + '</span>' + esc(d.dt) + '</p></div></div>';
   d.rows.forEach(function (r, k) {
     h += '<div class="row in" data-k="' + k + '" style="top:' + (top + k * (rh + gap)) + 'px;height:' + rh + 'px;animation-delay:' + (.42 + k * .07) + 's;padding:0 ' + rh * .2 + 'px">' +
       '<span class="th" style="width:' + th + 'px;height:' + th + 'px;' + (r.img ? 'background-image:url(' + r.img + ')' : 'background-color:#141c33') + '">' + (r.img ? '' : '<img alt="" src="' + d.icon + '">') + '</span>' +
