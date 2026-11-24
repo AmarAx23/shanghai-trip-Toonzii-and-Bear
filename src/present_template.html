@@ -25,6 +25,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
 #rim i{position:absolute;left:478px;top:478px;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--rim)}
 .dc{width:352px;height:352px;border-radius:50%;border:8px solid #fff;overflow:hidden;box-shadow:0 10px 30px #1f2a4433;cursor:pointer}
 .dc img{width:100%;height:100%;object-fit:cover;display:block;opacity:0}
+.dc .cy{position:absolute;inset:0;transition:opacity .9s ease;transform:scale(1.08);transition:opacity .9s ease,transform 3s cubic-bezier(.2,.6,.3,1)}
+.dc .cy.on{transform:scale(1)}
 .lb{width:160px;height:160px;border-radius:50%;border:5px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:Kanit,sans-serif;line-height:1;pointer-events:none}
 .lb small{font-size:22px;font-weight:400;opacity:.95}
 .lb b{font-size:76px;font-weight:600;margin-top:2px}
@@ -43,11 +45,16 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
 .ph-head h2{margin:2px 0 0;font:700 46px/1.15 Kanit,sans-serif}
 .ph-head p{margin:6px 0 0;font:400 21px Sarabun,sans-serif;color:var(--mute)}
 .row{position:absolute;left:0;width:896px;display:flex;align-items:center;background:#ffffffd9;border-radius:12px;box-shadow:0 4px 14px #1f2a4412}
-.row .th{border-radius:50%;flex:none;background:#dfe5ef center/cover no-repeat;border:3px solid;display:grid;place-items:center}
+.row{transition:translate .45s cubic-bezier(.3,1.3,.5,1),background .4s,box-shadow .4s}
+.row.act{background:#fff;translate:14px 0;box-shadow:0 10px 26px #1f2a4429,inset 6px 0 0 var(--c)}
+.row .th{border-radius:50%;flex:none;position:relative;z-index:2;transition:transform .45s cubic-bezier(.3,1.4,.5,1);background:#dfe5ef center/cover no-repeat;border:3px solid;display:grid;place-items:center}
 .row .th img{width:58%;height:58%}
+.row.act .th{transform:scale(1.14)}
+.tl{position:absolute;width:3px;margin-left:-1.5px;border-radius:3px;opacity:.5;z-index:1;transform-origin:top;animation:tl 1.5s .45s cubic-bezier(.45,0,.2,1) backwards}
+@keyframes tl{from{transform:scaleY(0)}}
 .row .tm{font-family:Kanit,sans-serif;font-weight:600;flex:none}
 .row .tx{font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.in{animation:pin .7s cubic-bezier(.2,.8,.25,1) both}
+.in{animation:pin .7s cubic-bezier(.2,.8,.25,1) backwards}
 @keyframes pin{from{opacity:0;transform:translateX(40px)}}
 .out{animation:pout .35s ease-in both}
 @keyframes pout{to{opacity:0;transform:translateX(-24px)}}
@@ -59,6 +66,25 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
 .credits ul{margin:0;padding:0;list-style:none;columns:2;column-gap:56px;font-size:15px;line-height:1.5;color:#3a4563}
 .credits li{break-inside:avoid;margin-bottom:3px}
 
+
+/* living night cover */
+#fx{position:absolute;inset:0;pointer-events:none;transition:opacity 1s ease}
+#fx:not(.on) *{animation-play-state:paused!important}
+.lan{position:absolute;top:-6px;transform-origin:50% 0;animation:sway 4s ease-in-out infinite alternate}
+@keyframes sway{from{rotate:-3.2deg}to{rotate:3.2deg}}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:1}to{opacity:.15}}
+.glow{position:absolute;border-radius:50%;animation:glow 2.6s ease-in-out infinite alternate}
+@keyframes glow{from{opacity:.25;transform:scale(.85)}to{opacity:.9;transform:scale(1.15)}}
+.beacon{position:absolute;width:10px;height:10px;border-radius:50%;background:#ffd56b;box-shadow:0 0 14px 6px #ffd56b88;animation:blink 1.6s steps(1) infinite}
+@keyframes blink{50%{opacity:.1}}
+.water{position:absolute;left:0;top:792px;width:3200px;height:108px;opacity:.5;mix-blend-mode:screen;
+ background:repeating-linear-gradient(90deg,transparent 0 46px,#ffffff22 46px 58px,transparent 58px 130px,#f2c46d26 130px 140px,transparent 140px 210px);
+ -webkit-mask:linear-gradient(#000 0,#0000 100%);mask:linear-gradient(#000,#0000);animation:flow 14s linear infinite}
+@keyframes flow{to{transform:translateX(-1600px)}}
+.shoot{position:absolute;left:1100px;top:60px;width:170px;height:2px;border-radius:2px;background:linear-gradient(90deg,#fff0,#fff);rotate:-24deg;opacity:0;animation:shoot 9s 2s ease-out infinite}
+@keyframes shoot{0%{opacity:0;transform:translateX(0)}2%{opacity:1}8%{opacity:0;transform:translateX(-420px)}100%{opacity:0;transform:translateX(-420px)}}
+@media(prefers-reduced-motion:reduce){#fx *{animation:none!important}}
 /* controls (not scaled) */
 .ui{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:8px;align-items:center;padding:6px;border-radius:16px;background:#141a33d9;box-shadow:0 8px 24px #0006;transition:opacity .4s;z-index:5}
 .ui.hide{opacity:.16}
@@ -80,6 +106,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
   <div id="stage" aria-live="polite">
     <div class="bg" id="bgD"></div>
     <div class="bg" id="bgN"></div>
+    <div id="fx" class="on"></div>
     <div id="rim"></div>
     <div id="wheel"></div>
     <div class="abs" id="ptr"></div>
@@ -123,13 +150,28 @@ var BADGE = 124.6, BADGE_S = 136;
 function sizeFor(a) { return a <= 1 ? 352 + (160 - 352) * a : a <= 2 ? 160 + (112 - 160) * (a - 1) : 112; }
 function lerp(a, b, t) { return a + (b - a) * t; }
 
+/* ---------- living night cover: lanterns, stars, tower glow, water shimmer ---------- */
+var fxEl = $('#fx');
+(function () {
+  var K = 1600 / 1920, h = '';
+  [[92, 117, 321, 4.2, 0], [246, 89, 239, 3.5, -1.2], [1586, 89, 239, 3.8, -2.1], [1712, 117, 321, 4.6, -.6]].forEach(function (l, k) {
+    h += '<img class="lan" alt="" src="img/present/lan' + k + '.png" style="left:' + l[0] * K + 'px;width:' + l[1] * K + 'px;height:' + l[2] * K + 'px;animation-duration:' + l[3] + 's;animation-delay:' + l[4] + 's">';
+  });
+  var seed = 7; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  for (var k = 0; k < 34; k++) { var z = 1.5 + rnd() * 2.5; h += '<i class="star" style="left:' + (rnd() * 1600) + 'px;top:' + (rnd() * 460) + 'px;width:' + z + 'px;height:' + z + 'px;animation-duration:' + (1.6 + rnd() * 3) + 's;animation-delay:' + (-rnd() * 4) + 's"></i>'; }
+  h += '<i class="glow" style="left:807px;top:657px;width:120px;height:120px;background:radial-gradient(#ff5fa0aa,#ff5fa000 65%)"></i>';
+  h += '<i class="glow" style="left:832px;top:607px;width:70px;height:70px;background:radial-gradient(#ff5fa099,#ff5fa000 65%);animation-delay:-1.3s"></i>';
+  h += '<i class="beacon" style="left:1065px;top:585px"></i><i class="water"></i><i class="shoot"></i>';
+  fxEl.innerHTML = h;
+})();
+
 /* ---------- build the wheel ---------- */
 var rim = $('#rim');
 for (var j = 0; j < 18; j++) { var t = document.createElement('i'); var a = j * 20 * Math.PI / 180; t.style.transform = 'translate(' + (R * Math.cos(a)) + 'px,' + (R * Math.sin(a)) + 'px)'; rim.appendChild(t); }
 var wheel = $('#wheel'), C = [], LB = [], SH = [];
 DAYS.forEach(function (d, i) {
   var c = document.createElement('div'); c.className = 'abs dc'; c.style.background = d.c; c.dataset.i = i;
-  c.innerHTML = '<img alt="" decoding="async" src="' + d.photo + '">';
+  c.innerHTML = '<img alt="" decoding="async" src="' + d.photo + '"><img class="cy" alt="" style="opacity:0"><img class="cy" alt="" style="opacity:0">';
   var l = document.createElement('div'); l.className = 'abs lb'; l.style.background = d.c; l.innerHTML = '<small>วันที่</small><b>' + d.n + '</b>';
   var s = document.createElement('div'); s.className = 'abs sh'; s.innerHTML = esc(d.short[0]) + '<br>' + esc(d.short[1]);
   s.style.transform = 'translate(' + (ROW_X0 + i * ROW_DX - 90) + 'px,515px)';
@@ -189,9 +231,10 @@ var panels = $('#panels');
 function dayPanel(d) {
   var n = d.rows.length, gap = n <= 5 ? 22 : 8, top = 248, avail = 632;
   var rh = Math.min(83, (avail + gap) / n - gap), th = rh * .8;
-  var h = '<div class="panel"><div class="ph-head in" style="animation-delay:.25s"><span class="ic" style="background:' + d.c + '"><img alt="" src="' + d.icon + '"></span><div><h2 style="color:' + d.c + '">' + esc(d.h) + '</h2><p>' + esc(d.dt) + '</p></div></div>';
+  var x0 = rh * .2 + th / 2, y0 = top + rh / 2, y1 = top + (n - 1) * (rh + gap) + rh / 2;
+  var h = '<div class="panel" style="--c:' + d.c + '"><div class="tl" style="left:' + x0 + 'px;top:' + y0 + 'px;height:' + (y1 - y0) + 'px;background:' + d.c + '"></div><div class="ph-head in" style="animation-delay:.25s"><span class="ic" style="background:' + d.c + '"><img alt="" src="' + d.icon + '"></span><div><h2 style="color:' + d.c + '">' + esc(d.h) + '</h2><p>' + esc(d.dt) + '</p></div></div>';
   d.rows.forEach(function (r, k) {
-    h += '<div class="row in" style="top:' + (top + k * (rh + gap)) + 'px;height:' + rh + 'px;animation-delay:' + (.42 + k * .07) + 's;padding:0 ' + rh * .2 + 'px">' +
+    h += '<div class="row in" data-k="' + k + '" style="top:' + (top + k * (rh + gap)) + 'px;height:' + rh + 'px;animation-delay:' + (.42 + k * .07) + 's;padding:0 ' + rh * .2 + 'px">' +
       '<span class="th" style="width:' + th + 'px;height:' + th + 'px;border-color:' + d.c + ';' + (r.img ? 'background-image:url(' + r.img + ')' : 'background-color:' + d.c) + '">' + (r.img ? '' : '<img alt="" src="' + d.icon + '">') + '</span>' +
       '<span class="tm" style="color:' + d.c + ';font-size:' + rh * .4 + 'px;width:' + rh * 1.75 + 'px;margin-left:' + rh * .3 + 'px">' + r.t + '</span>' +
       '<span class="tx" style="font-size:' + Math.min(28, rh * .37) + 'px">' + esc(r.title) + '</span></div>';
@@ -204,11 +247,41 @@ function creditsPanel() {
 }
 function preload(i) { var d = DAYS[i]; if (!d) return; d.rows.forEach(function (r) { if (r.img) (new Image()).src = r.img; }); }
 
+/* cycle the big photo through the day's stops and light up the matching row */
+var gen = 0, playing = false;
+function cyOff() { C.forEach(function (c) { [].forEach.call(c.querySelectorAll('.cy'), function (e) { e.style.opacity = 0; e.classList.remove('on'); }); }); }
+function cycle(di, my) {
+  var d = DAYS[di], stops = [], flip = 0, k = 0;
+  d.rows.forEach(function (r, j) { if (r.img) stops.push(j); });
+  var layers = C[di].querySelectorAll('.cy');
+  function rowsAct(j) { [].forEach.call(document.querySelectorAll('.panel .row'), function (r) { r.classList.toggle('act', +r.dataset.k === j); }); }
+  function step() {
+    if (my !== gen) return;
+    if (k >= stops.length) {  // back to the day's cover photo
+      rowsAct(-1); [].forEach.call(layers, function (e) { e.style.opacity = 0; e.classList.remove('on'); });
+      if (playing) { setTimeout(function () { if (my === gen && playing) next(); }, 1400); return; }
+      k = 0; setTimeout(step, 2600); return;
+    }
+    var j = stops[k++], a = layers[flip], b = layers[1 - flip]; flip = 1 - flip;
+    var go = function () {
+      if (my !== gen) return;
+      a.classList.remove('on'); void a.offsetWidth;
+      a.style.zIndex = 2; b.style.zIndex = 1; a.style.opacity = 1; a.classList.add('on');
+      setTimeout(function () { if (my === gen) b.style.opacity = 0; }, 900);
+      rowsAct(j);
+      setTimeout(step, 2300);
+    };
+    a.src = d.rows[j].img; if (a.decode) a.decode().then(go, go); else go();
+  }
+  setTimeout(step, reduce ? 300 : 1500);
+}
+
 var idx = -1;
 function show(i, instant) {
   i = Math.max(0, Math.min(SL.length - 1, i));
   if (i === idx) return;
-  var s = SL[i]; idx = i;
+  var s = SL[i]; idx = i; var my = ++gen; cyOff();
+  fxEl.style.opacity = s.night ? 1 : 0; fxEl.classList.toggle('on', !!s.night);
   $('#bgN').style.opacity = s.night ? 1 : 0;
   t1.style.color = s.tt ? '#5b6683' : '#fff';
   t1.style.opacity = s.k === 'end' || s.k === 'credits' ? 0 : 1;
@@ -222,24 +295,24 @@ function show(i, instant) {
   var html = s.k === 'day' ? dayPanel(DAYS[s.i]) : s.k === 'credits' ? creditsPanel() : '';
   if (html) { var w = document.createElement('div'); w.innerHTML = html; panels.appendChild(w); }
   tweenTo(s, instant ? 0 : (Math.abs(cur.f - s.f) > 2.5 ? 1500 : 1150));
-  if (s.k === 'day') preload(s.i + 1);
+  if (s.k === 'day') { preload(s.i + 1); cycle(s.i, my); }
+  else if (playing) setTimeout(function () { if (my === gen && playing) { if (idx >= SL.length - 1) stopPlay(); else next(); } }, 5200);
   $('#ct').textContent = (i + 1) + ' / ' + SL.length;
   $('#prev').disabled = i === 0; $('#next').disabled = i === SL.length - 1;
   try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
 }
 
 /* ---------- controls ---------- */
-var timer = 0, playB = $('#play');
-function stopPlay() { clearInterval(timer); timer = 0; playB.setAttribute('aria-pressed', 'false'); }
+var playB = $('#play');
+function stopPlay() { playing = false; playB.setAttribute('aria-pressed', 'false'); }
 function next() { show(idx + 1); }
 function prev() { show(idx - 1); }
 $('#next').onclick = function () { stopPlay(); next(); };
 $('#prev').onclick = function () { stopPlay(); prev(); };
 playB.onclick = function () {
-  if (timer) { stopPlay(); return; }
-  playB.setAttribute('aria-pressed', 'true');
-  if (idx === SL.length - 1) show(0);
-  timer = setInterval(function () { if (idx >= SL.length - 1) { stopPlay(); return; } next(); }, 6500);
+  if (playing) { stopPlay(); return; }
+  playing = true; playB.setAttribute('aria-pressed', 'true');
+  if (idx >= SL.length - 1) show(0); else next();
 };
 var fsB = $('#fs');
 if (!document.documentElement.requestFullscreen) fsB.hidden = true;
