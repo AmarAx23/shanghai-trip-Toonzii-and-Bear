@@ -22,8 +22,8 @@ html,body{margin:0;height:100%;position:fixed;inset:0;width:100%;background:var(
 .snow i{position:absolute;top:-12px;border-radius:50%;background:#fff;will-change:transform;animation:fall linear infinite}
 @keyframes fall{to{transform:translate(40px,110vh)}}
 .snow{transition:opacity .8s,visibility 0s}
-body.city .snow{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s .8s}
-body.city .snow i{animation-play-state:paused}
+body.incity .snow{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s .8s}
+body.incity .snow i{animation-play-state:paused}
 
 /* top bar */
 .top{position:fixed;top:0;left:0;right:0;z-index:600;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(#0b2333e6,#0b233300);pointer-events:none}
@@ -185,7 +185,7 @@ function dayPts(d) { var pts = d.pins.map(function (p) { return [p[0], p[1]]; })
 
 function go(i, ready) {
   i = Math.max(0, Math.min(D.length - 1, i)); idx = i; var d = D[i], my = ++gen;
-  document.body.classList.toggle('city', !(d.ov || d.asia || i === 1));
+  document.body.classList.toggle('incity', !(d.ov || d.asia || i === 1));
   ui(); map.closePopup(); layer.clearLayers(); pinEls = []; segEls = []; if (plane) { map.removeLayer(plane); plane = null; }
   var c = $('#card'); c.classList.add('out');
   setTimeout(function () { if (my !== gen) return; card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450);
@@ -220,7 +220,7 @@ function go(i, ready) {
     L.polyline(ARC_GO, { color: '#e2453c', weight: 3, className: 'arc' }).addTo(layer);
     cityTag(BKK, 'กรุงเทพฯ').addTo(layer); cityTag(PVG, 'เซี่ยงไฮ้').addTo(layer);
     fitTo([BKK, PVG], 6, 1.6);
-    setTimeout(function () { if (my !== gen) return; fly(ARC_GO, reduce ? 10 : 3000, function () { if (my !== gen) return; document.body.classList.add('city'); layer.clearLayers(); if (plane) { map.removeLayer(plane); plane = null; } fitTo(pts, 12, 2.6); setTimeout(after, reduce ? 0 : 2200); }); }, reduce ? 0 : 1700);
+    setTimeout(function () { if (my !== gen) return; fly(ARC_GO, reduce ? 10 : 3000, function () { if (my !== gen) return; document.body.classList.add('incity'); layer.clearLayers(); if (plane) { map.removeLayer(plane); plane = null; } fitTo(pts, 12, 2.6); setTimeout(after, reduce ? 0 : 2200); }); }, reduce ? 0 : 1700);
     return;
   }
   fitTo(pts, d.suzhou ? 14 : 15, 2.6);
