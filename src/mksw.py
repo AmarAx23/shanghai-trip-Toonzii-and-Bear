@@ -2,7 +2,7 @@
 import os, sys, time
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ver = sys.argv[1] if len(sys.argv) > 1 else time.strftime("v%Y%m%d%H%M")
-files=['./','./index.html','./tour.html','./present.html','./manifest.json','./icon-180.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./icon.svg','./favicon.ico','./favicon-32.png','./vendor/leaflet/leaflet.js','./vendor/leaflet/leaflet.css']
+files=['./','./index.html','./tour.html','./present.html','./manifest.json','./icon-180.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./icon.svg','./favicon.ico','./favicon-32.png','./vendor/leaflet/leaflet.js','./vendor/leaflet/leaflet.css','./vendor/maplibre/maplibre-gl.js','./vendor/maplibre/maplibre-gl.css']
 files+=['./img/'+f for f in sorted(os.listdir('img')) if f.endswith('.jpg')]
 files+=['./img/hd/'+f for f in sorted(os.listdir('img/hd')) if f.endswith('.webp')]
 files+=['./fonts/'+f for f in sorted(os.listdir('fonts')) if f.endswith('.woff2')]

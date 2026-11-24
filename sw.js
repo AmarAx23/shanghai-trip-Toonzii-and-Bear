@@ -1,7 +1,7 @@
 // Offline support for the trip page.
 // The page itself is fetched network-first, so an installed iPhone/Android app always shows the newest
 // version when online and falls back to the saved copy when offline. Photos, fonts and Leaflet are cache-first.
-const CACHE_NAME = 'sh-trip-v202611241753';
+const CACHE_NAME = 'sh-trip-v202611241809';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -17,6 +17,8 @@ const URLS_TO_CACHE = [
   './favicon-32.png',
   './vendor/leaflet/leaflet.js',
   './vendor/leaflet/leaflet.css',
+  './vendor/maplibre/maplibre-gl.js',
+  './vendor/maplibre/maplibre-gl.css',
   './img/canton8.jpg',
   './img/chef-fei.jpg',
   './img/cocina19.jpg',
