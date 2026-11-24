@@ -263,7 +263,19 @@ body.incity #map{background:#f4eee2}
   .bar{gap:6px}
   .bar>button{flex:1;padding:0 8px;white-space:nowrap;font-size:13px}
   .dots{margin-left:0;width:100%}
-  .maplibregl-ctrl-bottom-right{bottom:calc(44vh + 124px)}
+  .card{bottom:calc(var(--barh,150px) + 6px)}
+  .maplibregl-ctrl-bottom-right{top:calc(60px + env(safe-area-inset-top));bottom:auto}
+  /* story mode on phones: card folds to a slim strip so the map gets the screen */
+  body.storying .card{max-height:none}
+  body.storying .card .cover,body.storying .card .zh,body.storying .card .legs,body.storying .card .list{display:none}
+  body.storying.peek .card .list{display:block;max-height:28vh}
+  body.storying .card .head{display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 10px;padding:10px 14px 11px;cursor:pointer}
+  body.storying .card .head h2{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.storying .card .head h2::after{content:" ⌃";color:var(--gold);font-size:13px;display:inline-block;transition:transform .3s}
+  body.storying.peek .card .head h2::after{transform:rotate(180deg)}
+  body.storying .storyb{margin:0;min-height:34px}
+  body.storying .prog{grid-column:1/-1;margin-top:8px}
+  body.autoplay .storyb{display:none}
 }
 @media(prefers-reduced-motion:reduce){</style>
 </head>
@@ -398,7 +410,9 @@ function fly(pts, ms, my, done) {
 }
 
 /* layout padding so the card never hides anything */
-function pad(extraTop) { var w = innerWidth, h = innerHeight, p = w <= 820 ? { top: 70, left: 24, right: 24, bottom: Math.round(h * (document.body.classList.contains('storying') ? .26 : .44)) + 140 } : { top: 90, left: Math.min(430, w * .38) + 40, right: 60, bottom: 110 }; if (extraTop) p.top += extraTop; return p; }
+function barH() { var b = $('.bar'); return b ? b.offsetHeight : 150; }
+function fitBar() { document.documentElement.style.setProperty('--barh', barH() + 'px'); }
+function pad(extraTop) { var w = innerWidth, h = innerHeight, p = w <= 820 ? { top: 70, left: 24, right: 24, bottom: document.body.classList.contains('storying') ? barH() + 96 : Math.round(h * .44) + 140 } : { top: 90, left: Math.min(430, w * .38) + 40, right: 60, bottom: 110 }; if (extraTop) p.top += extraTop; return p; }
 var D3 = false; try { D3 = localStorage.getItem('tour3d') === '1'; } catch (e) {}
 function P_(v) { return D3 ? v : 0; }   // pitch / bearing are 0 in 2D mode
 function fitZoom(lnglats) {
@@ -514,7 +528,7 @@ function closePop() { if (popup) { popup.remove(); popup = null; } }
 
 function go(i, readyCb) {
   i = Math.max(0, Math.min(D.length - 1, i)); var prev = idx; idx = i; var d = D[i], my = ++gen;
-  ui(); closePop(); clearMarks(); document.body.classList.remove('storying'); cancelAnimationFrame(drawRaf); setLine('arc', []); setLine('route', []); map.stop();
+  ui(); closePop(); clearMarks(); document.body.classList.remove('storying', 'peek'); cancelAnimationFrame(drawRaf); setLine('arc', []); setLine('route', []); map.stop();
   var c = $('#card');
   if (document.startViewTransition && !reduce && c.innerHTML) document.startViewTransition(function () { if (my !== gen) return; card(d); bindList(); });
   else { c.classList.add('out'); setTimeout(function () { if (my !== gen) return; card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450); }
@@ -599,7 +613,7 @@ function story(doneCb) {
   var k = 0, from = d.suzhou ? null : LL(HOTEL), bear = map.getBearing();
   if (trav) trav.remove(); trav = mk(from || LL(d.pins[0]), '<div class="duo"><i class="dot"></i><img class="ha" alt="" src="img/present/head-a.webp"><img class="hb" alt="" src="img/present/head-b.webp"><span class="veh"></span></div>', { anchor: 'bottom', offset: [0, 6] });
   function finish() {
-    if (sb && my === gen) sb.textContent = '▶ เล่นทีละจุด'; document.body.classList.remove('storying');
+    if (sb && my === gen) sb.textContent = '▶ เล่นทีละจุด'; document.body.classList.remove('storying', 'peek');
     var pg = $('.prog'); if (pg && my === gen) { pg.classList.add('done'); setTimeout(function () { pg.remove(); }, 500); }
     closePop(); highlight(0); segEls.forEach(function (s) { var e = s.getElement().firstChild; if (e) e.classList.remove('act'); });
     if (trav) { trav.remove(); trav = null; }
@@ -643,7 +657,7 @@ function bindList() {
   document.querySelectorAll('.ovr').forEach(function (r) { r.addEventListener('click', function () { stop(); go(+r.dataset.go); }); });
   document.querySelectorAll('.it[data-pin]').forEach(function (r) { r.addEventListener('click', function () { stop(); gen++; closePop(); highlight(+r.dataset.pin, true); }); });
   var sb = $('#storyb');
-  if (sb) sb.addEventListener('click', function () { if (sb.textContent.indexOf('หยุด') >= 0) { stop(); gen++; document.body.classList.remove('storying'); sb.textContent = '▶ เล่นทีละจุด'; closePop(); if (trav) { trav.remove(); trav = null; } return; } stop(); story(); });
+  if (sb) sb.addEventListener('click', function () { if (sb.textContent.indexOf('หยุด') >= 0) { stop(); gen++; document.body.classList.remove('storying', 'peek'); sb.textContent = '▶ เล่นทีละจุด'; closePop(); if (trav) { trav.remove(); trav = null; } return; } stop(); story(); });
 }
 
 var labels = ['ภาพรวม'].concat(D.slice(1).map(function (_, k) { return 'วัน ' + (k + 1); }));
@@ -653,7 +667,7 @@ var pill = dots.querySelector('.pill');
 function movePill() { var b = dots.querySelector('button[aria-current=true]'); if (!b) return; pill.style.width = b.offsetWidth + 'px'; pill.style.height = b.offsetHeight + 'px'; pill.style.transform = 'translate(' + b.offsetLeft + 'px,' + b.offsetTop + 'px)'; pill.classList.add('on'); }
 function ui() { setTimeout(movePill, 0); dots.querySelectorAll('button').forEach(function (b) { var on = +b.dataset.i === idx; b.setAttribute('aria-current', on); if (on) dots.scrollTo({ left: b.offsetLeft - dots.clientWidth / 2 + b.offsetWidth / 2, behavior: 'smooth' }); }); $('#prev').disabled = idx === 0; }
 var autoB = $('#auto');
-function stop() { if (playing) { playing = false; autoB.textContent = '▶ เล่นอัตโนมัติ'; } }
+function stop() { document.body.classList.remove('autoplay'); if (playing) { playing = false; autoB.textContent = '▶ เล่นอัตโนมัติ'; } }
 function nxt() { go(idx === D.length - 1 ? 0 : idx + 1); }
 function playFrom(i) {
   if (!playing) return;
@@ -669,9 +683,13 @@ function playFrom(i) {
 dots.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { stop(); go(+b.dataset.i); } });
 $('#next').onclick = function () { stop(); nxt(); };
 $('#prev').onclick = function () { stop(); go(idx - 1); };
-autoB.onclick = function () { if (playing) { stop(); gen++; closePop(); return; } playing = true; autoB.textContent = '❚❚ หยุด'; playFrom(idx === D.length - 1 ? 0 : idx + 1); };
+autoB.onclick = function () { if (playing) { stop(); gen++; closePop(); return; } playing = true; document.body.classList.add('autoplay'); autoB.textContent = '❚❚ หยุด'; playFrom(idx === D.length - 1 ? 0 : idx + 1); };
 document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { stop(); nxt(); } if (e.key === 'ArrowLeft') { stop(); go(idx - 1); } });
-addEventListener('resize', movePill);
+addEventListener('resize', function () { movePill(); fitBar(); });
+fitBar();
+$('#card').addEventListener('click', function (e) { if (document.body.classList.contains('storying') && innerWidth <= 820 && e.target.closest('.head') && !e.target.closest('button')) document.body.classList.toggle('peek'); });
+function foldAttrib() { if (innerWidth <= 820) [].forEach.call(document.querySelectorAll('.maplibregl-ctrl-attrib'), function (a) { a.classList.remove('maplibregl-compact-show'); }); }
+map.once('load', foldAttrib); map.once('idle', foldAttrib);
 
 
 function apply3D(anim) {
