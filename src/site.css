@@ -737,3 +737,4 @@
 
   .hero-row2 { grid-column: 1 / -1; display: grid; grid-template-columns: 1.6fr 1fr; gap: 8px; }
   .hbtn-tour { text-decoration: none; justify-content: center; }
+  @media (max-width: 820px), (hover: none) and (pointer: coarse) { .hero-row2 { grid-template-columns: 1fr; } .hbtn-tour[href="tour.html"] { display: none; } }

@@ -17,13 +17,7 @@ html,body{margin:0;height:100%;position:fixed;inset:0;width:100%;background:var(
 #map{position:fixed;inset:0;z-index:0;isolation:isolate;background:#dfe6e8}
 /* wintery, slightly desaturated real map */
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:400;background:radial-gradient(120% 90% at 65% 45%,transparent 55%,#0b233399 100%)}
-.snow{position:fixed;inset:0;pointer-events:none;z-index:450;overflow:hidden}
-.snow i{position:absolute;top:-12px;border-radius:50%;background:#fff;will-change:transform;animation:fall linear infinite}
-@keyframes fall{to{transform:translate(40px,110vh)}}
-.snow{transition:opacity .8s,visibility 0s}
-body.incity .snow{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s .8s}
-body.incity .snow i{animation-play-state:paused}
-
+body.incity 
 /* top bar */
 .top{position:fixed;top:0;left:0;right:0;z-index:600;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(#0b2333e6,#0b233300);pointer-events:none}
 .top>*{pointer-events:auto}
@@ -215,6 +209,15 @@ button:hover{background:#1a2442}
 .maplibregl-ctrl-attrib a{color:var(--gold2)!important}
 .maplibregl-ctrl-attrib-button{filter:invert(1) sepia(1) saturate(2)}
 
+/* ===== PC only ===== */
+.pconly{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:24px;background:radial-gradient(120% 80% at 50% 30%,#1a2340,#0b1020)}
+.pconly[hidden]{display:none}
+.pconly>div{max-width:360px;text-align:center}
+.pconly b{display:block;font:500 24px/1.3 var(--serif);color:var(--ink)}
+.pconly p{color:var(--mute);font-size:15px;margin:10px 0 20px}
+.pconly a{display:flex;justify-content:center;align-items:center;min-height:46px;margin-top:10px;border-radius:12px;border:1px solid #ffffff30;color:var(--ink);text-decoration:none;font:600 15px Kanit,sans-serif}
+.pconly a.pri{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+body.mobile-block>*:not(.pconly):not(script){display:none!important}
 /* ===== 3D map extras ===== */
 .mk .seg{transform:scale(0);animation-name:pop3}
 @media(max-width:820px){.card{transition:max-height .6s cubic-bezier(.2,.8,.25,1),opacity .5s,transform .6s}body.storying .card{max-height:26vh}body.storying .top{opacity:0;transition:opacity .4s}}
@@ -246,13 +249,11 @@ body.incity #map{background:#f4eee2}
   .dots{margin-left:0;width:100%}
   .maplibregl-ctrl-bottom-right{bottom:calc(44vh + 124px)}
 }
-@media(prefers-reduced-motion:reduce){.snow{display:none}}
-</style>
+@media(prefers-reduced-motion:reduce){</style>
 </head>
 <body>
 <div id="map" aria-label="แผนที่ทริป"></div>
 <div class="vignette"></div>
-<div class="snow" id="snow"></div>
 <div class="top"><a class="back" href="./">← กลับไปหน้าแผน</a><div class="brand">เซี่ยงไฮ้ 8 วัน 7 คืน<small>Toonzii &amp; Bear · 5–12 ธ.ค. 2026</small></div></div>
 <section class="card" id="card" aria-live="polite"></section>
 <div class="chapter" id="chapter" aria-hidden="true"><div><small id="ch-s"></small><b id="ch-b"></b><i></i></div></div>
@@ -263,9 +264,15 @@ body.incity #map{background:#f4eee2}
   <div class="dots" id="dots"></div>
 </div>
 
-<script src="vendor/maplibre/maplibre-gl.js"></script>
+<div class="pconly" id="pconly" hidden><div><b>หน้านี้ดูได้บนคอมพิวเตอร์</b><p>แอนิเมชันแผนที่ 3 มิติต้องใช้จอใหญ่และเครื่องแรง เปิดลิงก์นี้บนคอมได้เลย ส่วนในมือถือดูแบบ "นำเสนอ" แทนได้</p><a class="pri" href="present.html">🖥️ ดูแบบนำเสนอ</a><a href="./">← กลับไปหน้าแผน</a></div></div>
+<script>
+var MOBILE = matchMedia('(max-width: 820px), (hover: none) and (pointer: coarse)').matches;
+if (MOBILE) { document.getElementById('pconly').hidden = false; document.body.classList.add('mobile-block'); }
+else document.write('<script src="vendor/maplibre/maplibre-gl.js"><\/script>');
+</script>
 <script>
 (function () {
+if (MOBILE) return;
 var D = __TOUR_DATA__;
 var HOTEL = [__HOTEL_LAT__, __HOTEL_LON__], BKK = [13.69, 100.75], PVG = [31.143, 121.805];
 var TOTAL = "__TOTAL__";
@@ -566,8 +573,6 @@ autoB.onclick = function () { if (playing) { stop(); gen++; closePop(); return; 
 document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { stop(); nxt(); } if (e.key === 'ArrowLeft') { stop(); go(idx - 1); } });
 addEventListener('resize', movePill);
 
-/* snow */
-$('#snow').innerHTML = Array.from({ length: 18 }, function (_, i) { var s = 2 + (i * 7) % 5; return '<i style="left:' + ((i * 37) % 100) + '%;width:' + s + 'px;height:' + s + 'px;opacity:' + (.3 + ((i * 13) % 6) / 10) + ';animation-duration:' + (8 + (i * 11) % 9) + 's;animation-delay:-' + ((i * 17) % 14) + 's"></i>'; }).join('');
 
 map.on('style.load', function () { ready = true; clearTimeout(fallT); buildPalette(); addLines(); add3D(); NIGHT = null; setNight(true); go(idx); });
 })();
