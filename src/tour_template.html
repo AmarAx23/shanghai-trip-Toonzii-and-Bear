@@ -278,7 +278,8 @@ function LL(p) { return [p[1], p[0]]; }  // [lat,lng] -> [lng,lat]
 var STYLE = 'https://tiles.openfreemap.org/styles/positron';
 var RASTER = { version: 8, sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19, attribution: '© OpenStreetMap contributors' } },
   layers: [{ id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-saturation': -0.5 } }] };
-var map = new maplibregl.Map({ container: 'map', style: STYLE, center: [111, 24], zoom: 3.2, pitch: 0, maxPitch: 70, attributionControl: { compact: true }, fadeDuration: 250, dragRotate: true });
+var map = new maplibregl.Map({ container: 'map', style: STYLE, center: [111, 24], zoom: 3.2, pitch: 0, maxPitch: 70, attributionControl: { compact: true }, fadeDuration: 250, dragRotate: true, pixelRatio: Math.min(devicePixelRatio || 1, 2) });
+function eio(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 var ready = false, fellBack = false;
 var fallT = setTimeout(function () { if (!ready) fallback(); }, 9000);
 map.on('error', function (e) { if (!ready && !fellBack && e && e.error && /style|Failed to fetch|NetworkError|load/i.test(String(e.error.message || e.error))) fallback(); });
@@ -311,9 +312,9 @@ function add3D() {
   try {
     map.addSource('ofm', { type: 'vector', url: 'https://tiles.openfreemap.org/planet' });
     var firstSym = (map.getStyle().layers.filter(function (l) { return l.type === 'symbol'; })[0] || {}).id;
-    map.addLayer({ id: 'b3d', type: 'fill-extrusion', source: 'ofm', 'source-layer': 'building', minzoom: 14.2,
+    map.addLayer({ id: 'b3d', type: 'fill-extrusion', source: 'ofm', 'source-layer': 'building', minzoom: 14.6,
       paint: { 'fill-extrusion-color': '#e6dcc6', 'fill-extrusion-opacity': .9,
-        'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14.2, 0, 15.2, ['coalesce', ['get', 'render_height'], 12]],
+        'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14.6, 0, 15.6, ['coalesce', ['get', 'render_height'], 12]],
         'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0] } }, firstSym);
   } catch (e) {}
 }
@@ -327,14 +328,20 @@ function addLines() {
     map.addLayer({ id: 'route-line', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#b08a3e', 'line-width': 3.6 } });
   }
 }
+var LCOL = { arc: ['#f3dfae', '#e9cf95'], route: ['#b08a3e', '#c9a04f'] };
+function reveal(k, p) {
+  p = Math.max(0, Math.min(1, p)); var c = LCOL[k];
+  function g(col) { return p >= 1 ? col : ['interpolate', ['linear'], ['line-progress'], 0, col, Math.max(p, 1e-4), col, Math.min(1, Math.max(p, 1e-4) + 1e-4), 'rgba(0,0,0,0)']; }
+  try { map.setPaintProperty(k + '-line', 'line-gradient', g(c[0])); map.setPaintProperty(k + '-glow', 'line-gradient', g(c[1])); } catch (e) {}
+}
 function setLine(k, coords) { var s = map.getSource(k); if (s) s.setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } }); }
 function dens(pts, n) { var out = []; for (var i = 0; i < pts.length - 1; i++) for (var j = 0; j < n; j++) { var t = j / n; out.push([pts[i][0] + (pts[i + 1][0] - pts[i][0]) * t, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * t]); } out.push(pts[pts.length - 1]); return out; }
 var drawRaf = 0;
 function drawLine(k, coords, ms, my) {
-  cancelAnimationFrame(drawRaf);
-  if (reduce || !ms) { setLine(k, coords); return; }
-  var t0 = performance.now();
-  (function f(now) { if (my !== gen) return; var p = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - p, 3), n = Math.max(2, Math.ceil(e * coords.length)); setLine(k, coords.slice(0, n)); if (p < 1) drawRaf = requestAnimationFrame(f); })(t0);
+  cancelAnimationFrame(drawRaf); setLine(k, coords);
+  if (reduce || !ms) { reveal(k, 1); return; }
+  reveal(k, 0); var t0 = performance.now();
+  (function f(now) { if (my !== gen) return; var p = Math.min(1, (now - t0) / ms); reveal(k, 1 - Math.pow(1 - p, 3)); if (p < 1) drawRaf = requestAnimationFrame(f); })(t0);
 }
 
 /* flight arc */
@@ -353,13 +360,14 @@ var PLANE_SVG = '<svg viewBox="0 0 24 24"><path fill="#f5ecd7" stroke="#b08a3e" 
 
 /* the plane: climbs (bigger, shadow drifts away) then descends, gold trail drawn behind it */
 function fly(pts, ms, my, done) {
+  setLine('arc', pts); reveal('arc', 0);
   plane = mk(pts[0], '<div class="plane3"><i class="sh"></i><div class="pb">' + PLANE_SVG + '</div></div>');
   var el = plane.getElement(), pb = el.querySelector('.pb'), sh = el.querySelector('.sh'), t0 = performance.now();
   (function step(now) {
     if (my !== gen) return;
     var t = Math.min(1, (now - t0) / ms), e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, f = e * (pts.length - 1), i = Math.min(pts.length - 2, Math.floor(f)), r = f - i;
     var a = pts[i], b = pts[i + 1], p = [a[0] + (b[0] - a[0]) * r, a[1] + (b[1] - a[1]) * r];
-    plane.setLngLat(p); setLine('arc', pts.slice(0, i + 1).concat([p]));
+    plane.setLngLat(p); reveal('arc', f / (pts.length - 1));
     var pa = map.project(a), pc = map.project(b), ang = Math.atan2(pc.y - pa.y, pc.x - pa.x) * 180 / Math.PI, alt = Math.sin(Math.PI * t);
     pb.style.transform = 'translateY(' + (-alt * 26) + 'px) rotate(' + ang + 'deg) scale(' + (.85 + alt * .55) + ')';
     sh.style.opacity = .55 - alt * .3; sh.style.transform = 'scale(' + (1 - alt * .3) + ')';
@@ -377,7 +385,7 @@ function view(lnglats, o) {
   var dx = Math.abs(mx(b.getEast()) - mx(b.getWest())) || 1e-6, dy = Math.abs(myy(b.getSouth()) - myy(b.getNorth())) || 1e-6;
   var z = Math.log2(Math.min(W / (dx * 512), H / (dy * 512)));
   var c = [(b.getEast() + b.getWest()) / 2, (b.getNorth() + b.getSouth()) / 2];
-  map.flyTo({ center: c, zoom: Math.min(o.maxZoom || 15.5, z) - (o.pitch ? .25 : 0), pitch: o.pitch || 0, bearing: o.bearing || 0, padding: pad(), duration: reduce ? 0 : (o.dur || 3000), curve: o.curve || 1.5, essential: true });
+  map.flyTo({ center: c, zoom: Math.min(o.maxZoom || 15.5, z) - (o.pitch ? .25 : 0), pitch: o.pitch || 0, bearing: o.bearing || 0, padding: pad(), duration: reduce ? 0 : (o.dur || 3000), curve: o.curve || 1.42, easing: eio, essential: true });
 }
 
 /* chapter title between days */
@@ -410,7 +418,7 @@ function scrollRow(r) { if (!r) return; var L2 = r.parentNode; L2.scrollTo({ top
 function highlight(n, flyTo) {
   pinEls.forEach(function (m, k) { var el = m.getElement().firstChild; if (el) el.classList.toggle('act', k + 1 === n); });
   document.querySelectorAll('.it').forEach(function (r) { r.classList.toggle('act', +r.dataset.pin === n); });
-  if (flyTo && n && pinEls[n - 1]) map.flyTo({ center: pinEls[n - 1].getLngLat(), zoom: 16.2, pitch: 58, bearing: map.getBearing() + 20, padding: pad(), duration: reduce ? 0 : 1800, essential: true });
+  if (flyTo && n && pinEls[n - 1]) map.flyTo({ center: pinEls[n - 1].getLngLat(), zoom: 16.2, pitch: 58, bearing: map.getBearing() + 20, padding: pad(), duration: reduce ? 0 : 1800, easing: eio, essential: true });
 }
 function dayPts(d) { var pts = d.pins.map(LL); if (!d.suzhou && (idx === 1 || pts.length < 2)) pts.push(LL(HOTEL)); return pts; }
 var popup = null;
@@ -500,7 +508,7 @@ function story(doneCb) {
     segEls.forEach(function (s, j) { var e = s.getElement().firstChild; if (e) e.classList.toggle('act', j === sj); });
     trav.getElement().querySelector('span').textContent = mode;
     bear += 22;
-    map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: innerWidth <= 820 ? 48 : 60, bearing: bear, padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2000, curve: 1.3, essential: true });
+    map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: innerWidth <= 820 ? 48 : 60, bearing: bear, padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2200, curve: 1.25, easing: eio, essential: true });
     var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800;
     (function run(now) {   // traveller dot glides along the leg
       if (my !== gen) return;
@@ -554,7 +562,7 @@ document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') 
 addEventListener('resize', movePill);
 
 /* snow */
-$('#snow').innerHTML = Array.from({ length: 28 }, function (_, i) { var s = 2 + (i * 7) % 5; return '<i style="left:' + ((i * 37) % 100) + '%;width:' + s + 'px;height:' + s + 'px;opacity:' + (.3 + ((i * 13) % 6) / 10) + ';animation-duration:' + (8 + (i * 11) % 9) + 's;animation-delay:-' + ((i * 17) % 14) + 's"></i>'; }).join('');
+$('#snow').innerHTML = Array.from({ length: 18 }, function (_, i) { var s = 2 + (i * 7) % 5; return '<i style="left:' + ((i * 37) % 100) + '%;width:' + s + 'px;height:' + s + 'px;opacity:' + (.3 + ((i * 13) % 6) / 10) + ';animation-duration:' + (8 + (i * 11) % 9) + 's;animation-delay:-' + ((i * 17) % 14) + 's"></i>'; }).join('');
 
 map.on('style.load', function () { ready = true; clearTimeout(fallT); buildPalette(); addLines(); add3D(); NIGHT = null; setNight(true); go(idx); });
 })();
