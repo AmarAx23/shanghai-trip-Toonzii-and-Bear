@@ -796,7 +796,46 @@ def _tour():
         route = ([] if suzhou else [list(HOTEL_LL)]) + pins
         if n == 1:
             route = pins + [list(HOTEL_LL)]
-        D.append(dict(base, pins=pins, route=route, it=items, suzhou=suzhou))
+        # how each leg is travelled: read the destination's note, fall back to distance
+        first_ev = {}
+        for e in evs:
+            k = idx.get(e["t"])
+            if k and k not in first_ev:
+                first_ev[k] = e
+        def km(a, b):
+            import math
+            la1, lo1, la2, lo2 = map(math.radians, (a[0], a[1], b[0], b[1]))
+            h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+            return 6371 * 2 * math.asin(math.sqrt(h))
+        KW = [("🚄", r"รถไฟความเร็วสูง|高铁|Maglev"), ("🚕", r"Didi|แท็กซี่"), ("🚇", r"รถไฟฟ้า|Metro|สาย \d"), ("🚶", r"เดิน")]
+        segs = []
+        for i in range(len(route) - 1):
+            A, B = route[i], route[i + 1]; dist = km(A, B)
+            if dist < 0.15:
+                continue
+            dest = None
+            if B in pins:
+                dest = first_ev.get(pins.index(B) + 1)
+            note = (dest or {}).get("note", "") if dest else ""
+            mode, mins = None, None
+            # only trust phrases that describe arriving here: "จาก <place> <mode> ~N นาที"
+            for ph in _r.findall(r"จาก[^·]{0,60}", note):
+                for ic, rx in KW:
+                    m = _r.search(rx, ph)
+                    if m:
+                        mode = ic
+                        mm = _r.search(r"(\d+)\s*นาที", ph[m.start():])
+                        mins = int(mm.group(1)) if mm else None
+                        break
+                if mode:
+                    break
+            if mode is None:
+                mode = "🚶" if dist < 1.2 else "🚕"
+            if mins is None:
+                mins = {"🚶": dist * 13, "🚇": 8 + dist * 2.2, "🚄": 30}.get(mode, (5 + dist * 2.6) if dist < 15 else (10 + dist * 1.2))
+                mins = max(5, int(round(mins / 5.0) * 5))
+            segs.append({"a": A, "b": B, "m": mode, "min": mins})
+        D.append(dict(base, pins=pins, route=route, it=items, suzhou=suzhou, segs=segs))
     html = (tpl.replace("__TOUR_DATA__", _j.dumps(D, ensure_ascii=False))
                .replace("__HOTEL_LON__", str(HOTEL_LL[1])).replace("__HOTEL_LAT__", str(HOTEL_LL[0]))
                .replace("__TOTAL__", f"{TOTAL:,}"))

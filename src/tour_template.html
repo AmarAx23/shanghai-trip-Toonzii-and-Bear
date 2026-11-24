@@ -62,6 +62,19 @@ html,body{margin:0;height:100%;position:fixed;inset:0;width:100%;background:var(
 .arc{stroke-dasharray:3 10;stroke-linecap:round}
 @keyframes march{to{stroke-dashoffset:-14}}
 
+.seg{display:inline-block;transform:translate(-50%,-50%) scale(0);white-space:nowrap;font:600 12px Kanit,sans-serif;color:#0f3a54;background:#fffffff0;border:1.5px solid #e2453c;border-radius:99px;padding:2px 8px;box-shadow:0 3px 8px #0005;animation:pop2 .4s ease-out forwards}
+.seg.act{background:#e2453c;color:#fff;border-color:#fff}
+@keyframes pop2{to{transform:translate(-50%,-50%) scale(1)}}
+.legs{margin:6px 0 0;font-size:13px;color:var(--mute)}
+.storyb{margin-top:8px;min-height:36px;padding:0 12px;font-size:13px;background:#e2453c;border-color:#e2453c;color:#fff}
+.storyb:hover{background:#c93a32}
+.story-pop .leaflet-popup-content-wrapper{padding:0;border-radius:14px;overflow:hidden;background:#0f2e42;color:#f7f1e6;box-shadow:0 12px 30px #0009}
+.story-pop .leaflet-popup-content{margin:0;width:240px!important}
+.story-pop .leaflet-popup-tip{background:#0f2e42}
+.sp-img{height:140px;background:#123 center/cover no-repeat}
+.sp-t{padding:8px 12px 10px;font:14px/1.4 Sarabun,sans-serif}
+.sp-t b{color:#f5c451;font-family:Kanit,sans-serif;margin-right:4px}
+@media(max-width:820px){.story-pop .leaflet-popup-content{width:180px!important}.sp-img{height:84px}.sp-t{font-size:13px;padding:6px 10px 8px}}
 /* controls */
 .bar{position:fixed;z-index:700;left:0;right:0;bottom:0;padding:10px 14px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:8px;background:linear-gradient(#0b233300,#0b2333ee 40%);flex-wrap:wrap}
 button{font:600 14px Kanit,sans-serif;min-height:42px;padding:0 14px;border-radius:12px;border:1px solid #ffffff30;background:#103c55;color:var(--ink);cursor:pointer}
@@ -140,72 +153,137 @@ function fly(pts, ms, done) {
 function pad() { var w = innerWidth, h = innerHeight; return w <= 820 ? { tl: [30, 80], br: [30, Math.round(h * .44) + 140] } : { tl: [Math.min(430, w * .38) + 40, 90], br: [50, 110] }; }
 function fitTo(latlngs, maxZoom, dur) { var p = pad(); map.flyToBounds(L.latLngBounds(latlngs), { paddingTopLeft: p.tl, paddingBottomRight: p.br, maxZoom: maxZoom || 15, duration: reduce ? 0 : (dur || 2.4) }); }
 
-var idx = 0, pinEls = [];
+var idx = 0, pinEls = [], segEls = [], gen = 0, playing = false;
 function card(d) {
   var c = $('#card');
   if (d.ov) {
     c.innerHTML = '<div class="cover" style="background-image:url(' + (d.cover || '') + ')"><div class="chips"><span class="chip">5–12 ธ.ค. 2026</span><span class="chip t">8 วัน 7 คืน</span></div></div>' +
-      '<div class="head"><h2>เซี่ยงไฮ้ + ซูโจว</h2><p class="zh">上海 · 苏州</p></div><div class="list ov"><p>ที่พัก <b>Atour X Hotel</b> ถนน Huaihai Middle</p><p>เดินทางด้วย <b>Metro + Didi</b> · งบราว <b>' + TOTAL + ' บาท/คน</b></p><p>ไฮไลต์: <b>Disneyland</b> · <b>ซูโจว + ชุดฮั่นฝู</b> · <b>ไฟคริสต์มาสริม The Bund</b></p><p>กด <b>ถัดไป</b> หรือ <b>เล่นอัตโนมัติ</b> เพื่อบินไปดูทีละวัน</p></div>';
+      '<div class="head"><h2>เซี่ยงไฮ้ + ซูโจว</h2><p class="zh">上海 · 苏州</p></div><div class="list ov"><p>ที่พัก <b>Atour X Hotel</b> ถนน Huaihai Middle</p><p>เดินทางด้วย <b>Metro + Didi</b> · งบราว <b>' + TOTAL + ' บาท/คน</b></p><p>ไฮไลต์: <b>Disneyland</b> · <b>ซูโจว + ชุดฮั่นฝู</b> · <b>ไฟคริสต์มาสริม The Bund</b></p><p>กด <b>เล่นอัตโนมัติ</b> เพื่อดูทั้งทริปแบบเล่าเรื่อง หรือกด <b>ถัดไป</b> ดูทีละวัน</p></div>';
     return;
   }
+  var legs = (d.segs || []).length ? '<p class="legs">' + d.segs.map(function (g) { return g.m; }).join(' ') + ' · ' + legSummary(d.segs) + '</p>' : '';
   c.innerHTML = '<div class="cover" style="background-image:url(' + (d.cover || '') + ')"><div class="chips"><span class="chip">' + esc(d.d) + '</span>' + (d.tp ? '<span class="chip t">' + esc(d.tp) + '</span>' : '') + '</div></div>' +
-    '<div class="head"><h2>' + esc(d.h) + '</h2><p class="zh">' + esc(d.zh) + '</p></div><div class="list">' +
+    '<div class="head"><h2>' + esc(d.h) + '</h2><p class="zh">' + esc(d.zh) + '</p>' + legs + (d.pins && d.pins.length > 1 ? '<button type="button" class="storyb" id="storyb">▶ เล่นทีละจุด</button>' : '') + '</div><div class="list">' +
     d.it.map(function (x, k) { return '<div class="it" data-k="' + k + '"' + (x.pin ? ' data-pin="' + x.pin + '"' : '') + '><span class="tm">' + x.t + '</span><span class="ph"' + (x.img ? ' style="background-image:url(' + x.img + ')"' : '') + '>' + (x.img ? '' : (x.hotel ? '🏨' : '•')) + '</span><span class="tx">' + esc(x.title) + '</span>' + (x.hotel ? '<span class="b h">★</span>' : x.pin ? '<span class="b">' + x.pin + '</span>' : '<span></span>') + '</div>'; }).join('') + '</div>';
 }
+function legSummary(segs) {
+  var t = { '🚶': 0, '🚇': 0, '🚕': 0, '🚄': 0 };
+  segs.forEach(function (g) { t[g.m] = (t[g.m] || 0) + g.min; });
+  var out = []; if (t['🚶']) out.push('เดิน ~' + t['🚶'] + ' นาที'); if (t['🚕']) out.push('Didi ~' + t['🚕'] + ' นาที'); if (t['🚇']) out.push('รถไฟฟ้า ~' + t['🚇'] + ' นาที'); if (t['🚄']) out.push('รถไฟ ~' + t['🚄'] + ' นาที');
+  return out.join(' · ');
+}
+function rowFor(n) { return document.querySelector('.it[data-pin="' + n + '"]'); }
+function scrollRow(r) { if (!r) return; var L2 = r.parentNode; L2.scrollTo({ top: r.offsetTop - L2.clientHeight / 2, behavior: 'smooth' }); }
 function highlight(n, flyTo) {
   pinEls.forEach(function (m, k) { var el = m.getElement && m.getElement(); if (el) el.firstChild.classList.toggle('act', k + 1 === n); });
   document.querySelectorAll('.it').forEach(function (r) { r.classList.toggle('act', +r.dataset.pin === n); });
   if (flyTo && n && pinEls[n - 1]) map.flyTo(pinEls[n - 1].getLatLng(), Math.max(map.getZoom(), 15), { duration: reduce ? 0 : 1 });
 }
+function dayPts(d) { var pts = d.pins.map(function (p) { return [p[0], p[1]]; }); if (!d.suzhou) pts.push(HOTEL); return pts; }
 
-function go(i) {
-  i = Math.max(0, Math.min(D.length - 1, i)); idx = i; var d = D[i];
-  ui(); layer.clearLayers(); pinEls = []; if (plane) { map.removeLayer(plane); plane = null; }
+function go(i, ready) {
+  i = Math.max(0, Math.min(D.length - 1, i)); idx = i; var d = D[i], my = ++gen;
+  ui(); map.closePopup(); layer.clearLayers(); pinEls = []; segEls = []; if (plane) { map.removeLayer(plane); plane = null; }
   var c = $('#card'); c.classList.add('out');
-  setTimeout(function () { card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450);
+  setTimeout(function () { if (my !== gen) return; card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450);
+  var done = function () { if (my === gen && ready) ready(); };
   if (d.ov || d.asia) {
     var path = d.asia ? ARC_BACK : ARC_GO;
     L.polyline(path, { color: '#e2453c', weight: 3, className: 'arc' }).addTo(layer);
     cityTag(BKK, 'กรุงเทพฯ').addTo(layer); cityTag(PVG, 'เซี่ยงไฮ้').addTo(layer);
     fitTo([BKK, PVG], 6, 2.6);
-    if (d.asia) setTimeout(function () { fly(ARC_BACK, reduce ? 10 : 3200); }, reduce ? 0 : 2700);
+    if (d.asia) setTimeout(function () { if (my === gen) fly(ARC_BACK, reduce ? 10 : 3200, function () { setTimeout(done, 1500); }); }, reduce ? 0 : 2700);
+    else setTimeout(done, reduce ? 0 : 4500);
     return;
   }
   var after = function () {
+    if (my !== gen) return;
     if (!d.suzhou) hotelMk().addTo(layer);
     if (d.route.length > 1) L.polyline(d.route, { color: '#e2453c', weight: 4, opacity: .9, className: 'rt' }).addTo(layer);
+    (d.segs || []).forEach(function (g, k) {
+      var mid = [(g.a[0] + g.b[0]) / 2, (g.a[1] + g.b[1]) / 2];
+      var m = L.marker(mid, { icon: L.divIcon({ className: '', html: '<span class="seg" style="animation-delay:' + (300 + k * 90) + 'ms">' + g.m + ' ' + g.min + '′</span>', iconSize: [0, 0] }), interactive: false, zIndexOffset: 300 });
+      m.addTo(layer); segEls.push(m);
+    });
     d.pins.forEach(function (p, k) {
       var m = L.marker([p[0], p[1]], { icon: L.divIcon({ className: '', html: '<div class="pin" style="animation-delay:' + (k * 90) + 'ms">' + (k + 1) + '</div>', iconSize: [30, 30], iconAnchor: [15, 15] }), zIndexOffset: 600 + k });
-      m.on('click', function () { stop(); highlight(k + 1, false); var r = document.querySelector('.it[data-pin="' + (k + 1) + '"]'); if (r) { var L2 = r.parentNode; L2.scrollTo({ top: r.offsetTop - L2.clientHeight / 2, behavior: 'smooth' }); } });
+      m.on('click', function () { stop(); gen++; map.closePopup(); highlight(k + 1, false); scrollRow(rowFor(k + 1)); });
       m.addTo(layer); pinEls.push(m);
     });
+    setTimeout(done, reduce ? 0 : 900);
   };
-  var pts = d.pins.map(function (p) { return [p[0], p[1]]; }); if (!d.suzhou) pts.push(HOTEL);
+  var pts = dayPts(d);
   if (i === 1) {  // day 1: fly the plane in first, then zoom to Shanghai
     L.polyline(ARC_GO, { color: '#e2453c', weight: 3, className: 'arc' }).addTo(layer);
     cityTag(BKK, 'กรุงเทพฯ').addTo(layer); cityTag(PVG, 'เซี่ยงไฮ้').addTo(layer);
     fitTo([BKK, PVG], 6, 1.6);
-    setTimeout(function () { fly(ARC_GO, reduce ? 10 : 3000, function () { layer.clearLayers(); if (plane) { map.removeLayer(plane); plane = null; } fitTo(pts, 12, 2.6); setTimeout(after, reduce ? 0 : 2200); }); }, reduce ? 0 : 1700);
+    setTimeout(function () { if (my !== gen) return; fly(ARC_GO, reduce ? 10 : 3000, function () { if (my !== gen) return; layer.clearLayers(); if (plane) { map.removeLayer(plane); plane = null; } fitTo(pts, 12, 2.6); setTimeout(after, reduce ? 0 : 2200); }); }, reduce ? 0 : 1700);
     return;
   }
   fitTo(pts, d.suzhou ? 14 : 15, 2.6);
   setTimeout(after, reduce ? 0 : 2000);
 }
-function bindList() { document.querySelectorAll('.it[data-pin]').forEach(function (r) { r.addEventListener('click', function () { stop(); highlight(+r.dataset.pin, true); }); }); }
+
+/* story mode: fly stop by stop, photo card pops up at each pin */
+function story(done) {
+  var d = D[idx], my = gen; if (!d.pins) { if (done) done(); return; }
+  var stops = [], seen = {};
+  d.it.forEach(function (x) { if (x.pin && !seen[x.pin + '|' + x.t]) { seen[x.pin + '|' + x.t] = 1; stops.push(x); } });
+  var sb = $('#storyb'); if (sb) sb.textContent = '❚❚ หยุดเล่า';
+  var k = 0;
+  function finish() { if (sb && my === gen) sb.textContent = '▶ เล่นทีละจุด'; map.closePopup(); highlight(0); segEls.forEach(function (s) { var e = s.getElement(); if (e) e.firstChild.classList.remove('act'); }); fitTo(dayPts(d), d.suzhou ? 14 : 15, 1.8); setTimeout(function () { if (my === gen && done) done(); }, reduce ? 0 : 2000); }
+  function next() {
+    if (my !== gen) return;
+    if (k >= stops.length) { finish(); return; }
+    var x = stops[k++], m = pinEls[x.pin - 1]; if (!m) { next(); return; }
+    segEls.forEach(function (s, j) { var e = s.getElement(); if (e) e.firstChild.classList.toggle('act', d.segs[j] && d.segs[j].b[0] === d.pins[x.pin - 1][0] && d.segs[j].b[1] === d.pins[x.pin - 1][1]); });
+    map.closePopup();
+    var z = 16, P = pad(), sz = map.getSize(), visB = sz.y - P.br[1], popH = innerWidth <= 820 ? 130 : 200;
+    var pinX = (P.tl[0] + sz.x - P.br[0]) / 2, pinY = Math.min(visB - 16, (P.tl[1] + visB) / 2 + popH / 2);
+    var ctr = map.unproject(map.project(m.getLatLng(), z).add([sz.x / 2 - pinX, sz.y / 2 - pinY]), z);
+    map.flyTo(ctr, z, { duration: reduce ? 0 : 1.6 });
+    setTimeout(function () {
+      if (my !== gen) return;
+      highlight(x.pin, false); scrollRow(rowFor(x.pin));
+      L.popup({ className: 'story-pop', closeButton: false, autoPan: false, offset: [0, -14], maxWidth: 260 })
+        .setLatLng(m.getLatLng())
+        .setContent((x.img ? '<div class="sp-img" style="background-image:url(' + x.img + ')"></div>' : '') + '<div class="sp-t"><b>' + x.t + '</b> ' + esc(x.title) + '</div>')
+        .openOn(map);
+      setTimeout(next, reduce ? 1200 : 3000);
+    }, reduce ? 0 : 1700);
+  }
+  next();
+}
+function bindList() {
+  document.querySelectorAll('.it[data-pin]').forEach(function (r) { r.addEventListener('click', function () { stop(); gen++; map.closePopup(); highlight(+r.dataset.pin, true); }); });
+  var sb = $('#storyb');
+  if (sb) sb.addEventListener('click', function () { if (sb.textContent.indexOf('หยุด') >= 0) { stop(); gen++; sb.textContent = '▶ เล่นทีละจุด'; map.closePopup(); return; } stop(); story(); });
+}
 
 var labels = ['ภาพรวม'].concat(D.slice(1).map(function (_, k) { return 'วัน ' + (k + 1); }));
 var dots = $('#dots');
 dots.innerHTML = labels.map(function (l, i) { return '<button data-i="' + i + '">' + l + '</button>'; }).join('');
 function ui() { dots.querySelectorAll('button').forEach(function (b) { var on = +b.dataset.i === idx; b.setAttribute('aria-current', on); if (on) dots.scrollTo({ left: b.offsetLeft - dots.clientWidth / 2 + b.offsetWidth / 2, behavior: 'smooth' }); }); $('#prev').disabled = idx === 0; }
-var timer = null, autoB = $('#auto');
-function stop() { if (timer) { clearInterval(timer); timer = null; autoB.textContent = '▶ เล่นอัตโนมัติ'; } }
+var autoB = $('#auto');
+function stop() { if (playing) { playing = false; autoB.textContent = '▶ เล่นอัตโนมัติ'; } }
 function nxt() { go(idx === D.length - 1 ? 0 : idx + 1); }
+function playFrom(i) {
+  if (!playing) return;
+  go(i, function () {
+    if (!playing) return;
+    story(function () {
+      if (!playing) return;
+      if (i >= D.length - 1) { stop(); return; }
+      setTimeout(function () { playFrom(i + 1); }, reduce ? 0 : 800);
+    });
+  });
+}
 dots.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { stop(); go(+b.dataset.i); } });
 $('#next').onclick = function () { stop(); nxt(); };
 $('#prev').onclick = function () { stop(); go(idx - 1); };
-autoB.onclick = function () { if (timer) { stop(); return; } autoB.textContent = '❚❚ หยุด'; nxt(); timer = setInterval(nxt, 9000); };
+autoB.onclick = function () { if (playing) { stop(); gen++; map.closePopup(); return; } playing = true; autoB.textContent = '❚❚ หยุด'; playFrom(idx === D.length - 1 ? 0 : idx + 1); };
 document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { stop(); nxt(); } if (e.key === 'ArrowLeft') { stop(); go(idx - 1); } });
-var rz; addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { go(idx); }, 300); });
+var rz, lastW = innerWidth; addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { if (Math.abs(innerWidth - lastW) > 40) { lastW = innerWidth; stop(); go(idx); } }, 300); });
 go(0);
 })();
 </script>
