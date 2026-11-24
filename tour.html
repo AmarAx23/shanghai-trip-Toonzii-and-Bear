@@ -253,6 +253,18 @@ body.incity #map{background:#f4eee2}
 .duo.at .dot{opacity:0}
 @keyframes bob{from{transform:translateY(0) rotate(-7deg)}to{transform:translateY(-7px) rotate(7deg)}}
 @keyframes rumble{from{transform:translateY(0)}to{transform:translateY(-1.5px)}}
+.duo.car .veh.r{transform:translateX(-50%) scale(-1,1)}
+.duo.train img{bottom:30px;height:40px}
+.duo.train .veh{font-size:50px}
+.duo.train{animation:rumble .18s linear infinite alternate}
+.fp{width:12px;height:12px;pointer-events:none}
+.fp i{position:absolute;left:2.5px;top:0;width:7px;height:11px;border-radius:50% 50% 42% 42%;background:#4a3714;box-shadow:0 0 0 1.5px #fff8;opacity:0;animation:fp 2.6s ease-out forwards}
+.fp i.l{translate:-5px 0}.fp i.r{translate:5px 0}
+@keyframes fp{0%{opacity:0;scale:.5}8%{opacity:.9;scale:1}55%{opacity:.75}100%{opacity:0}}
+.puffs{position:relative;width:1px;height:1px;pointer-events:none}
+.puffs i{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:#d8ccb0;opacity:0;animation:puff .9s ease-out forwards}
+.puffs i:nth-child(1){--x:-26px;--y:-6px}.puffs i:nth-child(2){--x:-14px;--y:-18px;animation-delay:.08s}.puffs i:nth-child(3){--x:-34px;--y:-16px;animation-delay:.16s;width:12px;height:12px}.puffs i:nth-child(4){--x:-20px;--y:4px;animation-delay:.12s;width:10px;height:10px}
+@keyframes puff{0%{opacity:.85;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.5)}}
 @keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-14px) scale(1.08)}100%{transform:translateY(0)}}
 .chapter{position:fixed;inset:0;z-index:640;display:grid;place-items:center;pointer-events:none;text-align:center;opacity:0;transition:opacity .7s}
 .chapter.on{opacity:1}
@@ -384,11 +396,13 @@ function add3D() {
 }
 function addLines() {
   var empty = { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } };
-  ['arc', 'route'].forEach(function (k) { if (!map.getSource(k)) map.addSource(k, { type: 'geojson', data: empty, lineMetrics: true }); });
+  ['arc', 'route', 'rail'].forEach(function (k) { if (!map.getSource(k)) map.addSource(k, { type: 'geojson', data: empty, lineMetrics: true }); });
   if (!map.getLayer('arc-glow')) {
     map.addLayer({ id: 'arc-glow', type: 'line', source: 'arc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#e9cf95', 'line-width': 12, 'line-blur': 8, 'line-opacity': .35 } });
     map.addLayer({ id: 'arc-line', type: 'line', source: 'arc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#f3dfae', 'line-width': 2.6 } });
     map.addLayer({ id: 'route-glow', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#c9a04f', 'line-width': 11, 'line-blur': 6, 'line-opacity': .28 } });
+    map.addLayer({ id: 'rail-base', type: 'line', source: 'rail', layout: { 'line-join': 'round' }, paint: { 'line-color': '#3b4a63', 'line-width': 5 } });
+    map.addLayer({ id: 'rail-ties', type: 'line', source: 'rail', layout: { 'line-join': 'round' }, paint: { 'line-color': '#f6efe0', 'line-width': 2.4, 'line-dasharray': [1.2, 1.4] } });
     map.addLayer({ id: 'route-line', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#b08a3e', 'line-width': 3.6 } });
   }
 }
@@ -417,7 +431,16 @@ var ARC_GO = arc(BKK, PVG, .22), ARC_BACK = arc(PVG, BKK, .22);
 var marks = [], pinEls = [], segEls = [], plane = null, trav = null;
 function mk(lnglat, html, opt) { var el = document.createElement('div'); el.className = 'mk'; el.innerHTML = html; var m = new maplibregl.Marker(Object.assign({ element: el, anchor: 'center' }, opt || {})).setLngLat(lnglat).addTo(map); marks.push(m); return m; }
 function clearMarks() { marks.forEach(function (m) { m.remove(); }); marks = []; pinEls = []; segEls = []; plane = null; trav = null; }
-var EN = { 'กรุงเทพฯ': 'BANGKOK', 'เซี่ยงไฮ้': 'SHANGHAI' };
+var EN = { 'กรุงเทพฯ': 'BANGKOK', 'เซี่ยงไฮ้': 'SHANGHAI', 'ซูโจว': 'SUZHOU' };
+/* little effects: footprints while walking, dust when the car pulls away */
+var fx = [];
+function fxMark(ll, el, opt, ms) { var m = new maplibregl.Marker(Object.assign({ element: el }, opt || {})).setLngLat(ll).addTo(map); el.style.zIndex = 0; fx.push(m); setTimeout(function () { m.remove(); var i = fx.indexOf(m); if (i >= 0) fx.splice(i, 1); }, ms); return m; }
+function clearFx() { fx.forEach(function (m) { m.remove(); }); fx = []; }
+function geoBearing(a, b) { return Math.atan2((b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), b[1] - a[1]) * 180 / Math.PI; }
+function footprint(ll, brg, right) { var el = document.createElement('div'); el.className = 'fp'; el.innerHTML = '<i class="' + (right ? 'r' : 'l') + '"></i>'; fxMark(ll, el, { rotation: brg, rotationAlignment: 'map', pitchAlignment: 'map' }, 2700); }
+function dust(ll, right) { var el = document.createElement('div'); el.innerHTML = '<div class="puffs"' + (right ? ' style="scale:-1 1"' : '') + '><i></i><i></i><i></i><i></i></div>'; fxMark(ll, el, {}, 1100); }
+/* the train to Suzhou: Shanghai Railway Station → Kunshan → Suzhou Station */
+var RAIL = [[121.4460, 31.2527], [121.3950, 31.2585], [121.3200, 31.2830], [121.2300, 31.3060], [121.1400, 31.3250], [121.0400, 31.3380], [120.9520, 31.3440], [120.8600, 31.3520], [120.7700, 31.3500], [120.7090, 31.3420], [120.6600, 31.3365], [120.6058, 31.3325]];
 function cityTag(ll, t) { return mk(LL(ll), '<div class="ctag" style="transform:none"><span class="cd"></span><span class="cn"><small>' + (EN[t] || '') + '</small>' + t + '</span></div>', { anchor: 'left', offset: [-9, 0] }); }
 function hotelMk() { return mk(LL(HOTEL), '<div class="hstar"><span>ที่พัก</span></div>'); }
 var PLANE_SVG = '<svg viewBox="0 0 24 24"><path fill="#f5ecd7" stroke="#b08a3e" stroke-width=".6" d="M21.5 12c0-.8-.7-1.3-1.5-1.3h-5.2L10 3.5H8l2.3 7.2H5.6L4 8.6H2.5l1 3.4-1 3.4H4l1.6-2.1h4.7L8 20.5h2l4.8-7.2H20c.8 0 1.5-.5 1.5-1.3z"/></svg>';
@@ -566,7 +589,7 @@ function closePop() { if (popup) { popup.remove(); popup = null; } }
 
 function go(i, readyCb) {
   i = Math.max(0, Math.min(D.length - 1, i)); var prev = idx; idx = i; var d = D[i], my = ++gen;
-  ui(); closePop(); clearMarks(); document.body.classList.remove('storying', 'peek'); cancelAnimationFrame(drawRaf); setLine('arc', []); setLine('route', []); map.stop();
+  ui(); closePop(); clearMarks(); document.body.classList.remove('storying', 'peek'); cancelAnimationFrame(drawRaf); setLine('arc', []); setLine('route', []); setLine('rail', []); map.stop(); clearFx();
   var c = $('#card');
   if (document.startViewTransition && !reduce && c.innerHTML) document.startViewTransition(function () { if (my !== gen) return; card(d); bindList(); });
   else { c.classList.add('out'); setTimeout(function () { if (my !== gen) return; card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450); }
@@ -650,10 +673,32 @@ function story(doneCb) {
   var bars = document.querySelectorAll('.prog b');
   var k = 0, from = d.suzhou ? null : LL(HOTEL), bear = map.getBearing();
   if (trav) trav.remove(); trav = mk(from || LL(d.pins[0]), '<div class="duo"><i class="dot"></i><img class="ha" alt="" src="img/present/head-a.webp"><img class="hb" alt="" src="img/present/head-b.webp"><span class="veh"></span></div>', { anchor: 'bottom', offset: [0, 6] });
+  trav.getElement().style.zIndex = 5;
+  function trainRide(path, cb) {   // heads hop on the high-speed train
+    setLine('rail', RAIL); closePop();
+    if (!trainTags) { trainTags = 1; cityTag([31.2527, 121.4460], 'เซี่ยงไฮ้'); cityTag([31.3325, 120.6058], 'ซูโจว'); }
+    view(RAIL, { maxZoom: 10.4, pitch: 40, bearing: 0, dur: reduce ? 0 : 2400 });
+    var duo = trav.getElement().firstChild, v = duo.querySelector('.veh');
+    trav.setLngLat(path[0]); duo.className = 'duo car train'; v.textContent = '🚄'; v.classList.toggle('r', path[path.length - 1][0] > path[0][0]);
+    setTimeout(function () {
+      if (my !== gen) return; var t0 = performance.now(), dur = reduce ? 1 : 4600;
+      (function run(now) {
+        if (my !== gen) return; var p = Math.min(1, (now - t0) / dur);
+        trav.setLngLat(along(path, eio(p)));
+        if (p < 1) requestAnimationFrame(run); else { duo.className = 'duo'; void duo.offsetWidth; duo.className = 'duo hop at'; v.textContent = ''; setTimeout(function () { if (my === gen) cb(); }, reduce ? 0 : 900); }
+      })(t0);
+    }, reduce ? 0 : 2500);
+  }
+  var trainTags = 0;
   function finish() {
     if (sb && my === gen) sb.textContent = '▶ เล่นทีละจุด'; document.body.classList.remove('storying', 'peek');
     var pg = $('.prog'); if (pg && my === gen) { pg.classList.add('done'); setTimeout(function () { pg.remove(); }, 500); }
     closePop(); highlight(0); segEls.forEach(function (s) { var e = s.getElement().firstChild; if (e) e.classList.remove('act'); });
+    if (d.suzhou && trav && !reduce) {   // evening train back to Shanghai
+      document.body.classList.add('storying');
+      trainRide(RAIL.slice().reverse(), function () { document.body.classList.remove('storying', 'peek'); if (trav) { trav.remove(); trav = null; } setTimeout(function () { if (my === gen && doneCb) doneCb(); }, 1200); });
+      return;
+    }
     if (trav) { trav.remove(); trav = null; }
     view(dayPts(d), { maxZoom: d.suzhou ? 14.5 : 15.3, pitch: 52, bearing: bear, dur: 2400 });
     setTimeout(function () { if (my === gen && doneCb) doneCb(); }, reduce ? 0 : 2600);
@@ -672,12 +717,22 @@ function story(doneCb) {
     duo.querySelector('.veh').textContent = isCar ? mode : ''; duo.className = 'duo ' + (isCar ? 'car' : 'walk');
     bear += 22;
     map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: P_(innerWidth <= 820 ? 48 : 60), bearing: P_(bear), padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2200, curve: 1.25, easing: eio, essential: true });
-    var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800, path = null;
+    var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800, path = null, lastFp = null, fpSide = 0, lastPx = null, vEl = duo.querySelector('.veh');
+    if (isCar && !reduce && from) { var ra = map.project(a), rb = map.project(to); vEl.classList.toggle('r', rb.x > ra.x); dust(a, rb.x > ra.x); }
     if (dayPaths) dayLegs(d).forEach(function (l, n) { if (Math.abs(l.a[0] - a[0]) < 1e-6 && Math.abs(l.a[1] - a[1]) < 1e-6 && Math.abs(l.b[0] - to[0]) < 1e-6 && Math.abs(l.b[1] - to[1]) < 1e-6) path = dayPaths[n]; });
     (function run(now) {   // traveller dot glides along the leg
       if (my !== gen) return;
       var p = Math.min(1, (now - t0) / dur), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-      trav.setLngLat(path ? along(path, e) : [a[0] + (to[0] - a[0]) * e, a[1] + (to[1] - a[1]) * e]);
+      var pos = path ? along(path, e) : [a[0] + (to[0] - a[0]) * e, a[1] + (to[1] - a[1]) * e];
+      trav.setLngLat(pos);
+      if (!reduce && p < 1) {
+        var px = map.project(pos);
+        if (!isCar) {   // a footprint every ~14 px, alternating left / right
+          if (!lastFp) lastFp = { ll: pos, px: px };
+          else if (Math.hypot(px.x - lastFp.px.x, px.y - lastFp.px.y) > 11) { footprint(pos, geoBearing(lastFp.ll, pos), fpSide ^= 1); lastFp = { ll: pos, px: px }; }
+        } else if (lastPx && Math.abs(px.x - lastPx.x) > 1.5) vEl.classList.toggle('r', px.x > lastPx.x);   // car faces where it drives
+        lastPx = px;
+      }
       if (p < 1) requestAnimationFrame(run); else { duo.className = 'duo'; void duo.offsetWidth; duo.className = 'duo hop at'; }
     })(t0);
     from = to;
@@ -689,7 +744,8 @@ function story(doneCb) {
       setTimeout(next, reduce ? 1200 : 3800);
     }, reduce ? 0 : 2100);
   }
-  next();
+  if (d.suzhou && !reduce) trainRide(RAIL, function () { from = RAIL[RAIL.length - 1]; next(); });
+  else next();
 }
 function offHTML() {
   var at = null; try { at = JSON.parse(localStorage.getItem('offmap') || 'null'); } catch (e) {}
