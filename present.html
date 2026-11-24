@@ -67,6 +67,9 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
 .credits{position:absolute;left:80px;top:60px;width:1440px;height:800px}
 .credits h2{margin:0;font:500 46px var(--serif);color:var(--ink)}
 .credits p{margin:8px 0 22px;color:var(--mute);font-size:20px}
+.P .credits ul{columns:1;font-size:15px}
+.P #bgN{background-position:44% center,44% center;background-size:cover,cover}
+.ph-head > div{min-width:0}
 .credits ul{margin:0;padding:0;list-style:none;columns:2;column-gap:56px;font-size:15px;line-height:1.5;color:#3a4563}
 .credits li{break-inside:avoid;margin-bottom:3px}
 
@@ -118,7 +121,6 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
   <button type="button" id="play" aria-pressed="false" aria-label="เล่นอัตโนมัติ">▶<span class="lbl">เล่นอัตโนมัติ</span></button>
   <button type="button" id="fs" aria-label="เต็มจอ">⛶</button>
 </div>
-<div class="hint" id="hint" style="opacity:0">หมุนจอเป็นแนวนอนจะดูชัดกว่า ↻</div>
 <script>
 (function () {
 'use strict';
@@ -128,45 +130,63 @@ var $ = function (s) { return document.querySelector(s); };
 var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-/* ---------- fit the 1600×900 stage to the screen ---------- */
+/* ---------- two layouts: 16:9 (taken from the deck) and a 9:16 phone version ---------- */
+var STEP = 38 * Math.PI / 180, BADGE = 134, BADGE_S = 98;
+var GL = { W: 1600, H: 900, CX: -192, CY: 450, R: 480, a0: 0, dir: 1,
+  row: function (i) { return [172.8 + i * 179.2, 425.6, 147]; }, shDy: 89,
+  tC: [800, 184], tD: [624, 30], ptr: [500, 436, 45], eye: 112, sub: 262,
+  px: 624, pw: 896, head: 82, top: 236, avail: 584, cr: [80, 1440, 2] };
+var GP = { W: 900, H: 1600, CX: 450, CY: -260, R: 560, a0: Math.PI / 2, dir: -1,
+  row: function (i) { return [135 + (i % 4) * 210, 720 + (i >> 2) * 300, 160]; }, shDy: 98,
+  tC: [450, 360], tD: [40, 24], ptr: [436, 500, 135], eye: 270, sub: 448,
+  px: 40, pw: 820, head: 540, top: 730, avail: 690, cr: [50, 800, 1] };
+var G = GL, mode = '';
 var stage = $('#stage');
 function fit() {
-  var k = Math.min(innerWidth / 1600, innerHeight / 900);
-  stage.style.transform = 'translate(' + (innerWidth - 1600 * k) / 2 + 'px,' + (innerHeight - 900 * k) / 2 + 'px) scale(' + k + ')';
+  var want = innerHeight > innerWidth * 1.05 ? 'P' : 'L';
+  if (want !== mode) { mode = want; G = mode === 'P' ? GP : GL; if (typeof layout === 'function') layout(); }
+  var k = Math.min(innerWidth / G.W, innerHeight / G.H);
+  stage.style.transform = 'translate(' + (innerWidth - G.W * k) / 2 + 'px,' + (innerHeight - G.H * k) / 2 + 'px) scale(' + k + ')';
 }
-fit(); addEventListener('resize', function () { fit(); measure(); render(cur); });
-
-/* ---------- geometry (design units, taken from the deck) ---------- */
-var CX = -192, CY = 450, R = 480, STEP = 38 * Math.PI / 180;
-var ROW_X0 = 172.8, ROW_DX = 179.2, ROW_Y = 425.6, ROW_S = 147;
-var BADGE = 134, BADGE_S = 98;
+addEventListener('resize', function () { var m0 = mode; fit(); measure(); render(cur); if (mode !== m0 && idx >= 0) { var k = idx; idx = -1; show(k, true); } });
 function sizeFor(a) { return a <= 1 ? 352 + (160 - 352) * a : a <= 2 ? 160 + (112 - 160) * (a - 1) : 112; }
 function lerp(a, b, t) { return a + (b - a) * t; }
 
 /* ---------- night cover: rising gold bokeh ---------- */
 var fxEl = $('#fx');
-(function () {
+function bokeh() {
   var h = '', seed = 11; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
-  for (var k = 0; k < 26; k++) { var z = 6 + rnd() * 22; h += '<i class="bk" style="left:' + (rnd() * 1600) + 'px;top:' + (380 + rnd() * 520) + 'px;width:' + z + 'px;height:' + z + 'px;--o:' + (.25 + rnd() * .5) + ';animation-duration:' + (9 + rnd() * 9) + 's;animation-delay:' + (-rnd() * 16) + 's"></i>'; }
+  for (var k = 0; k < 26; k++) { var z = 6 + rnd() * 22; h += '<i class="bk" style="left:' + (rnd() * G.W) + 'px;top:' + (G.H * .42 + rnd() * G.H * .58) + 'px;width:' + z + 'px;height:' + z + 'px;--o:' + (.25 + rnd() * .5) + ';animation-duration:' + (9 + rnd() * 9) + 's;animation-delay:' + (-rnd() * 16) + 's"></i>'; }
   fxEl.innerHTML = h;
-})();
+}
 
 /* ---------- build the wheel ---------- */
 var rim = $('#rim');
-for (var j = 0; j < 18; j++) { var t = document.createElement('i'); var a = j * 20 * Math.PI / 180; t.style.transform = 'translate(' + (R * Math.cos(a)) + 'px,' + (R * Math.sin(a)) + 'px)'; rim.appendChild(t); }
+for (var j = 0; j < 18; j++) rim.appendChild(document.createElement('i'));
 var wheel = $('#wheel'), C = [], LB = [], SH = [];
 DAYS.forEach(function (d, i) {
   var c = document.createElement('div'); c.className = 'abs dc'; c.style.background = d.c; c.dataset.i = i;
   c.innerHTML = '<img alt="" decoding="async" src="' + d.photo + '"><img class="cy" alt="" style="opacity:0"><img class="cy" alt="" style="opacity:0">';
   var l = document.createElement('div'); l.className = 'abs lb'; l.innerHTML = '<small>DAY</small><b>' + d.n + '</b>';
   var s = document.createElement('div'); s.className = 'abs sh'; s.innerHTML = esc(d.short[0]) + '<br>' + esc(d.short[1]);
-  s.style.transform = 'translate(' + (ROW_X0 + i * ROW_DX - 90) + 'px,515px)';
   wheel.appendChild(c); wheel.appendChild(l); wheel.appendChild(s); C.push(c); LB.push(l); SH.push(s);
 });
 
 /* ---------- titles ---------- */
 var t1 = $('#t1'), t2 = $('#t2'), W1, H1, W2;
-function measure() { W1 = t1.offsetWidth; H1 = t1.offsetHeight; W2 = t2.offsetWidth; t2.style.transform = 'translate(' + (800 - W2 / 2) + 'px,' + (184 - H1 / 2) + 'px)'; }
+function measure() { W1 = t1.offsetWidth; H1 = t1.offsetHeight; W2 = t2.offsetWidth; t2.style.transform = 'translate(' + (G.tC[0] - W2 / 2) + 'px,' + (G.tC[1] - H1 / 2) + 'px)'; }
+
+/* ---------- apply the current layout ---------- */
+function layout() {
+  stage.style.width = G.W + 'px'; stage.style.height = G.H + 'px'; stage.classList.toggle('P', G === GP);
+  rim.style.left = (G.CX - G.R) + 'px'; rim.style.top = (G.CY - G.R) + 'px'; rim.style.width = rim.style.height = 2 * G.R + 'px';
+  [].forEach.call(rim.children, function (t, j) { var a = j * 20 * Math.PI / 180; t.style.left = t.style.top = (G.R - 1.5) + 'px'; t.style.transform = 'translate(' + (G.R * Math.cos(a)) + 'px,' + (G.R * Math.sin(a)) + 'px)'; });
+  SH.forEach(function (e, i) { var r = G.row(i); e.style.transform = 'translate(' + (r[0] - 90) + 'px,' + (r[1] + G.shDy) + 'px)'; });
+  var p = $('#ptr'); p.style.left = G.ptr[0] + 'px'; p.style.top = G.ptr[1] + 'px'; p.style.transform = 'rotate(' + G.ptr[2] + 'deg)';
+  ['#e1', '#s1', '#s2'].forEach(function (q) { var e = $(q); e.style.width = G.W + 'px'; e.style.top = (q === '#e1' ? G.eye : G.sub) + 'px'; });
+  bokeh();
+}
+fit(); layout();
 
 /* ---------- slides ---------- */
 // state: m = 0 row (cover) → 1 wheel; f = focused day (float); tt = 0 big title → 1 small header; vis = circles visible
@@ -179,9 +199,9 @@ var cur = { m: 0, f: 0, tt: 0, vis: 1 };
 function render(s) {
   var m = s.m, f = s.f;
   for (var i = 0; i < N; i++) {
-    var d = i - f, ad = Math.abs(d), an = d * STEP;
-    var wx = CX + R * Math.cos(an), wy = CY + R * Math.sin(an), ws = sizeFor(ad), w = Math.max(0, 1 - ad);
-    var x = lerp(ROW_X0 + i * ROW_DX, wx, m), y = lerp(ROW_Y, wy, m), sz = lerp(ROW_S, ws, m), W = w * m;
+    var d = i - f, ad = Math.abs(d), an = G.a0 + G.dir * d * STEP, rp = G.row(i);
+    var wx = G.CX + G.R * Math.cos(an), wy = G.CY + G.R * Math.sin(an), ws = sizeFor(ad), w = Math.max(0, 1 - ad);
+    var x = lerp(rp[0], wx, m), y = lerp(rp[1], wy, m), sz = lerp(rp[2], ws, m), W = w * m;
     C[i].style.transform = 'translate(' + (x - 176) + 'px,' + (y - 176) + 'px) scale(' + (sz / 352) + ')';
     C[i].style.opacity = s.vis;
     var ls = lerp(sz * .94, BADGE_S, W), lx = x + BADGE * W, ly = y + BADGE * W;
@@ -190,10 +210,10 @@ function render(s) {
     LB[i].style.background = 'rgba(11,16,32,' + lerp(.38, .94, W) + ')';
     LB[i].style.opacity = s.vis;
   }
-  rim.style.transform = 'rotate(' + (-f * 38) + 'deg)';
+  rim.style.transform = 'rotate(' + (-G.dir * f * 38) + 'deg)';
   rim.style.opacity = m * s.vis;
   var tt = s.tt, sc = lerp(1, .36, tt);
-  t1.style.transform = 'translate(' + lerp(800 - W1 / 2, 624, tt) + 'px,' + lerp(184 - H1 / 2, 30, tt) + 'px) scale(' + sc + ')';
+  t1.style.transform = 'translate(' + lerp(G.tC[0] - W1 / 2, G.tD[0], tt) + 'px,' + lerp(G.tC[1] - H1 / 2, G.tD[1], tt) + 'px) scale(' + sc + ')';
 }
 measure(); render(cur);
 
@@ -215,11 +235,11 @@ function tweenTo(tg, ms) {
 /* ---------- slide content ---------- */
 var panels = $('#panels');
 function dayPanel(d) {
-  var n = d.rows.length, gap = n <= 5 ? 22 : 8, top = 236, avail = 584;
-  var rh = Math.min(83, (avail + gap) / n - gap), th = rh * .8;
-  var h = '<div class="panel" style="--c:' + d.c + '"><div class="ph-head in" style="animation-delay:.25s"><span class="ic"><img alt="" src="' + d.icon + '"></span><div><h2>' + esc(d.h) + '</h2><i class="acc" style="background:' + d.c + '"></i><p><span class="ey">DAY ' + (d.n < 10 ? '0' : '') + d.n + '</span>' + esc(d.dt) + '</p></div></div>';
+  var n = d.rows.length, gap = n <= 5 ? 22 : 8, top = G.top, avail = G.avail;
+  var rh = Math.min(83, (avail + gap) / n - gap), th = rh * .8, hs = d.h.length > 30 ? 33 : d.h.length > 22 ? 39 : 46;
+  var h = '<div class="panel" style="--c:' + d.c + ';left:' + G.px + 'px;width:' + G.pw + 'px"><div class="ph-head in" style="animation-delay:.25s;top:' + G.head + 'px;width:' + G.pw + 'px"><span class="ic"><img alt="" src="' + d.icon + '"></span><div><h2 style="font-size:' + hs + 'px">' + esc(d.h) + '</h2><i class="acc" style="background:' + d.c + '"></i><p><span class="ey">DAY ' + (d.n < 10 ? '0' : '') + d.n + '</span>' + esc(d.dt) + '</p></div></div>';
   d.rows.forEach(function (r, k) {
-    h += '<div class="row in" data-k="' + k + '" style="top:' + (top + k * (rh + gap)) + 'px;height:' + rh + 'px;animation-delay:' + (.42 + k * .07) + 's;padding:0 ' + rh * .2 + 'px">' +
+    h += '<div class="row in" data-k="' + k + '" style="top:' + (top + k * (rh + gap)) + 'px;width:' + G.pw + 'px;height:' + rh + 'px;animation-delay:' + (.42 + k * .07) + 's;padding:0 ' + rh * .2 + 'px">' +
       '<span class="th" style="width:' + th + 'px;height:' + th + 'px;' + (r.img ? 'background-image:url(' + r.img + ')' : 'background-color:#141c33') + '">' + (r.img ? '' : '<img alt="" src="' + (r.stay ? 'img/present/hotel.png' : d.icon) + '">') + '</span>' +
       '<span class="tm" style="font-size:' + rh * .4 + 'px;width:' + rh * 1.75 + 'px;margin-left:' + rh * .3 + 'px">' + r.t + '</span>' +
       '<span class="tx" style="font-size:' + Math.min(28, rh * .37) + 'px">' + esc(r.title) + '</span></div>';
@@ -227,8 +247,8 @@ function dayPanel(d) {
   return h + '</div>';
 }
 function creditsPanel() {
-  return '<div class="credits in"><h2>เครดิตรูปภาพ</h2><p>รูปจาก Wikimedia Commons ตามสัญญาอนุญาตที่ระบุ · รูปอื่นเป็นรูปของเราเอง</p><ul>' +
-    DATA.credits.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul></div>';
+  return '<div class="credits in" style="left:' + G.cr[0] + 'px;width:' + G.cr[1] + 'px"><h2>เครดิตรูปภาพ</h2><p>รูปจาก Wikimedia Commons ตามสัญญาอนุญาตที่ระบุ · รูปอื่นเป็นรูปของเราเอง</p><ul>' +
+    DATA.credits.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('').replace(/^/, '').replace(/<\/li>$/, '</li>') + '</ul></div>';
 }
 function preload(i) { var d = DAYS[i]; if (!d) return; d.rows.forEach(function (r) { if (r.img) (new Image()).src = r.img; }); }
 
@@ -327,7 +347,7 @@ var ui = $('#ui'), hideT = 0;
 function wake() { ui.classList.remove('hide'); clearTimeout(hideT); hideT = setTimeout(function () { ui.classList.add('hide'); }, 2600); }
 addEventListener('mousemove', wake); ui.addEventListener('pointerdown', wake); wake();
 // portrait phones: suggest rotating
-if (innerHeight > innerWidth && innerWidth < 760) { var hint = $('#hint'); hint.style.opacity = 1; setTimeout(function () { hint.style.opacity = 0; }, 4000); }
+
 
 var start = parseInt((location.hash || '').slice(1), 10);
 show(start >= 1 && start <= SL.length ? start - 1 : 0, true);
