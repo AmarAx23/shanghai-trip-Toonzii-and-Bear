@@ -867,7 +867,7 @@ def _present():
         k = DAY_COVER.get(n, "hero")
         days.append({"n": n, "c": COL[(n - 1) % 8], "h": d["title"], "dt": f"{dow} {dd} ธ.ค." + (f" · {tp}" if tp else ""),
                      "photo": f"img/hd/{k}-640.webp", "short": SHORT.get(n, ["", ""]), "icon": f"img/present/i{n}.png",
-                     "rows": [{"t": e["t"], "title": clean(e["title"]), "img": img(e)} for e in d["events"]]})
+                     "rows": [{"t": e["t"], "title": clean(e["title"]), "img": img(e), "stay": e["kind"] == "stay"} for e in d["events"]]})
     cr = []
     try:
         for row in _j.load(open(_osroot.path.join(_osroot.path.dirname(OUT), "img", "hd", "credits.json"), encoding="utf-8")):
