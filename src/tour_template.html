@@ -209,6 +209,10 @@ button:hover{background:#1a2442}
 .maplibregl-ctrl-attrib a{color:var(--gold2)!important}
 .maplibregl-ctrl-attrib-button{filter:invert(1) sepia(1) saturate(2)}
 
+/* 3D / 2D switch */
+.dim{margin-left:auto;display:flex;padding:3px;border-radius:999px;background:#0d1530d9;border:1px solid var(--line)}
+.dim button{min-height:34px;padding:0 14px;border:0;border-radius:999px;background:transparent;color:var(--mute);font:600 13px Kanit,sans-serif;letter-spacing:.06em}
+.dim button[aria-pressed=true]{background:var(--gold);color:var(--navy)}
 /* ===== PC only ===== */
 .pconly{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:24px;background:radial-gradient(120% 80% at 50% 30%,#1a2340,#0b1020)}
 .pconly[hidden]{display:none}
@@ -254,7 +258,7 @@ body.incity #map{background:#f4eee2}
 <body>
 <div id="map" aria-label="แผนที่ทริป"></div>
 <div class="vignette"></div>
-<div class="top"><a class="back" href="./">← กลับไปหน้าแผน</a><div class="brand">เซี่ยงไฮ้ 8 วัน 7 คืน<small>Toonzii &amp; Bear · 5–12 ธ.ค. 2026</small></div></div>
+<div class="top"><a class="back" href="./">← กลับไปหน้าแผน</a><div class="brand">เซี่ยงไฮ้ 8 วัน 7 คืน<small>Toonzii &amp; Bear · 5–12 ธ.ค. 2026</small></div><div class="dim" role="group" aria-label="มุมมองแผนที่"><button type="button" data-d="3">3D</button><button type="button" data-d="2">2D</button></div></div>
 <section class="card" id="card" aria-live="polite"></section>
 <div class="chapter" id="chapter" aria-hidden="true"><div><small id="ch-s"></small><b id="ch-b"></b><i></i></div></div>
 <div class="bar">
@@ -389,8 +393,18 @@ function fly(pts, ms, my, done) {
 
 /* layout padding so the card never hides anything */
 function pad(extraTop) { var w = innerWidth, h = innerHeight, p = w <= 820 ? { top: 70, left: 24, right: 24, bottom: Math.round(h * (document.body.classList.contains('storying') ? .26 : .44)) + 140 } : { top: 90, left: Math.min(430, w * .38) + 40, right: 60, bottom: 110 }; if (extraTop) p.top += extraTop; return p; }
+var D3 = true; try { D3 = localStorage.getItem('tour3d') !== '0'; } catch (e) {}
+function P_(v) { return D3 ? v : 0; }   // pitch / bearing are 0 in 2D mode
+function fitZoom(lnglats) {
+  var b = new maplibregl.LngLatBounds(); lnglats.forEach(function (x) { b.extend(x); });
+  var P = pad(), W = Math.max(80, innerWidth - P.left - P.right), H = Math.max(80, innerHeight - P.top - P.bottom);
+  var mx = function (lng) { return (lng + 180) / 360; }, myy = function (lat) { var s = Math.sin(lat * Math.PI / 180); return .5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI); };
+  var dx = Math.abs(mx(b.getEast()) - mx(b.getWest())) || 1e-6, dy = Math.abs(myy(b.getSouth()) - myy(b.getNorth())) || 1e-6;
+  return { b: b, z: Math.log2(Math.min(W / (dx * 512), H / (dy * 512))) };
+}
 function view(lnglats, o) {
   o = o || {}; var b = new maplibregl.LngLatBounds(); lnglats.forEach(function (x) { b.extend(x); });
+  if (!D3) { o.pitch = 0; o.bearing = 0; }
   // fit zoom computed in plain Web-Mercator so the current tilt doesn't skew it
   var P = pad(), W = Math.max(80, innerWidth - P.left - P.right), H = Math.max(80, innerHeight - P.top - P.bottom);
   var mx = function (lng) { return (lng + 180) / 360; }, myy = function (lat) { var s = Math.sin(lat * Math.PI / 180); return .5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI); };
@@ -398,6 +412,31 @@ function view(lnglats, o) {
   var z = Math.log2(Math.min(W / (dx * 512), H / (dy * 512)));
   var c = [(b.getEast() + b.getWest()) / 2, (b.getNorth() + b.getSouth()) / 2];
   map.flyTo({ center: c, zoom: Math.min(o.maxZoom || 15.5, z) - (o.pitch ? .25 : 0), pitch: o.pitch || 0, bearing: o.bearing || 0, padding: pad(), duration: reduce ? 0 : (o.dur || 3000), curve: o.curve || 1.42, easing: eio, essential: true });
+}
+
+/* warm the browser cache for the next day's area so the fly-in has no blank ground or popping buildings */
+var warmed = {};
+function tileTemplates() {
+  var out = [], st = map.getStyle(); if (!st) return out;
+  Object.keys(st.sources).forEach(function (id) { var src = map.getSource(id); if (src && src.type === 'vector' && src.tiles && src.tiles.length && out.indexOf(src.tiles[0]) < 0) out.push(src.tiles[0]); });
+  return out;
+}
+function prefetchDay(i) {
+  var d = D[i]; if (!d || !d.pins || warmed[i]) return; warmed[i] = 1;
+  d.it.forEach(function (x) { if (x.img) (new Image()).src = x.img; });
+  if (d.cover) (new Image()).src = d.cover;
+  var tpls = tileTemplates(); if (!tpls.length) return;
+  var f = fitZoom(d.pins.map(LL)), b = f.b, zc = Math.min(14, Math.max(8, Math.floor(f.z))), urls = [];
+  var w = b.getWest(), e = b.getEast(), n = b.getNorth(), s = b.getSouth(), pw = (e - w) * .6 + .01, ph = (n - s) * .6 + .01;
+  w -= pw; e += pw; n += ph; s -= ph;   // a margin: a tilted camera sees past the pins
+  function tx(lng, z) { return Math.floor((lng + 180) / 360 * Math.pow(2, z)); }
+  function ty(lat, z) { var r = lat * Math.PI / 180; return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z)); }
+  [zc - 2, zc - 1, zc].forEach(function (z) {
+    if (z < 0) return;
+    for (var x = tx(w, z); x <= tx(e, z); x++) for (var y = ty(n, z); y <= ty(s, z); y++)
+      tpls.forEach(function (t) { urls.push(t.replace('{z}', z).replace('{x}', x).replace('{y}', y)); });
+  });
+  urls.slice(0, 90).forEach(function (u, k) { setTimeout(function () { try { fetch(u, { mode: 'cors', credentials: 'omit', priority: 'low' }).catch(function () {}); } catch (e) {} }, k * 25); });
 }
 
 /* chapter title between days */
@@ -430,7 +469,7 @@ function scrollRow(r) { if (!r) return; var L2 = r.parentNode; L2.scrollTo({ top
 function highlight(n, flyTo) {
   pinEls.forEach(function (m, k) { var el = m.getElement().firstChild; if (el) el.classList.toggle('act', k + 1 === n); });
   document.querySelectorAll('.it').forEach(function (r) { r.classList.toggle('act', +r.dataset.pin === n); });
-  if (flyTo && n && pinEls[n - 1]) map.flyTo({ center: pinEls[n - 1].getLngLat(), zoom: 16.2, pitch: 58, bearing: map.getBearing() + 20, padding: pad(), duration: reduce ? 0 : 1800, easing: eio, essential: true });
+  if (flyTo && n && pinEls[n - 1]) map.flyTo({ center: pinEls[n - 1].getLngLat(), zoom: 16.2, pitch: P_(58), bearing: P_(map.getBearing() + 20), padding: pad(), duration: reduce ? 0 : 1800, easing: eio, essential: true });
 }
 function dayPts(d) { var pts = d.pins.map(LL); if (!d.suzhou && (idx === 1 || pts.length < 2)) pts.push(LL(HOTEL)); return pts; }
 var popup = null;
@@ -448,7 +487,7 @@ function go(i, readyCb) {
     cityTag(BKK, 'กรุงเทพฯ'); cityTag(PVG, 'เซี่ยงไฮ้');
     view([LL(BKK), LL(PVG)], { maxZoom: 6, pitch: 35, bearing: -8, dur: 2800 });
     if (d.asia) { chapter('DAY 0' + i, d.h); setTimeout(function () { if (my === gen) fly(ARC_BACK, reduce ? 10 : 4200, my, function () { setTimeout(done, 1500); }); }, reduce ? 0 : 2900); }
-    else { setTimeout(function () { if (my === gen) drawLine('arc', ARC_GO, 2200, my); }, reduce ? 0 : 2400); setTimeout(done, reduce ? 0 : 5000); }
+    else { setTimeout(function () { if (my === gen) drawLine('arc', ARC_GO, 2200, my); }, reduce ? 0 : 2400); setTimeout(done, reduce ? 0 : 5000); setTimeout(function () { prefetchDay(1); prefetchDay(2); }, 3000); }
     return;
   }
   var after = function () {
@@ -465,6 +504,7 @@ function go(i, readyCb) {
       pinEls.push(m);
     });
     setTimeout(done, reduce ? 0 : 1200);
+    setTimeout(function () { if (my === gen) prefetchDay(i + 1); }, 1500);
   };
   var bear = [0, 0, -18, 24, -20, 16, -26, 20, 0][i] || 0;
   if (i === 1) {  // day 1: tilt up, fly the plane in, then dive into Shanghai
@@ -520,7 +560,7 @@ function story(doneCb) {
     segEls.forEach(function (s, j) { var e = s.getElement().firstChild; if (e) e.classList.toggle('act', j === sj); });
     trav.getElement().querySelector('span').textContent = mode;
     bear += 22;
-    map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: innerWidth <= 820 ? 48 : 60, bearing: bear, padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2200, curve: 1.25, easing: eio, essential: true });
+    map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: P_(innerWidth <= 820 ? 48 : 60), bearing: P_(bear), padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2200, curve: 1.25, easing: eio, essential: true });
     var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800;
     (function run(now) {   // traveller dot glides along the leg
       if (my !== gen) return;
@@ -533,7 +573,7 @@ function story(doneCb) {
       if (my !== gen) return;
       popup = new maplibregl.Popup({ className: 'story-pop', closeButton: false, closeOnClick: false, offset: 30, maxWidth: '260px' })
         .setLngLat(to).setHTML((x.img ? '<div class="sp-img" style="background-image:url(' + x.img + ')"></div>' : '') + '<div class="sp-t"><b>' + x.t + '</b> ' + esc(x.title) + '</div>').addTo(map);
-      if (!reduce) map.easeTo({ bearing: bear + 14, duration: 3600, easing: function (t) { return t; }, essential: true });  // slow orbit
+      if (!reduce && D3) map.easeTo({ bearing: bear + 14, duration: 3600, easing: function (t) { return t; }, essential: true });  // slow orbit
       setTimeout(next, reduce ? 1200 : 3800);
     }, reduce ? 0 : 2100);
   }
@@ -574,7 +614,17 @@ document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') 
 addEventListener('resize', movePill);
 
 
-map.on('style.load', function () { ready = true; clearTimeout(fallT); buildPalette(); addLines(); add3D(); NIGHT = null; setNight(true); go(idx); });
+function apply3D(anim) {
+  [].forEach.call(document.querySelectorAll('.dim button'), function (b) { b.setAttribute('aria-pressed', (b.dataset.d === '3') === D3); });
+  try { if (map.getLayer('b3d')) map.setLayoutProperty('b3d', 'visibility', D3 ? 'visible' : 'none'); } catch (e) {}
+  if (anim) map.easeTo({ pitch: D3 ? (NIGHT ? 35 : 52) : 0, bearing: D3 ? map.getBearing() : 0, duration: reduce ? 0 : 1200, easing: eio });
+}
+document.querySelector('.dim').addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b) return; var v = b.dataset.d === '3'; if (v === D3) return;
+  D3 = v; try { localStorage.setItem('tour3d', v ? '1' : '0'); } catch (er) {} apply3D(true);
+});
+apply3D(false);
+map.on('style.load', function () { ready = true; clearTimeout(fallT); buildPalette(); addLines(); add3D(); apply3D(false); NIGHT = null; setNight(true); go(idx); });
 })();
 </script>
 </body>
