@@ -64,9 +64,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--night);color:var
 @keyframes pout{to{opacity:0;transform:translateX(-24px)}}
 
 /* credits */
-.wash{position:absolute;right:-12%;top:-18%;width:72%;height:136%;background:center/cover no-repeat;filter:blur(64px) saturate(1.35);opacity:0;transition:opacity 1.4s ease;
- -webkit-mask:radial-gradient(closest-side,#000 35%,#0000);mask:radial-gradient(closest-side,#000 35%,#0000)}
-.wash.on{opacity:.5}
+.wash{position:absolute;right:-14%;top:-10%;width:78%;height:125%;opacity:0;transition:opacity 1.4s ease}
+.wash.on{opacity:1}
 .P .wash{right:-30%;top:auto;bottom:-14%;width:130%;height:70%}
 .bignum{position:absolute;right:-18px;bottom:-60px;font:400 440px/1 var(--serif);color:transparent;-webkit-text-stroke:2px #c9a35c8c;letter-spacing:-.02em;pointer-events:none;animation:bn 1.4s .2s cubic-bezier(.2,.8,.25,1) backwards}
 .P .bignum{font-size:330px;bottom:auto;top:250px;right:-10px}
@@ -295,7 +294,7 @@ function show(i, instant) {
   if (i === idx) return;
   var s = SL[i]; idx = i; var my = ++gen; cyOff();
   var wa = $('#w1'), wb = $('#w2'), wOn = wa.classList.contains('on') ? wa : wb, wOff = wOn === wa ? wb : wa;
-  if (s.k === 'day') { wOff.style.backgroundImage = 'url(' + DAYS[s.i].photo + ')'; wOff.classList.add('on'); }
+  if (s.k === 'day') { var c = DAYS[s.i].c; wOff.style.background = 'radial-gradient(ellipse 55% 50% at 58% 62%,' + c + '4a 0,' + c + '1a 45%,' + c + '00 75%),radial-gradient(ellipse 45% 40% at 30% 26%,#e8c98a55 0,#e8c98a00 70%)'; wOff.classList.add('on'); }
   wOn.classList.remove('on');
   fxEl.style.opacity = s.night ? 1 : 0; fxEl.classList.toggle('on', !!s.night);
   $('#bgN').style.opacity = s.night ? 1 : 0;
