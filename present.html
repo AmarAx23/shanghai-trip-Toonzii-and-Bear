@@ -215,7 +215,7 @@ function tweenTo(tg, ms) {
 /* ---------- slide content ---------- */
 var panels = $('#panels');
 function dayPanel(d) {
-  var n = d.rows.length, gap = n <= 5 ? 22 : 8, top = 248, avail = 632;
+  var n = d.rows.length, gap = n <= 5 ? 22 : 8, top = 236, avail = 584;
   var rh = Math.min(83, (avail + gap) / n - gap), th = rh * .8;
   var h = '<div class="panel" style="--c:' + d.c + '"><div class="ph-head in" style="animation-delay:.25s"><span class="ic"><img alt="" src="' + d.icon + '"></span><div><h2>' + esc(d.h) + '</h2><i class="acc" style="background:' + d.c + '"></i><p><span class="ey">DAY ' + (d.n < 10 ? '0' : '') + d.n + '</span>' + esc(d.dt) + '</p></div></div>';
   d.rows.forEach(function (r, k) {
