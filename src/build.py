@@ -347,7 +347,7 @@ for _d in DAYS:
         _e["skip"] = SKIP.get((_d["n"], _e["t"]), "")
 
 
-def event_html(e):
+def event_html(e, go=None):
     tag = f' <span class="tag">{E(e["tag"])}</span>' if e["tag"] else ""
     note = e["note"] if e["html_note"] else E(e["note"])
     if e.get("hd"):
@@ -357,17 +357,89 @@ def event_html(e):
     else:
         img = (f'<figure class="ph"><img class="thumb" src="img/{e["img"]}.jpg" alt="{E(e["title"])}" loading="lazy" decoding="async"></figure>' if e["img"] else "")
     eid = f' id="{e["eid"]}"' if e.get("eid") else ""
-    return (f'<li class="ev"{eid} data-t="{e["data_t"]}" data-kind="{e["kind"]}" data-zh="{E(e.get("zh", ""))}" style="--dot:{KIND_DOT[e["kind"]]}">'
+    gat = f' data-go="{go[0]}|{go[1]}"' if go else ""
+    return (f'<li class="ev"{eid}{gat} data-t="{e["data_t"]}" data-kind="{e["kind"]}" data-zh="{E(e.get("zh", ""))}" style="--dot:{KIND_DOT[e["kind"]]}">'
             f'<time>{E(e["t"])}</time><span class="dot" aria-hidden="true"></span>'
             f'<div class="evb">{img}<h3>{E(e["title"])}{tag}</h3>'
             + (f'<div class="skip">😮‍💨 ข้ามได้ถ้าเหนื่อย <small>· {E(e["skip"])}</small></div>' if e.get("skip") else "")
             + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
 
+def day_route(d):
+    """pins, route and how each leg is travelled (shared by the plan page and the tour)"""
+    import re as _r
+    n = d["n"]
+    evs = d["events"]
+    pts = [(e["t"], GEO[(n, e["t"])][0]) for e in evs if (n, e["t"]) in GEO]
+    suzhou = any(ll[1] < 121.0 for _, ll in pts)
+    if suzhou:
+        pts = [(t, ll) for t, ll in pts if ll[1] < 121.0]
+    pins, idx = [], {}
+    for t, ll in pts:
+        key = (round(ll[0], 3), round(ll[1], 3))
+        if key not in idx:
+            idx[key] = len(pins) + 1; pins.append([ll[0], ll[1]])
+        idx[t] = idx[key]
+    if not pins or n == len(DAYS):
+        return dict(pins=pins, idx=idx, suzhou=suzhou, route=[], segs=[], first_ev={})
+    route = ([] if suzhou else [list(HOTEL_LL)]) + pins
+    if n == 1:
+        route = pins + [list(HOTEL_LL)]
+    # how each leg is travelled: read the destination's note, fall back to distance
+    first_ev = {}
+    for e in evs:
+        k = idx.get(e["t"])
+        if k and k not in first_ev:
+            first_ev[k] = e
+    def km(a, b):
+        import math
+        la1, lo1, la2, lo2 = map(math.radians, (a[0], a[1], b[0], b[1]))
+        h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+        return 6371 * 2 * math.asin(math.sqrt(h))
+    KW = [("🚄", r"รถไฟความเร็วสูง|高铁|Maglev"), ("🚕", r"Didi|แท็กซี่"), ("🚇", r"รถไฟฟ้า|Metro|สาย \d"), ("🚶", r"เดิน")]
+    segs = []
+    for i in range(len(route) - 1):
+        A, B = route[i], route[i + 1]; dist = km(A, B)
+        if dist < 0.15:
+            continue
+        dest = None
+        if B in pins:
+            dest = first_ev.get(pins.index(B) + 1)
+        note = (dest or {}).get("note", "") if dest else ""
+        mode, mins = None, None
+        # only trust phrases that describe arriving here: "จาก <place> <mode> ~N นาที"
+        for ph in _r.findall(r"จาก[^·]{0,60}", note):
+            for ic, rx in KW:
+                m = _r.search(rx, ph)
+                if m:
+                    mode = ic
+                    mm = _r.search(r"(\d+)\s*นาที", ph[m.start():])
+                    mins = int(mm.group(1)) if mm else None
+                    break
+            if mode:
+                break
+        if mode is None:
+            mode = "🚶" if dist < 1.2 else "🚕"
+        if mins is None:
+            mins = {"🚶": dist * 13, "🚇": 8 + dist * 2.2, "🚄": 30}.get(mode, (5 + dist * 2.6) if dist < 15 else (10 + dist * 1.2))
+            mins = max(5, int(round(mins / 5.0) * 5))
+        segs.append({"a": A, "b": B, "m": mode, "min": mins})
+    return dict(pins=pins, idx=idx, suzhou=suzhou, route=route, segs=segs, first_ev=first_ev)
+
+def arrivals(d):
+    """{event time: (mode, minutes)} for the leg that ends at that event"""
+    r = day_route(d); out = {}
+    for g in r["segs"]:
+        if g["b"] in r["pins"]:
+            ev = r["first_ev"].get(r["pins"].index(g["b"]) + 1)
+            if ev: out[ev["t"]] = (g["m"], g["min"])
+    return out
+
 DAY_COVER = {1: "spring", 2: "bund", 4: "wukang", 5: "xintiandi", 3: "castle", 6: "sz-garden", 7: "ljznight", 8: "pvg"}
 def day_html(d):
     disney = ' <span class="tag gold">DISNEY DAY</span>' if d.get("disney") else ""
     mp = day_geo(d)
-    evs = "".join(event_html(e) for e in d["events"])
+    arr = arrivals(d)
+    evs = "".join(event_html(e, arr.get(e["t"])) for e in d["events"])
     g = d.get("guide")
     guide = f'<details class="tip day-guide"><summary>{E(g[0])}</summary><div class="dg">{g[1]}</div></details>' if g else ""
     return f'''
@@ -806,63 +878,12 @@ def _tour():
     for d in DAYS:
         n = d["n"]; dd = int(d["iso"].split("-")[2])
         tp = _r.sub(r"^\D*", "", d.get("wx", "")).strip()
-        base = {"d": f"วันที่ {n} · {d['dow']} {dd} ธ.ค.", "tp": tp, "h": d["title"], "zh": ZH_DAY.get(n, ""), "cover": cover(n)}
+        base = {"d": f"วันที่ {n} · {d['dow']} {dd} ธ.ค.", "tp": tp, "h": d["title"], "zh": ZH_DAY.get(n, ""), "cover": cover(n), "iso": d["iso"]}
         evs = d["events"]
-        pts = [(e["t"], GEO[(n, e["t"])][0]) for e in evs if (n, e["t"]) in GEO]
-        suzhou = any(ll[1] < 121.0 for _, ll in pts)
-        if suzhou:
-            pts = [(t, ll) for t, ll in pts if ll[1] < 121.0]
-        pins, idx = [], {}
-        for t, ll in pts:
-            key = (round(ll[0], 3), round(ll[1], 3))
-            if key not in idx:
-                idx[key] = len(pins) + 1; pins.append([ll[0], ll[1]])
-            idx[t] = idx[key]
+        R = day_route(d); pins, idx, suzhou, route, segs = R["pins"], R["idx"], R["suzhou"], R["route"], R["segs"]
         items = [{"t": e["t"], "title": clean(e["title"]), "img": img(e), "pin": idx.get(e["t"]), "hotel": e["kind"] == "stay"} for e in evs]
         if not pins or n == len(DAYS):
             D.append(dict(base, asia=1, it=items)); continue
-        route = ([] if suzhou else [list(HOTEL_LL)]) + pins
-        if n == 1:
-            route = pins + [list(HOTEL_LL)]
-        # how each leg is travelled: read the destination's note, fall back to distance
-        first_ev = {}
-        for e in evs:
-            k = idx.get(e["t"])
-            if k and k not in first_ev:
-                first_ev[k] = e
-        def km(a, b):
-            import math
-            la1, lo1, la2, lo2 = map(math.radians, (a[0], a[1], b[0], b[1]))
-            h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
-            return 6371 * 2 * math.asin(math.sqrt(h))
-        KW = [("🚄", r"รถไฟความเร็วสูง|高铁|Maglev"), ("🚕", r"Didi|แท็กซี่"), ("🚇", r"รถไฟฟ้า|Metro|สาย \d"), ("🚶", r"เดิน")]
-        segs = []
-        for i in range(len(route) - 1):
-            A, B = route[i], route[i + 1]; dist = km(A, B)
-            if dist < 0.15:
-                continue
-            dest = None
-            if B in pins:
-                dest = first_ev.get(pins.index(B) + 1)
-            note = (dest or {}).get("note", "") if dest else ""
-            mode, mins = None, None
-            # only trust phrases that describe arriving here: "จาก <place> <mode> ~N นาที"
-            for ph in _r.findall(r"จาก[^·]{0,60}", note):
-                for ic, rx in KW:
-                    m = _r.search(rx, ph)
-                    if m:
-                        mode = ic
-                        mm = _r.search(r"(\d+)\s*นาที", ph[m.start():])
-                        mins = int(mm.group(1)) if mm else None
-                        break
-                if mode:
-                    break
-            if mode is None:
-                mode = "🚶" if dist < 1.2 else "🚕"
-            if mins is None:
-                mins = {"🚶": dist * 13, "🚇": 8 + dist * 2.2, "🚄": 30}.get(mode, (5 + dist * 2.6) if dist < 15 else (10 + dist * 1.2))
-                mins = max(5, int(round(mins / 5.0) * 5))
-            segs.append({"a": A, "b": B, "m": mode, "min": mins})
         D.append(dict(base, pins=pins, route=route, it=items, suzhou=suzhou, segs=segs))
     html = (tpl.replace("__TOUR_DATA__", _j.dumps(D, ensure_ascii=False))
                .replace("__HOTEL_LON__", str(HOTEL_LL[1])).replace("__HOTEL_LAT__", str(HOTEL_LL[0]))

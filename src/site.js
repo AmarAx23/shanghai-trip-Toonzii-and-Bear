@@ -7,7 +7,10 @@
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
 
   // Date/time in Shanghai
+  // ?now=2026-12-06T13:10 previews the trip-day features (Shanghai time)
+  var NOW_Q = (location.search.match(/[?&]now=(\d{4}-\d\d-\d\d)T(\d\d:\d\d)/) || null);
   function shNow() {
+    if (NOW_Q) return { date: NOW_Q[1], hm: NOW_Q[2] };
     var p = {}; new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
       .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
     return { date: p.year + '-' + p.month + '-' + p.day, hm: p.hour + ':' + p.minute };
@@ -74,9 +77,50 @@
     });
     return n;
   }
+  // ---- "Next up" card: during the trip, what's next, how long until, walk or Didi ----
+  var GO_TXT = { '🚶': 'เดิน', '🚕': 'เรียก Didi', '🚇': 'Metro', '🚄': 'รถไฟ' };
+  function mins(hm) { var a = hm.split(':'); return +a[0] * 60 + +a[1]; }
+  function hm(m) { m = (m + 1440) % 1440; return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function nowCard(n) {
+    var box = $('#nowc'), now = shNow(), ev = n ? $('#day-' + n + ' .ev.next') : null;
+    var key = ev ? now.date + ' ' + ev.getAttribute('data-t') : '';
+    var hide = !ev || (function () { try { return sessionStorage.getItem('nowcX') === key; } catch (e) { return false; } })();
+    document.body.classList.toggle('has-now', !hide);
+    if (hide) { if (box) box.hidden = true; return; }
+    if (!box) {
+      box = document.createElement('div'); box.id = 'nowc'; box.className = 'nowc'; box.setAttribute('role', 'status');
+      document.body.appendChild(box);
+      box.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        if (b.classList.contains('nowc-x')) { try { sessionStorage.setItem('nowcX', box.getAttribute('data-key')); } catch (er) {} box.hidden = true; document.body.classList.remove('has-now'); return; }
+        if (b.classList.contains('nowc-see')) {
+          var d = box.getAttribute('data-day'), t = box.getAttribute('data-t'), li = $('#day-' + d + ' .ev[data-t="' + t + '"]');
+          showDay(d); if (li) setTimeout(function () { li.scrollIntoView({ behavior: REDUCE ? 'auto' : 'smooth', block: 'center' }); li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash'); }, 60);
+        }
+      });
+    }
+    var t = ev.getAttribute('data-t'), left = mins(t) - mins(now.hm), h3 = $('h3', ev);
+    var title = h3 ? (h3.childNodes[0] && h3.childNodes[0].nodeType === 3 ? h3.childNodes[0].textContent : h3.textContent).trim() : '';
+    var go = (ev.getAttribute('data-go') || '').split('|'), mode = go[0], gm = +go[1] || 0;
+    var when = left <= 0 ? 'ถึงเวลาแล้ว' : left < 60 ? 'อีก ' + left + ' นาที' : 'อีก ' + Math.floor(left / 60) + ' ชม.' + (left % 60 ? ' ' + left % 60 + ' นาที' : '');
+    var how = '';
+    if (mode && GO_TXT[mode]) {
+      var leave = mins(t) - gm, shown = (($('time', ev) || {}).textContent || t), shift = /^\d\d:\d\d$/.test(shown) ? mins(shown) - mins(t) : 0, late = mins(now.hm) >= leave;
+      how = mode + ' ' + GO_TXT[mode] + ' ~' + gm + ' นาที · ' + (late ? '<b>ออกเดินทางได้เลย</b>' : 'ออกราว ' + hm(leave + shift));
+    }
+    var nav = $('.links a[href*="amap.com"]', ev);
+    box.setAttribute('data-key', key); box.setAttribute('data-day', n); box.setAttribute('data-t', t);
+    box.innerHTML = '<div class="nowc-m"><div class="nowc-k">ถัดไป · ' + when + '</div>' +
+      '<div class="nowc-t"><time>' + (($('time', ev) || {}).textContent || t) + '</time> ' + title.replace(/[<&]/g, function (c) { return c === '<' ? '&lt;' : '&amp;'; }) + '</div>' +
+      (how ? '<div class="nowc-g">' + how + '</div>' : '') + '</div>' +
+      '<div class="nowc-a">' + (nav ? '<a class="nowc-nav" href="' + nav.getAttribute('href') + '" target="_blank" rel="noopener">🧭 นำทาง</a>' : '') +
+      '<button type="button" class="nowc-see">ดูในแผน</button></div><button type="button" class="nowc-x" aria-label="ซ่อน">×</button>';
+    box.hidden = false;
+  }
   var tn = todayMode();
   showDay(tn || 1, false);
-  setInterval(todayMode, 60000);
+  nowCard(tn);
+  setInterval(function () { nowCard(todayMode()); }, 30000);
 
   var REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
