@@ -294,9 +294,14 @@ function buildPalette() {
     function put(prop, night, day) { var cur = map.getPaintProperty(id, prop); if (cur === undefined && day === undefined) return; P[prop] = [day !== undefined ? day : cur, night]; try { map.setPaintProperty(id, prop + '-transition', { duration: reduce ? 0 : 1400 }); } catch (e) {} }
     if (t === 'background') put('background-color', '#0e1428', '#f4eee2');
     else if (t === 'fill') put('fill-color', w ? '#0a1a2e' : /park|wood|grass|landcover/.test(id) ? '#121c31' : /building/.test(id) ? '#19223d' : '#111a2e');
-    else if (t === 'line') put('line-color', w ? '#0b1b30' : /boundary|admin/.test(id) ? '#3d4870' : /rail/.test(id) ? '#252e4b' : '#1d2745');
-    else if (t === 'symbol') { put('text-color', '#a49d86'); put('text-halo-color', '#0b1020'); }
-    else if (t === 'fill-extrusion') put('fill-extrusion-color', '#1b2442', '#e6dcc6');
+    else if (t === 'line') { put('line-color', w ? '#0b1b30' : /boundary|admin/.test(id) ? '#3d4870' : /rail/.test(id) ? '#252e4b' : '#1d2745'); if (!/boundary|admin|water/.test(id)) put('line-opacity', .18, 1); }
+    else if (t === 'symbol') {
+      // at night keep only country / sea names so the flight stays clean
+      var keep = /country|continent|ocean|sea|marine|water_name/.test(id);
+      put('text-color', '#8d876f'); put('text-halo-color', '#0b1020');
+      put('text-opacity', keep ? .75 : 0, 1); put('icon-opacity', keep ? .75 : 0, 1);
+    }
+    else if (t === 'fill-extrusion') put('fill-extrusion-color', '#1b2442', '#efe6d3');
     else if (t === 'raster') { put('raster-brightness-max', .42, 1); put('raster-saturation', -.7, -.45); put('raster-hue-rotate', 200, 0); }
     if (Object.keys(P).length) PAL[id] = P;
   });
@@ -313,7 +318,7 @@ function add3D() {
     map.addSource('ofm', { type: 'vector', url: 'https://tiles.openfreemap.org/planet' });
     var firstSym = (map.getStyle().layers.filter(function (l) { return l.type === 'symbol'; })[0] || {}).id;
     map.addLayer({ id: 'b3d', type: 'fill-extrusion', source: 'ofm', 'source-layer': 'building', minzoom: 14.6,
-      paint: { 'fill-extrusion-color': '#e6dcc6', 'fill-extrusion-opacity': .9,
+      paint: { 'fill-extrusion-color': '#efe6d3', 'fill-extrusion-opacity': .88, 'fill-extrusion-vertical-gradient': true,
         'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14.6, 0, 15.6, ['coalesce', ['get', 'render_height'], 12]],
         'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0] } }, firstSym);
   } catch (e) {}
