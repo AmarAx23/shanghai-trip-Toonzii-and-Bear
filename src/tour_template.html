@@ -421,8 +421,39 @@ function tileTemplates() {
   Object.keys(st.sources).forEach(function (id) { var src = map.getSource(id); if (src && src.type === 'vector' && src.tiles && src.tiles.length && out.indexOf(src.tiles[0]) < 0) out.push(src.tiles[0]); });
   return out;
 }
+/* real streets: route each leg on OSM (walking or driving) via the public OSRM server, cached per browser */
+var ROAD_V = 'r1', roadMem = {};
+function decodePl(str) { var idx = 0, lat = 0, lng = 0, out = []; while (idx < str.length) { var b, sh = 0, res = 0; do { b = str.charCodeAt(idx++) - 63; res |= (b & 31) << sh; sh += 5; } while (b >= 32); lat += (res & 1) ? ~(res >> 1) : (res >> 1); sh = 0; res = 0; do { b = str.charCodeAt(idx++) - 63; res |= (b & 31) << sh; sh += 5; } while (b >= 32); lng += (res & 1) ? ~(res >> 1) : (res >> 1); out.push([lng / 1e5, lat / 1e5]); } return out; }
+function dayLegs(d) {
+  var r = d.route || [], out = [];
+  for (var k = 0; k < r.length - 1; k++) {
+    var a = r[k], b = r[k + 1], m = '🚶';
+    (d.segs || []).forEach(function (g) { if (g.a[0] === a[0] && g.a[1] === a[1] && g.b[0] === b[0] && g.b[1] === b[1]) m = g.m; });
+    out.push({ a: LL(a), b: LL(b), prof: m === '🚶' ? 'foot' : 'car' });
+  }
+  return out;
+}
+function road(leg) {
+  var key = ROAD_V + ':' + leg.prof + ':' + leg.a.join(',') + ';' + leg.b.join(',');
+  if (roadMem[key]) return roadMem[key];
+  var cached = null; try { cached = localStorage.getItem(key); } catch (e) {}
+  if (cached) { try { return (roadMem[key] = Promise.resolve(JSON.parse(cached))); } catch (e) {} }
+  var ctl = window.AbortController ? new AbortController() : null; var to = setTimeout(function () { if (ctl) ctl.abort(); }, 7000);
+  var url = 'https://routing.openstreetmap.de/routed-' + leg.prof + '/route/v1/driving/' + leg.a.join(',') + ';' + leg.b.join(',') + '?overview=full&geometries=polyline';
+  return (roadMem[key] = fetch(url, ctl ? { signal: ctl.signal } : {}).then(function (r) { return r.json(); }).then(function (j) {
+    clearTimeout(to); if (!j || j.code !== 'Ok' || !j.routes[0]) throw 0;
+    var pts = [leg.a].concat(decodePl(j.routes[0].geometry), [leg.b]);
+    try { localStorage.setItem(key, JSON.stringify(pts)); } catch (e) {}
+    return pts;
+  }).catch(function () { clearTimeout(to); delete roadMem[key]; return null; }));
+}
+function roadsFor(d) { return Promise.all(dayLegs(d).map(function (l) { return road(l).then(function (p) { return p || [l.a, l.b]; }); })); }
+function midOf(path) { var L2 = 0, seg = [], i; for (i = 1; i < path.length; i++) { var dx = path[i][0] - path[i - 1][0], dy = path[i][1] - path[i - 1][1], l = Math.sqrt(dx * dx + dy * dy); seg.push(l); L2 += l; } var h = L2 / 2; for (i = 0; i < seg.length; i++) { if (h <= seg[i]) { var f = seg[i] ? h / seg[i] : 0; return [path[i][0] + (path[i + 1][0] - path[i][0]) * f, path[i][1] + (path[i + 1][1] - path[i][1]) * f]; } h -= seg[i]; } return path[path.length - 1]; }
+function along(path, t) { var L2 = 0, seg = [], i; for (i = 1; i < path.length; i++) { var dx = path[i][0] - path[i - 1][0], dy = path[i][1] - path[i - 1][1], l = Math.sqrt(dx * dx + dy * dy); seg.push(l); L2 += l; } var h = L2 * t; for (i = 0; i < seg.length; i++) { if (h <= seg[i]) { var f = seg[i] ? h / seg[i] : 0; return [path[i][0] + (path[i + 1][0] - path[i][0]) * f, path[i][1] + (path[i + 1][1] - path[i][1]) * f]; } h -= seg[i]; } return path[path.length - 1]; }
+var dayPaths = null;   // the legs of the day on screen, once the street geometry is in
+
 function prefetchDay(i) {
-  var d = D[i]; if (!d || !d.pins || warmed[i]) return; warmed[i] = 1;
+  var d = D[i]; if (!d || !d.pins || warmed[i]) return; warmed[i] = 1; roadsFor(d);
   d.it.forEach(function (x) { if (x.img) (new Image()).src = x.img; });
   if (d.cover) (new Image()).src = d.cover;
   var tpls = tileTemplates(); if (!tpls.length) return;
@@ -490,12 +521,33 @@ function go(i, readyCb) {
     else { setTimeout(function () { if (my === gen) drawLine('arc', ARC_GO, 2200, my); }, reduce ? 0 : 2400); setTimeout(done, reduce ? 0 : 5000); setTimeout(function () { prefetchDay(1); prefetchDay(2); }, 3000); }
     return;
   }
+  dayPaths = null;
+  var roadsP = d.route ? roadsFor(d) : Promise.resolve([]);
   var after = function () {
     if (my !== gen) return;
     if (!d.suzhou) hotelMk();
-    if (d.route.length > 1) drawLine('route', dens(d.route.map(LL), 16), 1800, my);
-    (d.segs || []).forEach(function (g, k) {
-      segEls.push(mk([(g.a[1] + g.b[1]) / 2, (g.a[0] + g.b[0]) / 2], '<span class="seg" style="animation-delay:' + (700 + k * 90) + 'ms">' + g.m + ' ' + g.min + '′</span>'));
+    var legs = dayLegs(d);
+    function chips(paths) {
+      segEls.forEach(function (m) { m.remove(); }); segEls = [];
+      (d.segs || []).forEach(function (g, k) {
+        var j = -1; legs.forEach(function (l, n) { if (l.a[0] === g.a[1] && l.a[1] === g.a[0] && l.b[0] === g.b[1] && l.b[1] === g.b[0]) j = n; });
+        var pos = paths && j >= 0 ? midOf(paths[j]) : [(g.a[1] + g.b[1]) / 2, (g.a[0] + g.b[0]) / 2];
+        segEls.push(mk(pos, '<span class="seg" style="animation-delay:' + (700 + k * 90) + 'ms">' + g.m + ' ' + g.min + '′</span>'));
+      });
+    }
+    var drawn = false;
+    function draw(paths) {
+      if (my !== gen || drawn) return; drawn = true; dayPaths = paths;
+      var all = []; (paths || legs.map(function (l) { return [l.a, l.b]; })).forEach(function (p) { all = all.concat(p); });
+      if (all.length > 1) drawLine('route', paths ? all : dens(all, 16), 1800, my);
+      chips(paths);
+    }
+    // wait briefly for street geometry; if the router is slow, draw straight and swap in streets when they land
+    var t = setTimeout(function () { draw(null); dayPaths = null; }, 1600);
+    roadsP.then(function (paths) {
+      if (my !== gen) return; clearTimeout(t);
+      if (!drawn && !dayPaths) { draw(paths); return; }
+      dayPaths = paths; var all = []; paths.forEach(function (p) { all = all.concat(p); }); setLine('route', all); reveal('route', 1); chips(paths);
     });
     d.pins.forEach(function (p, k) {
       var im = (d.it.filter(function (x) { return x.pin === k + 1 && x.img; })[0] || {}).img;
@@ -561,11 +613,12 @@ function story(doneCb) {
     trav.getElement().querySelector('span').textContent = mode;
     bear += 22;
     map.flyTo({ center: to, zoom: d.suzhou ? 16 : 16.4, pitch: P_(innerWidth <= 820 ? 48 : 60), bearing: P_(bear), padding: pad(innerWidth <= 820 ? 150 : 200), duration: reduce ? 0 : 2200, curve: 1.25, easing: eio, essential: true });
-    var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800;
+    var a = from || to, t0 = performance.now(), dur = reduce ? 1 : 1800, path = null;
+    if (dayPaths) dayLegs(d).forEach(function (l, n) { if (Math.abs(l.a[0] - a[0]) < 1e-6 && Math.abs(l.a[1] - a[1]) < 1e-6 && Math.abs(l.b[0] - to[0]) < 1e-6 && Math.abs(l.b[1] - to[1]) < 1e-6) path = dayPaths[n]; });
     (function run(now) {   // traveller dot glides along the leg
       if (my !== gen) return;
       var p = Math.min(1, (now - t0) / dur), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-      trav.setLngLat([a[0] + (to[0] - a[0]) * e, a[1] + (to[1] - a[1]) * e]);
+      trav.setLngLat(path ? along(path, e) : [a[0] + (to[0] - a[0]) * e, a[1] + (to[1] - a[1]) * e]);
       if (p < 1) requestAnimationFrame(run);
     })(t0);
     from = to;
