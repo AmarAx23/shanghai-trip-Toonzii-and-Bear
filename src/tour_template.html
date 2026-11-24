@@ -16,11 +16,14 @@
 html,body{margin:0;height:100%;position:fixed;inset:0;width:100%;background:var(--bg);color:var(--ink);font:16px/1.5 Sarabun,system-ui,sans-serif;overflow:hidden}
 #map{position:fixed;inset:0;z-index:0;isolation:isolate;background:#dfe6e8}
 /* wintery, slightly desaturated real map */
-#map .leaflet-tile{filter:saturate(.55) brightness(1.04) contrast(.95) sepia(.12) hue-rotate(-8deg)}
+#map .leaflet-tile-pane{filter:saturate(.55) brightness(1.04) contrast(.95) sepia(.12) hue-rotate(-8deg);will-change:transform}
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:400;background:radial-gradient(120% 90% at 65% 45%,transparent 55%,#0b233399 100%)}
 .snow{position:fixed;inset:0;pointer-events:none;z-index:450;overflow:hidden}
-.snow i{position:absolute;top:-12px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff8;animation:fall linear infinite}
+.snow i{position:absolute;top:-12px;border-radius:50%;background:#fff;will-change:transform;animation:fall linear infinite}
 @keyframes fall{to{transform:translate(40px,110vh)}}
+.snow{transition:opacity .8s,visibility 0s}
+body.city .snow{opacity:0;visibility:hidden;transition:opacity .8s,visibility 0s .8s}
+body.city .snow i{animation-play-state:paused}
 
 /* top bar */
 .top{position:fixed;top:0;left:0;right:0;z-index:600;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(#0b2333e6,#0b233300);pointer-events:none}
@@ -58,9 +61,8 @@ html,body{margin:0;height:100%;position:fixed;inset:0;width:100%;background:var(
 .star span{position:absolute;left:30px;top:4px;white-space:nowrap;font:600 13px Kanit,sans-serif;color:#0f3a54;background:#fffd;padding:1px 8px;border-radius:99px}
 .city{font:700 15px Kanit,sans-serif;color:#fff;background:#e2453c;border:2px solid #fff;border-radius:99px;padding:2px 10px;white-space:nowrap;box-shadow:0 4px 12px #0007;transform:translate(-10%,-50%);display:inline-block}
 .plane{font-size:34px;line-height:34px;filter:drop-shadow(0 4px 6px #0009);transition:none}
-.rt{stroke-dasharray:2 12;stroke-linecap:round;animation:march 1.2s linear infinite}
+.rt{stroke-dasharray:2 12;stroke-linecap:round}
 .arc{stroke-dasharray:3 10;stroke-linecap:round}
-@keyframes march{to{stroke-dashoffset:-14}}
 
 .seg{display:inline-block;transform:translate(-50%,-50%) scale(0);white-space:nowrap;font:600 12px Kanit,sans-serif;color:#0f3a54;background:#fffffff0;border:1.5px solid #e2453c;border-radius:99px;padding:2px 8px;box-shadow:0 3px 8px #0005;animation:pop2 .4s ease-out forwards}
 .seg.act{background:#e2453c;color:#fff;border-color:#fff}
@@ -97,7 +99,7 @@ button:disabled{opacity:.4;cursor:default}
   .dots{margin-left:0;width:100%}
   .leaflet-bottom.leaflet-right{bottom:calc(44vh + 124px)}
 }
-@media(prefers-reduced-motion:reduce){.snow{display:none}.rt{animation:none}}
+@media(prefers-reduced-motion:reduce){.snow{display:none}}
 </style>
 </head>
 <body>
@@ -124,11 +126,11 @@ var $ = function (s) { return document.querySelector(s); };
 var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
 var map = L.map('map', { zoomControl: false, attributionControl: true, zoomSnap: 0.25, worldCopyJump: false });
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, crossOrigin: true, attribution: '© OpenStreetMap' }).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, crossOrigin: true, updateWhenZooming: false, keepBuffer: 4, attribution: '© OpenStreetMap' }).addTo(map);
 map.setView([24, 111], 4.25);
 
 /* snow */
-$('#snow').innerHTML = Array.from({ length: 46 }, function (_, i) { var s = 2 + (i * 7) % 5; return '<i style="left:' + ((i * 37) % 100) + '%;width:' + s + 'px;height:' + s + 'px;opacity:' + (.3 + ((i * 13) % 6) / 10) + ';animation-duration:' + (8 + (i * 11) % 9) + 's;animation-delay:-' + ((i * 17) % 14) + 's"></i>'; }).join('');
+$('#snow').innerHTML = Array.from({ length: 28 }, function (_, i) { var s = 2 + (i * 7) % 5; return '<i style="left:' + ((i * 37) % 100) + '%;width:' + s + 'px;height:' + s + 'px;opacity:' + (.3 + ((i * 13) % 6) / 10) + ';animation-duration:' + (8 + (i * 11) % 9) + 's;animation-delay:-' + ((i * 17) % 14) + 's"></i>'; }).join('');
 
 /* flight arc */
 function arc(a, b, k) { var pts = [], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, dx = b[1] - a[1], dy = b[0] - a[0], c = [mx + dx * k, my - dy * k];
@@ -183,6 +185,7 @@ function dayPts(d) { var pts = d.pins.map(function (p) { return [p[0], p[1]]; })
 
 function go(i, ready) {
   i = Math.max(0, Math.min(D.length - 1, i)); idx = i; var d = D[i], my = ++gen;
+  document.body.classList.toggle('city', !(d.ov || d.asia || i === 1));
   ui(); map.closePopup(); layer.clearLayers(); pinEls = []; segEls = []; if (plane) { map.removeLayer(plane); plane = null; }
   var c = $('#card'); c.classList.add('out');
   setTimeout(function () { if (my !== gen) return; card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450);
@@ -217,7 +220,7 @@ function go(i, ready) {
     L.polyline(ARC_GO, { color: '#e2453c', weight: 3, className: 'arc' }).addTo(layer);
     cityTag(BKK, 'กรุงเทพฯ').addTo(layer); cityTag(PVG, 'เซี่ยงไฮ้').addTo(layer);
     fitTo([BKK, PVG], 6, 1.6);
-    setTimeout(function () { if (my !== gen) return; fly(ARC_GO, reduce ? 10 : 3000, function () { if (my !== gen) return; layer.clearLayers(); if (plane) { map.removeLayer(plane); plane = null; } fitTo(pts, 12, 2.6); setTimeout(after, reduce ? 0 : 2200); }); }, reduce ? 0 : 1700);
+    setTimeout(function () { if (my !== gen) return; fly(ARC_GO, reduce ? 10 : 3000, function () { if (my !== gen) return; document.body.classList.add('city'); layer.clearLayers(); if (plane) { map.removeLayer(plane); plane = null; } fitTo(pts, 12, 2.6); setTimeout(after, reduce ? 0 : 2200); }); }, reduce ? 0 : 1700);
     return;
   }
   fitTo(pts, d.suzhou ? 14 : 15, 2.6);
@@ -241,7 +244,8 @@ function story(done) {
     var z = 16, P = pad(), sz = map.getSize(), visB = sz.y - P.br[1], popH = innerWidth <= 820 ? 130 : 200;
     var pinX = (P.tl[0] + sz.x - P.br[0]) / 2, pinY = Math.min(visB - 16, (P.tl[1] + visB) / 2 + popH / 2);
     var ctr = map.unproject(map.project(m.getLatLng(), z).add([sz.x / 2 - pinX, sz.y / 2 - pinY]), z);
-    map.flyTo(ctr, z, { duration: reduce ? 0 : 1.6 });
+    if (Math.abs(map.getZoom() - z) < .01 && map.getBounds().pad(.5).contains(ctr)) map.panTo(ctr, { animate: !reduce, duration: 1.1, easeLinearity: .35 });
+    else map.flyTo(ctr, z, { duration: reduce ? 0 : 1.4 });
     setTimeout(function () {
       if (my !== gen) return;
       highlight(x.pin, false); scrollRow(rowFor(x.pin));
