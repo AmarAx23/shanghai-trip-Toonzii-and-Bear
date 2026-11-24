@@ -874,7 +874,7 @@ def _present():
         tp = _r.sub(r"^\D*", "", d.get("wx", "")).strip()
         dow = FULL.get(d["dow"], d["dow"])
         k = DAY_COVER.get(n, "hero")
-        days.append({"n": n, "c": COL[(n - 1) % 8], "h": d["title"], "dt": f"{dow} {dd} ธ.ค." + (f" · {tp}" if tp else ""),
+        days.append({"n": n, "c": COL[(n - 1) % 8], "h": d["title"], "dw": f"{dow} {dd} ธ.ค.", "tp": tp, "iso": d["iso"],
                      "photo": f"img/hd/{k}-640.webp", "short": SHORT.get(n, ["", ""]), "icon": f"img/present/i{n}.png",
                      "rows": [{"t": e["t"], "title": clean(e["title"]), "img": img(e), "stay": e["kind"] == "stay"} for e in d["events"]]})
     cr = []
