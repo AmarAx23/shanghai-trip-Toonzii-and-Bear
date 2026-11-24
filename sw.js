@@ -1,11 +1,12 @@
 // Offline support for the trip page.
 // The page itself is fetched network-first, so an installed iPhone/Android app always shows the newest
 // version when online and falls back to the saved copy when offline. Photos, fonts and Leaflet are cache-first.
-const CACHE_NAME = 'sh-trip-v202611241435';
+const CACHE_NAME = 'sh-trip-v202611241615';
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './tour.html',
+  './present.html',
   './manifest.json',
   './icon-180.png',
   './icon-192.png',
@@ -183,10 +184,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req, { cache: 'no-store' })
         .then((res) => {
-          if (res && res.ok) { const copy = res.clone(); const key = url.pathname.endsWith('tour.html') ? './tour.html' : './index.html'; caches.open(CACHE_NAME).then((c) => c.put(key, copy)); }
+          if (res && res.ok) { const copy = res.clone(); const key = url.pathname.endsWith('tour.html') ? './tour.html' : url.pathname.endsWith('present.html') ? './present.html' : './index.html'; caches.open(CACHE_NAME).then((c) => c.put(key, copy)); }
           return res;
         })
-        .catch(() => caches.match(url.pathname.endsWith('tour.html') ? './tour.html' : './index.html').then((r) => r || caches.match('./')))
+        .catch(() => caches.match(url.pathname.endsWith('tour.html') ? './tour.html' : url.pathname.endsWith('present.html') ? './present.html' : './index.html').then((r) => r || caches.match('./')))
     );
     return;
   }

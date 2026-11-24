@@ -2,7 +2,7 @@
 import os, sys, time
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ver = sys.argv[1] if len(sys.argv) > 1 else time.strftime("v%Y%m%d%H%M")
-files=['./','./index.html','./tour.html','./manifest.json','./icon-180.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./icon.svg','./favicon.ico','./favicon-32.png','./vendor/leaflet/leaflet.js','./vendor/leaflet/leaflet.css']
+files=['./','./index.html','./tour.html','./present.html','./manifest.json','./icon-180.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./icon.svg','./favicon.ico','./favicon-32.png','./vendor/leaflet/leaflet.js','./vendor/leaflet/leaflet.css']
 files+=['./img/'+f for f in sorted(os.listdir('img')) if f.endswith('.jpg')]
 files+=['./img/hd/'+f for f in sorted(os.listdir('img/hd')) if f.endswith('.webp')]
 files+=['./fonts/'+f for f in sorted(os.listdir('fonts')) if f.endswith('.woff2')]
@@ -56,10 +56,10 @@ self.addEventListener('fetch', (event) => {{
     event.respondWith(
       fetch(req, {{ cache: 'no-store' }})
         .then((res) => {{
-          if (res && res.ok) {{ const copy = res.clone(); const key = url.pathname.endsWith('tour.html') ? './tour.html' : './index.html'; caches.open(CACHE_NAME).then((c) => c.put(key, copy)); }}
+          if (res && res.ok) {{ const copy = res.clone(); const key = url.pathname.endsWith('tour.html') ? './tour.html' : url.pathname.endsWith('present.html') ? './present.html' : './index.html'; caches.open(CACHE_NAME).then((c) => c.put(key, copy)); }}
           return res;
         }})
-        .catch(() => caches.match(url.pathname.endsWith('tour.html') ? './tour.html' : './index.html').then((r) => r || caches.match('./')))
+        .catch(() => caches.match(url.pathname.endsWith('tour.html') ? './tour.html' : url.pathname.endsWith('present.html') ? './present.html' : './index.html').then((r) => r || caches.match('./')))
     );
     return;
   }}

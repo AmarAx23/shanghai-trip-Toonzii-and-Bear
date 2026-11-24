@@ -529,7 +529,7 @@ page = f'''<!DOCTYPE html>
       <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
       <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
       <button type="button" class="hbtn" id="print-btn"><span aria-hidden="true">🖨️</span>แพลนเที่ยว + ปริ้น</button>
-      <a class="hbtn hbtn-tour" href="tour.html"><span aria-hidden="true">🎬</span>ดูทริปแบบแอนิเมชัน</a>
+      <div class="hero-row2"><a class="hbtn hbtn-tour" href="tour.html"><span aria-hidden="true">🎬</span>ดูทริปแบบแอนิเมชัน</a><a class="hbtn hbtn-tour" href="present.html"><span aria-hidden="true">🖥️</span>นำเสนอ</a></div>
     </div>
   </header>
 
@@ -844,3 +844,40 @@ def _tour():
     print("written tour.html", len(html))
 
 _tour()
+
+
+def _present():
+    """present.html: a web slideshow with a morphing day wheel (styled after the user's morph deck)."""
+    import json as _j, re as _r
+    tpl = open(_osroot.path.join(_ROOT, "src", "present_template.html"), encoding="utf-8").read()
+    COL = ["#E76F51", "#F4A261", "#E9C46A", "#2A9D8F", "#264653", "#8E5572", "#D1495B", "#3D5A80"]
+    SHORT = {1: ["บินไป", "เซี่ยงไฮ้"], 2: ["เที่ยวเบาๆ", "+ The Bund"], 3: ["Shanghai", "Disneyland"], 4: ["Wukang", "+ Jing'an"],
+             5: ["West Bund", "+ Xintiandi"], 6: ["ซูโจว", "+ ฮั่นฝู"], 7: ["The Bund", "+ Lujiazui"], 8: ["เดินทาง", "กลับ"]}
+    FULL = {"ส.": "เสาร์", "อา.": "อาทิตย์", "จ.": "จันทร์", "อ.": "อังคาร", "พ.": "พุธ", "พฤ.": "พฤหัสบดี", "ศ.": "ศุกร์"}
+    def clean(t):
+        t = _r.sub(r"[\U0001F300-\U0001FAFF☀-➿️]", "", t).strip()
+        return t if len(t) <= 52 else t[:50].rstrip() + "…"
+    def img(e):
+        return f"img/hd/{e['hd']}-640.webp" if e.get("hd") else (f"img/{e['img']}.jpg" if e.get("img") else None)
+    days = []
+    for d in DAYS:
+        n = d["n"]; dd = int(d["iso"].split("-")[2])
+        tp = _r.sub(r"^\D*", "", d.get("wx", "")).strip()
+        dow = FULL.get(d["dow"], d["dow"])
+        k = DAY_COVER.get(n, "hero")
+        days.append({"n": n, "c": COL[(n - 1) % 8], "h": d["title"], "dt": f"{dow} {dd} ธ.ค." + (f" · {tp}" if tp else ""),
+                     "photo": f"img/hd/{k}-640.webp", "short": SHORT.get(n, ["", ""]), "icon": f"img/present/i{n}.png",
+                     "rows": [{"t": e["t"], "title": clean(e["title"]), "img": img(e)} for e in d["events"]]})
+    cr = []
+    try:
+        for row in _j.load(open(_osroot.path.join(_osroot.path.dirname(OUT), "img", "hd", "credits.json"), encoding="utf-8")):
+            if row[4]:
+                cr.append(f"{_r.sub(r'\s*\(วันที่[^)]*\)', '', row[2])} — {row[5]} ({row[4]})")
+    except Exception as ex:
+        print("credits skipped:", ex)
+    html = tpl.replace("__DATA__", _j.dumps({"days": days, "credits": cr, "total": f"{TOTAL:,}"}, ensure_ascii=False))
+    out = _osroot.path.join(_osroot.path.dirname(OUT), "present.html")
+    open(out, "w", encoding="utf-8").write(html)
+    print("written present.html", len(html))
+
+_present()
