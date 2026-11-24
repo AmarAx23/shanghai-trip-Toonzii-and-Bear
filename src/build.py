@@ -767,17 +767,19 @@ def _tour():
     import json as _j, re as _r
     tpl = open(_osroot.path.join(_ROOT, "src", "tour_template.html"), encoding="utf-8").read()
     def clean(t):
-        t = _r.sub(r"[\U0001F300-\U0001FAFF☀-➿️]", "", t).strip()
-        return t if len(t) <= 42 else t[:40].rstrip() + "…"
-    D = [{"ov": 1}]
+        t = _r.sub(r"[\U0001F300-\U0001FAFF\u2600-\u27BF\uFE0F]", "", t).strip()
+        return t if len(t) <= 48 else t[:46].rstrip() + "…"
+    def img(e):
+        return f"img/hd/{e['hd']}-640.webp" if e.get("hd") else (f"img/{e['img']}.jpg" if e.get("img") else None)
+    def cover(n):
+        k = DAY_COVER.get(n)
+        return f"img/hd/{k}-1280.webp" if k else None
+    D = [{"ov": 1, "cover": "img/hd/hero-960.webp"}]
     for d in DAYS:
-        n = d["n"]; y, m, dd = d["iso"].split("-")
-        tp = _r.sub(r"^\D*", "", d.get("wx", "")).strip() or ""
+        n = d["n"]; dd = int(d["iso"].split("-")[2])
+        tp = _r.sub(r"^\D*", "", d.get("wx", "")).strip()
+        base = {"d": f"วันที่ {n} · {d['dow']} {dd} ธ.ค.", "tp": tp, "h": d["title"], "zh": ZH_DAY.get(n, ""), "cover": cover(n)}
         evs = d["events"]
-        if n == len(DAYS):
-            D.append({"d": f"วันที่ {n} · {d['dow']} {int(dd)} ธ.ค.", "tp": tp, "h": d["title"], "zh": ZH_DAY.get(n, ""), "asia": 1,
-                      "it": [[e["t"], clean(e["title"])] + (["h"] if e["kind"] == "stay" else []) for e in evs]})
-            continue
         pts = [(e["t"], GEO[(n, e["t"])][0]) for e in evs if (n, e["t"]) in GEO]
         suzhou = any(ll[1] < 121.0 for _, ll in pts)
         if suzhou:
@@ -786,25 +788,15 @@ def _tour():
         for t, ll in pts:
             key = (round(ll[0], 3), round(ll[1], 3))
             if key not in idx:
-                idx[key] = len(pins) + 1; pins.append([ll[1], ll[0]])
+                idx[key] = len(pins) + 1; pins.append([ll[0], ll[1]])
             idx[t] = idx[key]
-        items = []
-        for e in evs:
-            mark = "h" if e["kind"] == "stay" else idx.get(e["t"])
-            items.append([e["t"], clean(e["title"])] + ([mark] if mark else []))
+        items = [{"t": e["t"], "title": clean(e["title"]), "img": img(e), "pin": idx.get(e["t"]), "hotel": e["kind"] == "stay"} for e in evs]
+        if not pins or n == len(DAYS):
+            D.append(dict(base, asia=1, it=items)); continue
+        route = ([] if suzhou else [list(HOTEL_LL)]) + pins
         if n == 1:
-            route = [f"p{i+1}" for i in range(len(pins))] + ["h"]
-        elif suzhou:
-            route = [f"p{i+1}" for i in range(len(pins))]
-        else:
-            route = ["h"] + [f"p{i+1}" for i in range(len(pins))]
-        day = {"d": f"วันที่ {n} · {d['dow']} {int(dd)} ธ.ค.", "tp": tp, "h": d["title"], "zh": ZH_DAY.get(n, ""),
-               "pins": pins, "route": route, "it": items}
-        if suzhou:
-            day["fit"] = "pins"
-        if not pins:
-            day["asia"] = 1; day.pop("pins"); day.pop("route")
-        D.append(day)
+            route = pins + [list(HOTEL_LL)]
+        D.append(dict(base, pins=pins, route=route, it=items, suzhou=suzhou))
     html = (tpl.replace("__TOUR_DATA__", _j.dumps(D, ensure_ascii=False))
                .replace("__HOTEL_LON__", str(HOTEL_LL[1])).replace("__HOTEL_LAT__", str(HOTEL_LL[0]))
                .replace("__TOTAL__", f"{TOTAL:,}"))
