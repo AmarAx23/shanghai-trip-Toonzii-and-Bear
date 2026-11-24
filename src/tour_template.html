@@ -142,7 +142,12 @@ button:disabled{opacity:.4;cursor:default}
 :root{--bg:#0b1020;--panel:#0d1530eb;--line:#d9b26a33;--ink:#f5ecd7;--mute:#b9b3a3;--gold:#d9b26a;--gold2:#e9cf95;--navy:#141c33;--serif:'Noto Serif Thai',Georgia,serif}
 #map{background:#0b1020}
 .tl-dark,.tl-light{transition:opacity 1.2s ease}
-.tl-light{opacity:0!important;filter:sepia(.28) saturate(.75) brightness(1.03)}
+.tl-light{opacity:0!important;filter:sepia(.32) saturate(.9) brightness(1.04)}
+.tl-ref{filter:sepia(.4) saturate(.7) contrast(.9)}
+body.incity .tl-ref{opacity:.75!important}
+#map .tl-osm{filter:invert(.92) hue-rotate(190deg) saturate(.45) brightness(.8);transition:filter 1.2s}
+body.incity #map .tl-osm{filter:sepia(.3) saturate(.6) brightness(1.03)}
+#map .tl-dark{filter:sepia(.4) hue-rotate(185deg) saturate(1.6) brightness(.8)}
 body.incity .tl-light{opacity:1!important}
 body.incity .tl-dark{opacity:0!important}
 .vignette{background:radial-gradient(120% 90% at 65% 45%,transparent 55%,#0b102099 100%)}
@@ -186,7 +191,7 @@ body.incity .vignette{background:radial-gradient(120% 90% at 65% 45%,transparent
 .hstar{width:40px;height:40px;border-radius:50%;background:var(--navy) url(img/present/hotel.png) center/58% no-repeat;border:2px solid var(--gold);box-shadow:0 6px 16px #0b102066;position:relative}
 .hstar span{position:absolute;left:46px;top:9px;white-space:nowrap;font:500 13px var(--serif);color:var(--navy);background:#fbf6ea;border:1px solid var(--gold);padding:0 9px;border-radius:99px}
 .ctag{display:flex;align-items:center;gap:10px;transform:translate(-9px,-9px);white-space:nowrap;pointer-events:none}
-.ctag .cd{width:18px;height:18px;border-radius:50%;background:var(--gold2);box-shadow:0 0 0 0 #e9cf9599;animation:pulse 2.2s ease-out infinite}
+.ctag .cd{flex:none;width:18px;height:18px;border-radius:50%;background:var(--gold2);box-shadow:0 0 0 0 #e9cf9599;animation:pulse 2.2s ease-out infinite}
 .ctag .cn{font:500 17px var(--serif);color:#f5ecd7;text-shadow:0 2px 10px #000c;letter-spacing:.02em}
 .ctag .cn small{display:block;font:600 10px Kanit,sans-serif;letter-spacing:.3em;color:var(--gold)}
 @keyframes pulse{0%{box-shadow:0 0 0 0 #e9cf9599}80%,100%{box-shadow:0 0 0 18px #e9cf9500}}
@@ -246,9 +251,15 @@ var $ = function (s) { return document.querySelector(s); };
 var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
 var map = L.map('map', { zoomControl: false, attributionControl: true, zoomSnap: 0.25, worldCopyJump: false });
-var ATT = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>';
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 19, crossOrigin: true, updateWhenZooming: false, keepBuffer: 3, className: 'tl-dark', attribution: ATT }).addTo(map);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { subdomains: 'abcd', maxZoom: 19, crossOrigin: true, updateWhenZooming: false, keepBuffer: 3, className: 'tl-light' }).addTo(map);
+var ATT = 'Tiles © <a href="https://www.esri.com">Esri</a> — Esri, HERE, Garmin, © OpenStreetMap contributors';
+var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+var darkL = L.tileLayer(ESRI + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxNativeZoom: 16, maxZoom: 19, crossOrigin: true, updateWhenZooming: false, keepBuffer: 3, className: 'tl-dark', attribution: ATT }).addTo(map);
+/* if Esri ever refuses tiles, fall back to plain OpenStreetMap tinted to match */
+var okT = 0, badT = 0, fell = false;
+darkL.on('tileload', function () { okT++; });
+darkL.on('tileerror', function () { if (++badT >= 4 && !okT && !fell) { fell = true; L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, crossOrigin: true, className: 'tl-osm', attribution: '© OpenStreetMap' }).addTo(map); } });
+L.tileLayer(ESRI + 'World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxNativeZoom: 16, maxZoom: 19, crossOrigin: true, updateWhenZooming: false, keepBuffer: 3, className: 'tl-light' }).addTo(map);
+L.tileLayer(ESRI + 'World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxNativeZoom: 16, maxZoom: 19, crossOrigin: true, updateWhenZooming: false, keepBuffer: 3, className: 'tl-light tl-ref' }).addTo(map);
 map.setView([24, 111], 4.25);
 
 /* snow */
