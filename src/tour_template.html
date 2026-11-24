@@ -175,6 +175,13 @@ body.incity .vignette{background:radial-gradient(120% 90% at 65% 45%,transparent
 .ovr em{font:400 12px Sarabun,sans-serif;font-style:normal;color:var(--mute);white-space:nowrap}
 .ovsum{margin:2px 10px 10px;padding:10px 0 2px;border-top:1px solid var(--line);color:var(--mute);font-size:13px}
 .ovsum b{color:var(--gold2);font-weight:600}
+.offw{margin:0 10px 12px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px;font-size:12.5px;color:var(--mute);line-height:1.45}
+.offw button{width:100%;margin-bottom:6px;background:transparent;border:1px solid var(--gold);color:var(--gold2);min-height:40px}
+.offw button:hover{background:#d9b26a22}.offw button:disabled{opacity:.75;cursor:default}
+.offw button.ok{border-color:#6fbf8e;color:#9fdcb4}
+.offw .pbar{height:3px;border-radius:3px;background:#ffffff1f;overflow:hidden;margin:-2px 0 6px;display:none}
+.offw .pbar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+.offw.run .pbar{display:block}
 /* map marks */
 .mpin{width:46px;height:46px;border-radius:50%;border:2.5px solid var(--gold);background:var(--navy) center/cover no-repeat;box-shadow:0 6px 18px #0b102066;position:relative;transform:scale(0);animation:pop .5s cubic-bezier(.3,1.5,.5,1) forwards;transition:box-shadow .3s}
 .mpin i{position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:50%;background:var(--navy);border:1.5px solid var(--gold);color:var(--gold2);font:500 11px/17px var(--serif);text-align:center;font-style:normal}
@@ -307,7 +314,30 @@ function LL(p) { return [p[1], p[0]]; }  // [lat,lng] -> [lng,lat]
 var STYLE = 'https://tiles.openfreemap.org/styles/positron';
 var RASTER = { version: 8, sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19, attribution: '© OpenStreetMap contributors' } },
   layers: [{ id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-saturation': -0.5 } }] };
-var map = new maplibregl.Map({ container: 'map', style: STYLE, center: [111, 24], zoom: 3.2, pitch: 0, maxPitch: 70, attributionControl: { compact: true }, fadeDuration: 250, dragRotate: true, pixelRatio: Math.min(devicePixelRatio || 1, 2) });
+/* offline: every OpenFreeMap request (style, tiles, fonts) goes through our own cache so the map still works
+   in China without VPN / without signal once it has been saved with the button on the overview card */
+var OFFC = 'sh-ofm-v1';
+function cGet(url, json) {
+  function net(ms) {
+    var ctl = window.AbortController ? new AbortController() : null, t = ms ? setTimeout(function () { if (ctl) ctl.abort(); }, ms) : 0;
+    return fetch(url, { mode: 'cors', credentials: 'omit', signal: ctl ? ctl.signal : undefined }).then(function (r) { clearTimeout(t); if (!r.ok) throw new Error('HTTP ' + r.status); return r; });
+  }
+  if (!window.caches) return net(0);
+  return caches.open(OFFC).then(function (c) {
+    function keep(r) { try { c.put(url, r.clone()); } catch (e) {} return r; }
+    if (json) return net(5000).then(keep).catch(function (e) { return c.match(url).then(function (h) { if (h) return h; throw e; }); });  // newest when online
+    return c.match(url).then(function (h) { return h || net(0).then(keep); });   // tiles & fonts: saved copy first
+  }).catch(function (e) { if (e && /HTTP|abort|fetch|network/i.test(String(e.message || e))) throw e; return net(0); });
+}
+var OFM = /^https:\/\/tiles\.openfreemap\.org\//;
+try {
+  maplibregl.addProtocol('ofmc', function (p) {
+    var url = 'https://' + p.url.slice(7), json = p.type === 'json';
+    return cGet(url, json).then(function (r) { return json ? r.json() : r.arrayBuffer(); }).then(function (d) { return { data: d }; });
+  });
+} catch (e) {}
+function viaCache(url, type) { return (OFM.test(url) && /^(Style|Source|Tile|Glyphs|SpriteJSON)$/.test(type)) ? { url: 'ofmc://' + url.slice(8) } : { url: url }; }
+var map = new maplibregl.Map({ container: 'map', style: STYLE, transformRequest: viaCache, center: [111, 24], zoom: 3.2, pitch: 0, maxPitch: 70, attributionControl: { compact: true }, fadeDuration: 250, dragRotate: true, pixelRatio: Math.min(devicePixelRatio || 1, 2) });
 function eio(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 var ready = false, fellBack = false;
 var fallT = setTimeout(function () { if (!ready) fallback(); }, 9000);
@@ -487,7 +517,7 @@ function prefetchDay(i) {
     for (var x = tx(w, z); x <= tx(e, z); x++) for (var y = ty(n, z); y <= ty(s, z); y++)
       tpls.forEach(function (t) { urls.push(t.replace('{z}', z).replace('{x}', x).replace('{y}', y)); });
   });
-  urls.slice(0, 90).forEach(function (u, k) { setTimeout(function () { try { fetch(u, { mode: 'cors', credentials: 'omit', priority: 'low' }).catch(function () {}); } catch (e) {} }, k * 25); });
+  urls.slice(0, 90).forEach(function (u, k) { setTimeout(function () { try { cGet(u).catch(function () {}); } catch (e) {} }, k * 25); });
 }
 
 /* chapter title between days */
@@ -501,7 +531,7 @@ function card(d) {
     c.innerHTML = '<div class="cover"><div class="cv" style="background-image:url(' + (d.cover || '') + ')"></div><div class="chips"><span class="chip">5–12 ธ.ค. 2026</span><span class="chip t">8 วัน 7 คืน</span></div></div>' +
       '<div class="head"><h2>เซี่ยงไฮ้ + ซูโจว</h2><p class="zh">上海 · 苏州</p></div><div class="list ov"><div class="ovl">' +
       D.slice(1).map(function (x, k) { return '<div class="ovr" style="--i:' + k + '" data-go="' + (k + 1) + '"><span class="ph" style="background-image:url(' + String(x.cover || '').replace('-1280.', '-640.') + ')"></span><span><small>DAY ' + (k < 9 ? '0' : '') + (k + 1) + '</small><b>' + esc(x.h) + '</b></span><em>' + esc(String(x.d).split('·').pop().trim()) + '</em></div>'; }).join('') +
-      '</div><p class="ovsum">ที่พัก <b>Atour X Hotel</b> ถนน Huaihai · <b>Metro + Didi</b> · งบราว <b>' + TOTAL + ' บาท/คน</b></p></div>';
+      '</div><p class="ovsum">ที่พัก <b>Atour X Hotel</b> ถนน Huaihai · <b>Metro + Didi</b> · งบราว <b>' + TOTAL + ' บาท/คน</b></p>' + offHTML() + '</div>';
     return;
   }
   var legs = (d.segs || []).length ? '<p class="legs">' + d.segs.map(function (g) { return g.m; }).join(' ') + ' · ' + legSummary(d.segs) + '</p>' : '';
@@ -653,7 +683,71 @@ function story(doneCb) {
   }
   next();
 }
+function offHTML() {
+  var at = null; try { at = JSON.parse(localStorage.getItem('offmap') || 'null'); } catch (e) {}
+  return '<div class="offw" id="offw"><button type="button" id="offb"' + (at ? ' class="ok"' : '') + '>' + (at ? '✓ เก็บแผนที่ไว้ในเครื่องแล้ว · กดเพื่ออัปเดต' : '⬇ เก็บแผนที่ทุกวันไว้ในเครื่อง') + '</button><div class="pbar"><i></i></div>' +
+    '<span id="offt">' + (at ? 'เก็บเมื่อ ' + at.d + ' · ราว ' + at.mb + ' MB · เปิดได้แม้ไม่มีเน็ต' : 'กดตอนอยู่ไทยที่มี Wi-Fi (ราว 1–2 นาที) · ถึงจีนแล้วแผนที่ เส้นทาง และรูปจะเปิดได้ แม้ไม่มี VPN หรือสัญญาณไม่ดี') + '</span></div>';
+}
+function saveOffline() {
+  var btn = $('#offb'), box = $('#offw'), txt = $('#offt'), bar = $('#offw .pbar i');
+  if (!btn || btn.disabled) return;
+  if (!window.caches) { txt.textContent = 'เบราว์เซอร์นี้เก็บแบบออฟไลน์ไม่ได้ ลองเปิดด้วย Safari / Chrome'; return; }
+  btn.disabled = true; btn.className = ''; btn.textContent = '⏳ กำลังเตรียม…'; box.classList.add('run');
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+  function tx(lng, z) { return Math.floor((lng + 180) / 360 * Math.pow(2, z)); }
+  function ty(lat, z) { var r = lat * Math.PI / 180; return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z)); }
+  cGet(STYLE, true).then(function (r) { return r.json(); }).then(function (st) {
+    var vs = Object.keys(st.sources).map(function (k) { return st.sources[k]; }).filter(function (x) { return x.type === 'vector' && (x.url || x.tiles); });
+    return Promise.all(vs.map(function (x) { return x.url ? cGet(x.url, true).then(function (r) { return r.json(); }) : x; })).then(function (tjs) {
+      var tiles = {}, other = [];
+      function addBox(w, s2, e, n, z0, z1) {
+        tjs.forEach(function (tj) {
+          var mz = tj.maxzoom || 14;
+          for (var z = z0; z <= Math.min(z1, mz); z++) for (var x = tx(w, z); x <= tx(e, z); x++) for (var y = ty(n, z); y <= ty(s2, z); y++)
+            (tj.tiles || []).slice(0, 1).forEach(function (t) { tiles[t.replace('{z}', z).replace('{x}', x).replace('{y}', y)] = 1; });
+        });
+      }
+      addBox(94, 8, 129, 37, 2, 6);            // the flight: Bangkok → Shanghai
+      addBox(119, 29.3, 123.5, 33, 7, 9); addBox(120.2, 30.6, 122.2, 31.7, 10, 10);       // Shanghai + Suzhou region
+      D.forEach(function (d) {
+        if (!d.pins || !d.pins.length) return;
+        var la = d.pins.map(function (p) { return p[0]; }), lo = d.pins.map(function (p) { return p[1]; });
+        if (!d.suzhou) { la.push(HOTEL[0]); lo.push(HOTEL[1]); }
+        var w = Math.min.apply(0, lo), e = Math.max.apply(0, lo), s2 = Math.min.apply(0, la), n = Math.max.apply(0, la), mw = (e - w) * .35 + .012, mh = (n - s2) * .35 + .01;
+        addBox(w - mw, s2 - mh, e + mw, n + mh, 11, 14);
+        (d.it || []).forEach(function (x) { if (x.img) other.push(x.img); });
+        if (d.cover) other.push(d.cover);
+      });
+      var stacks = {};
+      st.layers.forEach(function (l) { var f = l.layout && l.layout['text-font']; if (f && f[0] === 'literal') f = f[1]; if (Array.isArray(f) && typeof f[0] === 'string') stacks[f.join(',')] = 1; });
+      if (st.glyphs) Object.keys(stacks).forEach(function (fs) { ['0-255', '256-511', '8192-8447', '12288-12543', '65280-65535'].forEach(function (rg) { tiles[st.glyphs.replace('{fontstack}', fs).replace('{range}', rg)] = 1; }); });
+      if (typeof st.sprite === 'string') ['', '@2x'].forEach(function (k) { tiles[st.sprite + k + '.json'] = 1; other.push(st.sprite + k + '.png'); });
+      var list = Object.keys(tiles).map(function (u) { return { u: u, c: 1 }; }).concat(other.map(function (u) { return { u: u, c: 0 }; }));
+      var done = 0, bytes = 0, bad = 0, i = 0, N = list.length + 1;
+      function tick() { done++; var pc = Math.round(done / N * 100); bar.style.width = pc + '%'; btn.textContent = '⏳ กำลังเก็บ ' + pc + '%'; }
+      function work() {
+        if (i >= list.length) return Promise.resolve();
+        var j = list[i++];
+        var pr = j.c ? cGet(j.u) : fetch(j.u, { mode: j.u.indexOf('http') === 0 ? 'cors' : 'same-origin' }).then(function (r) { if (!r.ok) throw 0; var cp = r.clone(); if (window.caches) caches.open(OFFC).then(function (c) { c.put(new URL(j.u, location.href).href, cp); }); return r; });
+        return pr.then(function (r) { return r.arrayBuffer(); }).then(function (b) { bytes += b.byteLength; }).catch(function () { bad++; (window.offBad = window.offBad || []).push(j.u); }).then(function () { tick(); return work(); });
+      }
+      var roads = Promise.all(D.filter(function (d) { return d.pins; }).map(roadsFor));
+      return Promise.all([work(), work(), work(), work(), work(), work(), roads.then(tick)]).then(function () {
+        var mb = Math.max(1, Math.round(bytes / 1048576)), now = new Date(), dstr = now.getDate() + '/' + (now.getMonth() + 1) + ' ' + ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+        if (bad > list.length * .2) throw new Error('many');
+        try { localStorage.setItem('offmap', JSON.stringify({ d: dstr, mb: mb })); } catch (e) {}
+        box.classList.remove('run'); btn.disabled = false; btn.className = 'ok';
+        btn.textContent = '✓ เก็บแผนที่ไว้ในเครื่องแล้ว · กดเพื่ออัปเดต';
+        txt.textContent = 'เก็บเมื่อ ' + dstr + ' · ราว ' + mb + ' MB · เปิดได้แม้ไม่มีเน็ต' + (bad ? ' (ขาด ' + bad + ' ไฟล์ ลองกดอีกครั้งได้)' : '');
+      });
+    });
+  }).catch(function () {
+    box.classList.remove('run'); btn.disabled = false; btn.className = '';
+    btn.textContent = '↻ ลองใหม่'; txt.textContent = 'เก็บไม่ครบ เน็ตอาจหลุดระหว่างทาง ลองกดใหม่ตอนต่อ Wi-Fi';
+  });
+}
 function bindList() {
+  var ob = $('#offb'); if (ob) ob.addEventListener('click', saveOffline);
   document.querySelectorAll('.ovr').forEach(function (r) { r.addEventListener('click', function () { stop(); go(+r.dataset.go); }); });
   document.querySelectorAll('.it[data-pin]').forEach(function (r) { r.addEventListener('click', function () { stop(); gen++; closePop(); highlight(+r.dataset.pin, true); }); });
   var sb = $('#storyb');

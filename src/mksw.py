@@ -21,11 +21,12 @@ self.addEventListener('install', (event) => {{
 }});
 
 const TILE_CACHE = 'sh-tiles-v1'; // OpenStreetMap tiles saved for offline use (kept across versions)
+const OFM_CACHE = 'sh-ofm-v1';   // OpenFreeMap style, vector tiles, fonts, sprites for the tour (kept across versions)
 
 self.addEventListener('activate', (event) => {{
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== TILE_CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== TILE_CACHE && k !== OFM_CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 }});
@@ -48,6 +49,15 @@ self.addEventListener('fetch', (event) => {{
         return res;
       }})))
     );
+    return;
+  }}
+  if (url.hostname === 'tiles.openfreemap.org') {{
+    // tour map: style/tilejson newest when online, tiles/fonts/sprites saved copy first
+    const isJson = /\\/styles\\/|\\/planet$|\\.json$/.test(url.pathname) && !/sprite/.test(url.pathname);
+    event.respondWith(caches.open(OFM_CACHE).then((c) => {{
+      const net = () => fetch(req).then((res) => {{ if (res && res.ok) c.put(req.url, res.clone()); return res; }});
+      return isJson ? net().catch(() => c.match(req.url)) : c.match(req.url).then((hit) => hit || net());
+    }}));
     return;
   }}
   if (url.origin !== self.location.origin) return; // weather, rates: straight to network
