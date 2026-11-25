@@ -760,3 +760,9 @@
   .ev.flash .evb { animation: evFlash 1.6s ease; }
   @keyframes evFlash { 0%, 100% { box-shadow: none; } 25%, 60% { box-shadow: 0 0 0 3px var(--gold); border-radius: 14px; } }
   @media (prefers-reduced-motion: reduce) { .nowc { animation: none; } .ev.flash .evb { animation: none; } }
+  .nowc.tmr { border-left-color: var(--gold); align-items: flex-start; }
+  .nowc.tmr .nowc-k { color: var(--gold); }
+  .nowc.tmr .nowc-t { white-space: normal; }
+  .nowc.tmr .nowc-g { margin-top: 2px; }
+  .nowc.tmr .nowc-g b { color: var(--ink); }
+  .nowc.tmr .nowc-a { align-self: center; }

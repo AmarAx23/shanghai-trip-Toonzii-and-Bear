@@ -81,10 +81,42 @@
   var GO_TXT = { '🚶': 'เดิน', '🚕': 'เรียก Didi', '🚇': 'Metro', '🚄': 'รถไฟ' };
   function mins(hm) { var a = hm.split(':'); return +a[0] * 60 + +a[1]; }
   function hm(m) { m = (m + 1440) % 1440; return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  // the evening before a trip day: which day it is tomorrow (also the night before we fly)
+  function tomorrowDay(now) {
+    var t = new Date(Date.parse(now.date + 'T00:00:00Z') + 864e5).toISOString().slice(0, 10), m = dayIndexFor(t);
+    if (!m) return 0;
+    var n = dayIndexFor(now.date);
+    if (n) { if ($('#day-' + n + ' .ev.next')) return 0; return m; }   // today's plan is finished
+    return now.hm >= '17:00' ? m : 0;                                    // night before departure
+  }
+  function tomorrowCard(box, m, now) {
+    var sec = $('#day-' + m); if (!sec) return false;
+    var evs = $$('.ev', sec), first = evs[0]; if (!first) return false;
+    var t0 = first.getAttribute('data-t'), shown0 = (($('time', first) || {}).textContent || t0);
+    var go = (first.getAttribute('data-go') || '').split('|'), lv = mins(shown0) - (+go[1] || 0);
+    var leaveTxt = /ออกจากที่พัก|เช็คเอาท์|ไปสถานี|ไปสนามบิน/.test(first.textContent) ? 'เริ่ม ' + shown0 : 'ออกจากที่พักราว ' + hm(lv - 5);
+    if (m === 1) leaveTxt = 'ถึงสุวรรณภูมิ ' + shown0 + ' (เวลาไทย)';
+    var wb = $('.wxb[data-date="' + sec.getAttribute('data-date') + '"]', document), wt = wb ? wb.textContent.replace(/\s*\(พยากรณ์\)/, '').replace('กลางคืน', '').trim() : '';
+    var lo = (wt.match(/(-?\d+)\s*[–-]/) || [])[1], wear = '';
+    if (lo != null) lo = +lo;
+    if (m === 1) wear = 'ใส่สบาย ๆ ขึ้นเครื่อง แต่เอาเสื้อกันหนาวไว้ในกระเป๋าถือ (ลงเครื่องตอนค่ำ ~8°C)';
+    else if (lo != null) wear = lo <= 3 ? 'หนาวจัด: ฮีทเทค + โค้ทหนา + ถุงมือ + หมวก' : lo <= 7 ? 'หนาว: ฮีทเทค + โค้ท + ผ้าพันคอ' : lo <= 12 ? 'เย็น: เสื้อแขนยาว + แจ็กเก็ต' : 'กำลังสบาย: เสื้อแขนยาวบาง ๆ';
+    if (/ฝน|雨|🌧|🌦|⛈/.test(wt)) wear += ' · ☔ พกร่ม';
+    var h3 = $('.dh-txt h3', sec), title = h3 ? (h3.childNodes[0] && h3.childNodes[0].nodeType === 3 ? h3.childNodes[0].textContent : h3.textContent).trim() : '';
+    box.setAttribute('data-key', 'tm' + now.date); box.setAttribute('data-day', m); box.setAttribute('data-t', t0);
+    box.className = 'nowc tmr';
+    box.innerHTML = '<div class="nowc-m"><div class="nowc-k">🌙 พรุ่งนี้ · วันที่ ' + m + '</div>' +
+      '<div class="nowc-t">' + title.replace(/[<&]/g, function (c) { return c === '<' ? '&lt;' : '&amp;'; }) + '</div>' +
+      '<div class="nowc-g">⏰ <b>' + leaveTxt + '</b>' + (wt ? ' · ' + wt : '') + '</div>' +
+      (wear ? '<div class="nowc-g">🧥 ' + wear + '</div>' : '') +
+      '<div class="nowc-g">🎒 ' + (sec.getAttribute('data-bring') || '') + '</div></div>' +
+      '<div class="nowc-a"><button type="button" class="nowc-see">ดูแผน</button></div><button type="button" class="nowc-x" aria-label="ซ่อน">×</button>';
+    return true;
+  }
   function nowCard(n) {
-    var box = $('#nowc'), now = shNow(), ev = n ? $('#day-' + n + ' .ev.next') : null;
-    var key = ev ? now.date + ' ' + ev.getAttribute('data-t') : '';
-    var hide = !ev || (function () { try { return sessionStorage.getItem('nowcX') === key; } catch (e) { return false; } })();
+    var box = $('#nowc'), now = shNow(), ev = n ? $('#day-' + n + ' .ev.next') : null, tm = ev ? 0 : tomorrowDay(now);
+    var key = ev ? now.date + ' ' + ev.getAttribute('data-t') : tm ? 'tm' + now.date : '';
+    var hide = (!ev && !tm) || (function () { try { return sessionStorage.getItem('nowcX') === key; } catch (e) { return false; } })();
     document.body.classList.toggle('has-now', !hide);
     if (hide) { if (box) box.hidden = true; return; }
     if (!box) {
@@ -99,6 +131,8 @@
         }
       });
     }
+    if (!ev) { if (tomorrowCard(box, tm, now)) box.hidden = false; else { box.hidden = true; document.body.classList.remove('has-now'); } return; }
+    box.className = 'nowc';
     var t = ev.getAttribute('data-t'), left = mins(t) - mins(now.hm), h3 = $('h3', ev);
     var title = h3 ? (h3.childNodes[0] && h3.childNodes[0].nodeType === 3 ? h3.childNodes[0].textContent : h3.textContent).trim() : '';
     var go = (ev.getAttribute('data-go') || '').split('|'), mode = go[0], gm = +go[1] || 0;

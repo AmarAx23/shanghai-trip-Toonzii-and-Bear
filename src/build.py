@@ -364,6 +364,16 @@ def event_html(e, go=None):
             + (f'<div class="skip">😮‍💨 ข้ามได้ถ้าเหนื่อย <small>· {E(e["skip"])}</small></div>' if e.get("skip") else "")
             + (f'<p>{note}</p>' if note else "") + links_html(e["links"]) + '</div></li>')
 
+# what to have in the bag the next morning (shown on the "Tomorrow" card the evening before)
+BRING_DEFAULT = "พาสปอร์ต · Alipay/WeChat Pay · พาวเวอร์แบงก์ · ซิม/eSIM"
+BRING = {
+    1: "พาสปอร์ต · ตั๋วเครื่องบิน 9C7284 · เงินหยวนสำรอง · ซิม/eSIM · แบตสำรอง (ถือขึ้นเครื่อง)",
+    3: "ตั๋ว Disney (QR ในแอป) · พาสปอร์ตตัวจริง (ใช้เข้าสวน) · พาวเวอร์แบงก์ · ผ้าพันคอ/ถุงมือ (ดูพลุตอนค่ำหนาว)",
+    6: "พาสปอร์ตตัวจริง (ขึ้นรถไฟ + เข้าสวน 拙政园) · ตั๋วรถไฟไป–กลับ · ตั๋วสวน · พาวเวอร์แบงก์",
+    7: "พาสปอร์ต · Alipay · พาวเวอร์แบงก์ · คืนนี้เริ่มเก็บกระเป๋า",
+    8: "พาสปอร์ต · ตั๋วเครื่องบิน 9C7283 · เช็คเอาท์ 07:30 · ของฝากโหลดใต้เครื่อง · ของเหลวไม่เกิน 100 ml",
+}
+
 def day_route(d):
     """pins, route and how each leg is travelled (shared by the plan page and the tour)"""
     import re as _r
@@ -443,7 +453,7 @@ def day_html(d):
     g = d.get("guide")
     guide = f'<details class="tip day-guide"><summary>{E(g[0])}</summary><div class="dg">{g[1]}</div></details>' if g else ""
     return f'''
-    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" data-zh="{E(d.get("zh", ""))}" data-cover="img/hd/{DAY_COVER.get(d["n"], "hero")}-640.webp" aria-label="วันที่ {d["n"]}">
+    <section class="day" id="day-{d["n"]}" data-day="{d["n"]}" data-date="{d["iso"]}" data-zh="{E(d.get("zh", ""))}" data-cover="img/hd/{DAY_COVER.get(d["n"], "hero")}-640.webp" data-bring="{E(BRING.get(d["n"], BRING_DEFAULT))}" aria-label="วันที่ {d["n"]}">
       <div class="dayhead">
         <div class="num">{d["n"]}</div>
         <div class="dh-txt"><h3>{E(d["title"])}{disney}</h3><p>{E(d["date"])} · <span class="wxb" data-date="{d["iso"]}">{E(d["wx"])}</span></p></div>
