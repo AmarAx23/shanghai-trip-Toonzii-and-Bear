@@ -892,10 +892,29 @@
       if (saved[k]) { cb.checked = true; cb.closest('.packing-item').classList.add('checked'); }
       cb.addEventListener('change', function () {
         saved[k] = cb.checked; store(KEY, JSON.stringify(saved));
-        cb.closest('.packing-item').classList.toggle('checked', cb.checked); upd();
+        cb.closest('.packing-item').classList.toggle('checked', cb.checked); upd(); dues();
       });
     });
-    upd();
+    // due dates: "วันนี้!" on the day, "พรุ่งนี้" the day before, orange once it's late and still unticked
+    function dues() {
+      var today = '';
+      try { today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date()); } catch (e) { today = new Date().toISOString().slice(0, 10); }
+      var q = location.search.match(/[?&]today=(\d{4}-\d\d-\d\d)/); if (q) today = q[1];
+      $$('.packing-item[data-due]').forEach(function (li) {
+        var due = li.getAttribute('data-due'), chip = $('.pack-due', li), done = li.classList.contains('checked');
+        if (!chip) return;
+        if (!chip.getAttribute('data-d')) chip.setAttribute('data-d', chip.textContent);
+        var days = Math.round((Date.parse(due) - Date.parse(today)) / 864e5), cls = '', txt = chip.getAttribute('data-d');
+        if (!done) {
+          if (days === 0) { cls = 'today'; txt = 'วันนี้!'; }
+          else if (days === 1) { cls = 'soon'; txt = 'พรุ่งนี้'; }
+          else if (days > 1 && days <= 3) { cls = 'soon'; txt = 'อีก ' + days + ' วัน'; }
+          else if (days < 0) { cls = 'late'; txt = 'เลยกำหนด ' + txt; }
+        }
+        chip.className = 'pack-due' + (cls ? ' ' + cls : ''); chip.textContent = txt;
+      });
+    }
+    upd(); dues();
   })();
 
   // ---- Bottom nav highlight ----

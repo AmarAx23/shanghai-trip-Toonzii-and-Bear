@@ -162,17 +162,22 @@ BUDGET = [("ตั๋วเครื่องบิน Spring Airlines ไป-�
 TOTAL = sum(b[1] for b in BUDGET)
 assert TOTAL == 29860
 
-BOOK = [("bk-disney", "🏰", "ตั๋ว Disney 7 ธ.ค."), ("bk-train", "🚄", "ตั๋วรถไฟไป-กลับซูโจว (เปิดขาย 26 พ.ย.)"),
-        ("bk-garden", "🎫", "ตั๋วสวน 拙政园 (เปิดจอง 3 ธ.ค.)"), ("bk-hanfu", "👘", "จองร้านเช่าชุดฮั่นฝู"),
-        ("bk-didi", "🚕", "แอป Didi ผูกบัตร"), ("bk-insure", "🛡️", "ประกันเดินทาง"),
-        ("bk-arrival", "🛂", "China Arrival Card ออนไลน์ ทั้ง 2 คน (ฟรี)", "https://s.nia.gov.cn/ArrivalCardFillingPhone/")]
-PACK = [("sim", "📱", "ซิม / eSIM จีน"), ("pay", "💳", "Alipay ผูกบัตร"), ("passport", "🛂", "Passport + สำเนา"),
+# (key, icon, text, link, due date) — booking list is sorted by due date; the page flags today / overdue items
+BOOK = [("bk-train", "🚄", "ตั๋วรถไฟไป-กลับซูโจว (เปิดขาย 26 พ.ย.)", None, "2026-11-26"),
+        ("bk-disney", "🏰", "ตั๋ว Disney 7 ธ.ค.", None, "2026-11-30"),
+        ("bk-garden", "🎫", "ตั๋วสวน 拙政园 (เปิดจอง 3 ธ.ค.)", None, "2026-12-03"),
+        ("bk-hanfu", "👘", "จองร้านเช่าชุดฮั่นฝู", None, "2026-12-03"),
+        ("bk-arrival", "🛂", "China Arrival Card ออนไลน์ ทั้ง 2 คน (ฟรี)", "https://s.nia.gov.cn/ArrivalCardFillingPhone/", "2026-12-04"),
+        ("bk-didi", "🚕", "แอป Didi ผูกบัตร", None, "2026-12-04"),
+        ("bk-insure", "🛡️", "ประกันเดินทาง", None, "2026-12-04"),
+        ("bk-checkin", "✈️", "เช็คอินออนไลน์ 9C7284 ในแอป/เว็บ Spring Airlines (ถ้าระบบเปิดให้) · ไม่งั้นถึงเคาน์เตอร์ก่อนบิน 3 ชม.", "https://th.ch.com/", "2026-12-05")]
+PACK = [("sim", "📱", "ซิม / eSIM จีน"), ("pay", "💳", "Alipay ผูกบัตร"), ("passport", "🛂", "Passport + สำเนา"), ("passphoto", "📸", "ถ่ายรูปหน้าพาสปอร์ตเก็บในมือถือ (ทั้ง 2 คน)", None, "2026-12-04"),
         ("powerbank", "🔋", "แบตสำรอง 3C"), ("meds", "💊", "ยาแก้แพ้ / แก้ปวด"), ("plug", "🔌", "หัวแปลงปลั๊ก"),
         ("coat", "🧣", "เสื้อหนาว ผ้าพันคอ"), ("booking", "📄", "ปริ้น Booking"), ("vpn", "🌐", "VPN สำหรับ LINE"),
         ("shoes", "👟", "รองเท้าเดินสบาย"), ("cash", "💴", "เงินสดหยวน"), ("lipbalm", "💧", "ลิปมัน / โลชั่น"),
         ("motionsick", "🤢", "ยาแก้เมารถ"), ("luggage", "⚖️", "กระเป๋า 20/10 กก."), ("umbrella", "☂️", "ร่มพับ / กันลม"),
         ("maps", "🗺️", "แอป Amap"),
-        ("offmap", "⬇️", "กดเก็บแผนที่ออฟไลน์ (ปุ่มเดียวได้ทั้งหมด)")]
+        ("offmap", "⬇️", "กดเก็บแผนที่ออฟไลน์ (ปุ่มเดียวได้ทั้งหมด)", None, "2026-12-04")]
 
 SOS = [("110", "👮", "ตำรวจ", "มีสายด่วนรองรับภาษาอังกฤษ", "110"), ("120", "🚑", "รถพยาบาล", "เหตุฉุกเฉินทางการแพทย์", "120"),
        ("119", "🚒", "ดับเพลิง", "ไฟไหม้ / เหตุฉุกเฉินอื่น ๆ", "119"),
@@ -479,9 +484,12 @@ bmax = max(b[1] for b in BUDGET)
 budget_rows = "".join(f'<li><span class="bi" aria-hidden="true">{i}</span><span class="bl">{E(l)}</span><span class="ba">{a:,} ฿</span><span class="bbar"><i style="width:{a/bmax*100:.1f}%"></i></span></li>' for l, a, i in BUDGET)
 
 CHECK_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>'
-def _pack_li(k, ic, t, url=None):
-    link = f'<a class="pack-link" href="{E(url)}" target="_blank" rel="noopener">กรอกที่นี่ ↗</a>' if url else ""
-    return f'<li class="packing-item" id="pack-{k}"><label><input type="checkbox" data-key="{k}"><span class="pack-box">{CHECK_SVG}</span><span class="packing-txt">{ic} {E(t)}</span></label>{link}</li>'
+TH_MON = {11: "พ.ย.", 12: "ธ.ค."}
+def _pack_li(k, ic, t, url=None, due=None):
+    link = f'<a class="pack-link" href="{E(url)}" target="_blank" rel="noopener">{"กรอกที่นี่" if "nia.gov" in url else "เปิด"} ↗</a>' if url else ""
+    dd = f' data-due="{due}"' if due else ""
+    chip = f' <span class="pack-due">{int(due[8:])} {TH_MON[int(due[5:7])]}</span>' if due else ""
+    return f'<li class="packing-item{" has-link" if url else ""}" id="pack-{k}"{dd}><label><input type="checkbox" data-key="{k}"><span class="pack-box">{CHECK_SVG}</span><span class="packing-txt">{ic} {E(t)}{chip}</span></label>{link}</li>'
 book_rows = "".join(_pack_li(*x) for x in BOOK)
 pack_rows = "".join(_pack_li(*x) for x in PACK)
 

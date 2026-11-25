@@ -766,7 +766,15 @@
   .nowc.tmr .nowc-g { margin-top: 2px; }
   .nowc.tmr .nowc-g b { color: var(--ink); }
   .nowc.tmr .nowc-a { align-self: center; }
-  .packing-item:has(.pack-link) { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); }
-  .packing-item:has(.pack-link) label { flex: 1; border-bottom: none; }
+  .packing-item[data-due] { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .packing-item[data-due] label { flex: 1; min-width: 0; border-bottom: none !important; }
+  .packing-item.has-link { grid-column: 1 / -1; }
+  .pack-due { display: inline-block; vertical-align: 1px; margin-left: 4px; font-size: 11px; line-height: 1.5; font-weight: 700; color: var(--muted); background: var(--gold-soft); border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+  .pack-due.soon { color: #fff; background: #d98a1c; }
+  .pack-due.today { color: #fff; background: var(--red); animation: duePulse 1.6s ease-in-out infinite; }
+  .pack-due.late { color: #fff; background: #c2571a; }
+  .packing-item.checked .pack-due { opacity: .45; }
+  @keyframes duePulse { 50% { box-shadow: 0 0 0 5px rgba(220, 60, 60, .18); } }
+  @media (prefers-reduced-motion: reduce) { .pack-due.today { animation: none; } }
   .pack-link { flex: none; font-size: 13px; font-weight: 700; color: var(--red); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: var(--card); white-space: nowrap; }
   .pack-link:hover { background: var(--gold-soft); }
