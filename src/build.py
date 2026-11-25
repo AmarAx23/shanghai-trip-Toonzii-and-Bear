@@ -165,7 +165,7 @@ assert TOTAL == 29860
 BOOK = [("bk-disney", "🏰", "ตั๋ว Disney 7 ธ.ค."), ("bk-train", "🚄", "ตั๋วรถไฟไป-กลับซูโจว (เปิดขาย 26 พ.ย.)"),
         ("bk-garden", "🎫", "ตั๋วสวน 拙政园 (เปิดจอง 3 ธ.ค.)"), ("bk-hanfu", "👘", "จองร้านเช่าชุดฮั่นฝู"),
         ("bk-didi", "🚕", "แอป Didi ผูกบัตร"), ("bk-insure", "🛡️", "ประกันเดินทาง"),
-        ("bk-arrival", "🛂", "China Arrival Card ออนไลน์ ทั้ง 2 คน (s.nia.gov.cn · ฟรี)")]
+        ("bk-arrival", "🛂", "China Arrival Card ออนไลน์ ทั้ง 2 คน (ฟรี)", "https://s.nia.gov.cn/ArrivalCardFillingPhone/")]
 PACK = [("sim", "📱", "ซิม / eSIM จีน"), ("pay", "💳", "Alipay ผูกบัตร"), ("passport", "🛂", "Passport + สำเนา"),
         ("powerbank", "🔋", "แบตสำรอง 3C"), ("meds", "💊", "ยาแก้แพ้ / แก้ปวด"), ("plug", "🔌", "หัวแปลงปลั๊ก"),
         ("coat", "🧣", "เสื้อหนาว ผ้าพันคอ"), ("booking", "📄", "ปริ้น Booking"), ("vpn", "🌐", "VPN สำหรับ LINE"),
@@ -479,8 +479,9 @@ bmax = max(b[1] for b in BUDGET)
 budget_rows = "".join(f'<li><span class="bi" aria-hidden="true">{i}</span><span class="bl">{E(l)}</span><span class="ba">{a:,} ฿</span><span class="bbar"><i style="width:{a/bmax*100:.1f}%"></i></span></li>' for l, a, i in BUDGET)
 
 CHECK_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>'
-def _pack_li(k, ic, t):
-    return f'<li class="packing-item" id="pack-{k}"><label><input type="checkbox" data-key="{k}"><span class="pack-box">{CHECK_SVG}</span><span class="packing-txt">{ic} {E(t)}</span></label></li>'
+def _pack_li(k, ic, t, url=None):
+    link = f'<a class="pack-link" href="{E(url)}" target="_blank" rel="noopener">กรอกที่นี่ ↗</a>' if url else ""
+    return f'<li class="packing-item" id="pack-{k}"><label><input type="checkbox" data-key="{k}"><span class="pack-box">{CHECK_SVG}</span><span class="packing-txt">{ic} {E(t)}</span></label>{link}</li>'
 book_rows = "".join(_pack_li(*x) for x in BOOK)
 pack_rows = "".join(_pack_li(*x) for x in PACK)
 
@@ -561,7 +562,7 @@ _pr_over = "".join(f'<tr><td class="p-t">{d["n"]}</td><td>{E(d["date"])}</td><td
 _pr_budget = "".join(f'<tr><td>{E(l)}</td><td class="p-r">{a:,} ฿</td></tr>' for l, a, i in BUDGET)
 _pr_sos = "".join(f'<tr><td><b>{E(n)}</b><div class="p-n">{E(sub)}</div></td><td class="p-r p-mono">{E(num)}</td></tr>' for tel, ic, n, sub, num in SOS)
 _pr_phr = "".join(f'<tr><td class="p-zh" lang="zh-CN">{E(zh)}</td><td class="p-n">{E(py)}</td><td>{E(th)}</td></tr>' for zh, py, th in PHRASES)
-_pr_pack = "".join(f'<li>☐ {E(t)}</li>' for k, ic, t in BOOK + PACK)
+_pr_pack = "".join(f'<li>☐ {E(x[2])}</li>' for x in BOOK + PACK)
 PRINTDOC = f"""
 <div id="printdoc" aria-hidden="true">
   <header class="p-head"><img class="p-hero" data-psrc="img/hd/hero-960.webp" alt=""><div class="p-hin"><small>SHANGHAI · DECEMBER 2026 · Toonzii &amp; Bear</small><h1>แผนเที่ยวเซี่ยงไฮ้ 8 วัน 7 คืน</h1><p>เสาร์ 5 – เสาร์ 12 ธันวาคม 2026 · พิมพ์จากเว็บ อัปเดต {BUILD_TH}</p></div></header>
