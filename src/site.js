@@ -1258,9 +1258,32 @@
     countCached().then(function (n) {
       show(n, n >= tiles.length ? 'เก็บแผนที่ของทั้ง 8 วันไว้ในเครื่องแล้ว เปิดได้แม้ไม่มีเน็ต' : (n ? 'เก็บไว้แล้ว ' + n + '/' + tiles.length + ' ชิ้น กดเพื่อเก็บให้ครบ' : null));
     }).catch(function () {});
+    var tourAt = null; try { tourAt = JSON.parse(localStorage.getItem('offmap') || 'null'); } catch (e) {}
+    function allDone(msg) { fill.style.width = '100%'; box.classList.add('done'); btn.textContent = '✅ เก็บแผนที่ทั้งหมดแล้ว · อัปเดตอีกครั้ง'; status.textContent = msg; }
+    if (tourAt) countCached().then(function (n) { if (n >= tiles.length) allDone('เก็บแผนที่รายวัน + แผนที่ทัวร์ไว้ในเครื่องแล้ว (' + tourAt.d + ' · ราว ' + tourAt.mb + ' MB) เปิดได้แม้ไม่มีเน็ต'); }).catch(function () {});
+    // one button for everything: the tour page (in a hidden frame) saves its own map, routes, photos AND these day-map tiles
     btn.addEventListener('click', function () {
       if (busy) return;
       if (navigator.onLine === false) { toast('ต่อเน็ตก่อนแล้วค่อยกดเก็บแผนที่', null, 2200); return; }
+      busy = true; btn.disabled = true; box.classList.remove('done');
+      btn.textContent = '⏳ กำลังเตรียม…'; status.textContent = 'กำลังเก็บแผนที่รายวัน แผนที่ทัวร์ เส้นทาง และรูป… เปิดหน้านี้ค้างไว้ก่อนนะ';
+      var fr = document.createElement('iframe'), heard = false, finished = false;
+      fr.src = 'tour.html?save=1'; fr.setAttribute('aria-hidden', 'true'); fr.tabIndex = -1;
+      fr.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none';
+      function end() { finished = true; window.removeEventListener('message', onMsg); setTimeout(function () { fr.remove(); }, 300); busy = false; btn.disabled = false; }
+      function onMsg(e) {
+        if (e.origin !== location.origin || !e.data || !e.data.tourSave) return;
+        heard = true; var m = e.data;
+        if (m.state === 'run') { fill.style.width = m.pc + '%'; btn.textContent = '⏳ กำลังเก็บ ' + m.pc + '%'; }
+        else if (m.state === 'ok') { end(); allDone(m.note.replace('เก็บเมื่อ', 'เก็บแผนที่รายวัน + แผนที่ทัวร์แล้ว เมื่อ')); toast('✅ เก็บแผนที่ทั้งหมดแล้ว', null, 2200); }
+        else if (m.state === 'fail') { end(); fill.style.width = '0'; btn.textContent = '↻ ลองใหม่'; status.textContent = m.note || 'เก็บไม่ครบ ลองกดใหม่ตอนต่อ Wi-Fi'; }
+      }
+      window.addEventListener('message', onMsg);
+      document.body.appendChild(fr);
+      // if the tour page can't run here (old browser / no WebGL), still save the day maps the old way
+      setTimeout(function () { if (!heard && !finished) { end(); osmOnly(); } }, 20000);
+    });
+    function osmOnly() {
       busy = true; btn.disabled = true;
       var refresh = box.classList.contains('done'), i = 0, ok = 0, fail = 0;
       caches.open(TILE_CACHE).then(function (cache) {
@@ -1282,7 +1305,7 @@
         if (fail) show(ok, 'เก็บได้ ' + ok + '/' + tiles.length + ' ชิ้น บางส่วนโหลดไม่สำเร็จ ลองกดอีกครั้ง');
         else { show(ok, 'เก็บแผนที่ของทั้ง 8 วันไว้ในเครื่องแล้ว เปิดได้แม้ไม่มีเน็ต'); toast('✅ เก็บแผนที่ครบ ' + ok + ' ชิ้นแล้ว', null, 2200); }
       }).catch(function () { busy = false; btn.disabled = false; show(ok, 'เก็บแผนที่ไม่สำเร็จ ลองใหม่อีกครั้ง'); });
-    });
+    }
   })();
 
   // ---- Toast ----

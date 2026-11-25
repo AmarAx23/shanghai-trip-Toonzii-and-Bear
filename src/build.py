@@ -95,8 +95,8 @@ DAYS = [
 
  dict(n=5, iso="2026-12-09", dow="พ.", date="พุธ 9 ธ.ค.", title="Canton 8 + West Bund + Xintiandi", icon="🏭", wx="☀️ 3–9°C",
   events=[
-   ev("09:45", "food", "Pushing Coffee คาเฟ่น้องหมา", "สาขาถนน Maoming Road (茂名路) ช่วงตัดกับ Huaihai Middle Road · มีน้องหมาประจำร้านหลายตัว นั่งเก้าอี้หน้าร้านเล่นกับน้องหมาได้ · เช้าวันธรรมดาคนน้อย · ให้น้องหมาเดินมาหาก่อนค่อยลูบ ไม่ใช้แฟลช · Didi จากที่พัก ~5 นาที หรือเดิน ~20 นาที · ราว 10:50 เรียก Didi ไป Canton 8 ~15 นาที · ร้านอยู่ซอยเดียวกับ Uniqlo บนถนน Huaihai · เปิด 09:00–20:00 (ตามรีวิว) · ⚠️ ปี 2026 เซี่ยงไฮ้คุมเข้มเรื่องหมาในร้านอาหาร ก่อนไปเช็กรีวิวล่าสุดใน Dianping/Xiaohongshu ว่าน้องหมายังอยู่ไหม", "pushing", L("Pushing Coffee Maoming Road, Shanghai", "Pushing Coffee 茂名路"), tag="คาเฟ่"),
-   ev("11:15", "food", "Canton 8 (喜粤8号) สาขา Runan Street", "ร้านอาหารกวางตุ้งชื่อดัง ติดมิชลิน · ติ่มซำ ห่านย่าง · ร้านเปิด ~11:00 ไปตอนเปิดคิวสั้น · จาก Pushing Coffee Didi ~15 นาที", "canton8", L("Canton 8 Runan Street, Shanghai", "喜粤8号"), tag="มื้อกลางวัน"),
+   ev("09:45", "food", "Pushing Coffee คาเฟ่น้องหมา", "สาขาตามพิกัดใน Google Maps อยู่ย่าน Jing'an ฝั่งเหนือ (เหนือแม่น้ำซูโจว) · มีน้องหมาประจำร้านหลายตัว นั่งเก้าอี้หน้าร้านเล่นกับน้องหมาได้ · เช้าวันธรรมดาคนน้อย · ให้น้องหมาเดินมาหาก่อนค่อยลูบ ไม่ใช้แฟลช · Didi จากที่พัก ~20 นาที (ออกราว 09:20) · ราว 10:45 เรียก Didi ไป Canton 8 ~20–25 นาที · เปิด 09:00–20:00 (ตามรีวิว) · ⚠️ ปี 2026 เซี่ยงไฮ้คุมเข้มเรื่องหมาในร้านอาหาร ก่อนไปเช็กรีวิวล่าสุดใน Dianping/Xiaohongshu ว่าน้องหมายังอยู่ไหม", "pushing", L("Pushing Coffee, Jing'an, Shanghai", "Pushing Coffee"), tag="คาเฟ่"),
+   ev("11:15", "food", "Canton 8 (喜粤8号) สาขา Runan Street", "ร้านอาหารกวางตุ้งชื่อดัง ติดมิชลิน · ติ่มซำ ห่านย่าง · ร้านเปิด ~11:00 ไปตอนเปิดคิวสั้น · จาก Pushing Coffee Didi ~20–25 นาที", "canton8", L("Canton 8 Runan Street, Shanghai", "喜粤8号"), tag="มื้อกลางวัน"),
    ev("13:00", "see", "Gate M West Bund Dream Center (西岸梦中心)", "โรงงานปูนซีเมนต์เก่าริมแม่น้ำหวงผู่ ปรับเป็นย่านคาเฟ่ ร้านอาหาร ร้านค้า ตึกอินดัสเทรียลถ่ายรูปสวย · ทางเดินริมน้ำ 800 ม. · 2266 Longteng Avenue · จาก Canton 8 Didi ~15 นาที · ริมน้ำลมแรง ใส่เสื้อกันลม · ฤดูหนาวที่แล้วมีลานสเก็ตน้ำแข็งริมแม่น้ำ (ปีนี้ยังไม่ยืนยัน)", None, L("Gate M West Bund Dream Center, 2266 Longteng Avenue, Shanghai", "西岸梦中心"), tag="ถ่ายรูป"),
    ev("16:00", "see", "Xintiandi (新天地)", "ตรอกอิฐแดงสไตล์ Shikumen ผสมจีน-ยุโรป · คาเฟ่ ร้านบูติก · จาก Gate M Didi ~20 นาที · เดินเล่นช่วงเย็นตอนไฟเปิด ร้านอาหาร บาร์ คาเฟ่เยอะ · ธันวาคมมักตกแต่งคริสต์มาส · แล้วแวะ New York Bagelous ใน Xintiandi Style", "xintiandi", L("Xintiandi, Shanghai", "新天地")),
    ev("16:45", "food", "New York Bagelous Museum 🥯", "ร้านเบเกิลดังในห้าง Xintiandi Style เฟส 2 ชั้น 1 ห้อง L111 (马当路245号 新天地时尚购物中心2期 L111) · เนื้อขนมนุ่มหนึบ ใกล้ขนมปังนมผสมเพรทเซลมากกว่าเบเกิลแท้ · Original ~¥13, พริกฮาลาเปโญ ~¥26, แซลมอนรมควัน ~¥56 · ร้านเล็ก คิวต่อเนื่อง · เปิด 11:00–19:00 (ตามรีวิว เช็กอีกครั้ง) · เดินจาก Xintiandi ได้ แล้วไป Pane ที่ TX Huaihai ต่อ ~10 นาที", None, L("New York Bagelous Museum, Xintiandi Style, 245 Madang Road, Shanghai", "新天地时尚 马当路245号 贝果"), tag="ของหวาน"),
@@ -171,7 +171,7 @@ PACK = [("sim", "📱", "ซิม / eSIM จีน"), ("pay", "💳", "Alipay �
         ("shoes", "👟", "รองเท้าเดินสบาย"), ("cash", "💴", "เงินสดหยวน"), ("lipbalm", "💧", "ลิปมัน / โลชั่น"),
         ("motionsick", "🤢", "ยาแก้เมารถ"), ("luggage", "⚖️", "กระเป๋า 20/10 กก."), ("umbrella", "☂️", "ร่มพับ / กันลม"),
         ("maps", "🗺️", "แอป Amap"),
-        ("offmap", "⬇️", "เก็บแผนที่ทัวร์ไว้ในเครื่อง")]
+        ("offmap", "⬇️", "กดเก็บแผนที่ออฟไลน์ (ปุ่มเดียวได้ทั้งหมด)")]
 
 SOS = [("110", "👮", "ตำรวจ", "มีสายด่วนรองรับภาษาอังกฤษ", "110"), ("120", "🚑", "รถพยาบาล", "เหตุฉุกเฉินทางการแพทย์", "120"),
        ("119", "🚒", "ดับเพลิง", "ไฟไหม้ / เหตุฉุกเฉินอื่น ๆ", "119"),
@@ -215,7 +215,7 @@ PVG_LL = (31.1525, 121.8018)
 GEO = {
  (4, "14:00"): ((31.2222, 121.4347), "Pane Yongyuan"),
  (5, "16:45"): ((31.2185, 121.4706), "Bagelous"), (4, "16:45"): ((31.2318, 121.4552), "Butterful"),
- (5, "09:45"): ((31.2180, 121.4568), "Pushing Coffee"),
+ (5, "09:45"): ((31.27543, 121.45608), "Pushing Coffee"),  # Google pin 31.27355,121.46066 (GCJ) → WGS
  (5, "17:30"): ((31.2245, 121.4680), "Pane TX Huaihai"),
  (5, "20:00"): ((31.2175, 121.4545), "Huaihai Road"),
  (5, "11:15"): ((31.2065, 121.4743), "Canton 8"), (5, "13:00"): ((31.1749, 121.4574), "Gate M West Bund"), (5, "16:00"): ((31.2219, 121.4704), "Xintiandi"), (5, "18:30"): ((31.2208, 121.4600), "New Sukiyaki Huaihai"),
@@ -324,7 +324,7 @@ SKIP = {
 ZH_EV = {
  (4, "14:00"): "PANE 球鞋（永源路22号）",
  (5, "16:45"): "New York Bagelous Museum（新天地时尚 L111）", (4, "16:45"): "黄油与面包 Butterful & Creamorous（吴江路289号）",
- (5, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）",
+ (5, "09:45"): "Pushing Coffee 狗狗咖啡",
  (5, "17:30"): "PANE 球鞋（TX淮海 淮海中路523号）",
  (5, "20:00"): "淮海中路 散步回酒店",
  (5, "11:15"): "喜粤8号（汝南街）", (5, "13:00"): "西岸梦中心", (5, "16:00"): "新天地", (5, "18:30"): "牛New寿喜烧（淮海中路755号 3楼）",
@@ -716,10 +716,10 @@ page = f'''<!DOCTYPE html>
       <ul class="pack">{pack_rows}</ul>
     </div>
     <div class="card offmap" id="offmap" data-tiles="{E(json.dumps(ALL_TILES))}">
-      <div class="om-h"><span class="om-i" aria-hidden="true">🗺️</span><div><b>แผนที่ออฟไลน์</b><span id="om-status">เก็บแผนที่ของทั้ง 8 วันไว้ในเครื่อง เปิดได้แม้ไม่มีเน็ตหรือไม่ได้เปิด VPN</span></div></div>
+      <div class="om-h"><span class="om-i" aria-hidden="true">🗺️</span><div><b>แผนที่ออฟไลน์</b><span id="om-status">กดครั้งเดียว เก็บทั้งแผนที่รายวัน แผนที่ทัวร์ เส้นทาง และรูป ไว้ในเครื่อง เปิดได้แม้ไม่มีเน็ตหรือไม่ได้เปิด VPN</span></div></div>
       <div class="om-bar" aria-hidden="true"><i id="om-fill"></i></div>
-      <button type="button" class="btn" id="om-btn">💾 เก็บแผนที่ไว้ใช้ออฟไลน์</button>
-      <small class="om-note">ทำตอนอยู่ไทยและต่อ Wi-Fi · ใช้เน็ตประมาณ 3 MB · แผนที่ © OpenStreetMap contributors</small>
+      <button type="button" class="btn" id="om-btn">💾 เก็บแผนที่ทั้งหมดไว้ใช้ออฟไลน์</button>
+      <small class="om-note">ทำตอนอยู่ไทยและต่อ Wi-Fi · ใช้เน็ตราว 20–40 MB · แผนที่ © OpenStreetMap contributors</small>
     </div>
   </section>
 
@@ -903,7 +903,7 @@ def _tour():
         D.append(dict(base, pins=pins, route=route, it=items, suzhou=suzhou, segs=segs))
     html = (tpl.replace("__TOUR_DATA__", _j.dumps(D, ensure_ascii=False))
                .replace("__HOTEL_LON__", str(HOTEL_LL[1])).replace("__HOTEL_LAT__", str(HOTEL_LL[0]))
-               .replace("__TOTAL__", f"{TOTAL:,}"))
+               .replace("__TOTAL__", f"{TOTAL:,}").replace("__OSM_TILES__", _j.dumps(ALL_TILES)))
     out = _osroot.path.join(_osroot.path.dirname(OUT), "tour.html")
     open(out, "w", encoding="utf-8").write(html)
     print("written tour.html", len(html))
