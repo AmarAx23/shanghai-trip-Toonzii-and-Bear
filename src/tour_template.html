@@ -265,6 +265,52 @@ body.incity #map{background:#f4eee2}
 .puffs i{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:#d8ccb0;opacity:0;animation:puff .9s ease-out forwards}
 .puffs i:nth-child(1){--x:-26px;--y:-6px}.puffs i:nth-child(2){--x:-14px;--y:-18px;animation-delay:.08s}.puffs i:nth-child(3){--x:-34px;--y:-16px;animation-delay:.16s;width:12px;height:12px}.puffs i:nth-child(4){--x:-20px;--y:4px;animation-delay:.12s;width:10px;height:10px}
 @keyframes puff{0%{opacity:.85;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.5)}}
+
+/* ---- emoji bubble over the heads ---- */
+.duo .bub{position:absolute;left:-40px;bottom:30px;width:44px;height:44px;display:grid;place-items:center;font-size:25px;line-height:1;background:#fffaf0;border-radius:50%;box-shadow:0 6px 16px #0005,0 0 0 2px #e9cf95;z-index:4;animation:bub 3.3s cubic-bezier(.3,1.5,.5,1) forwards}
+.duo .bub::after{content:"";position:absolute;right:-7px;top:50%;margin-top:-6px;border:6px solid transparent;border-left-color:#fffaf0;border-right:0}
+@keyframes bub{0%{opacity:0;transform:translateY(14px) scale(.2)}14%{opacity:1;transform:translateY(-4px) scale(1.18)}24%{transform:translateY(0) scale(1)}78%{opacity:1;transform:translateY(-6px) scale(1)}100%{opacity:0;transform:translateY(-20px) scale(.9)}}
+/* ---- time of day: tint over the map (markers stay untinted) ---- */
+.sky{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply}
+.sky i{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}
+.sky .m{background:linear-gradient(180deg,#c6dcff 0%,#fff6e4 70%)}
+.sky .g{background:linear-gradient(180deg,#ffd58a 0%,#ffe9c2 80%)}
+.sky .d{background:linear-gradient(180deg,#7a63c9 0%,#ff9a6a 62%,#ffd29a 100%)}
+.sky.m .m{opacity:.3}.sky.g .g{opacity:.4}.sky.d .d{opacity:.46}
+/* ---- fireworks + light beams ---- */
+.fw{position:relative;width:1px;height:1px;pointer-events:none}
+.fw .burst{position:absolute;width:0;height:0}
+.fw .burst::before{content:"";position:absolute;left:-40px;top:-40px;width:80px;height:80px;border-radius:50%;background:radial-gradient(var(--c),transparent 65%);opacity:0;animation:fwg 1.9s ease-out infinite;animation-delay:inherit}
+.fw .burst i{position:absolute;left:-2.5px;top:-2.5px;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 8px 2px var(--c);opacity:0;animation:fwp 1.9s cubic-bezier(.1,.75,.3,1) infinite;animation-delay:inherit}
+@keyframes fwp{0%{opacity:0;transform:rotate(var(--a)) translateY(0) scale(1)}6%{opacity:1}65%{opacity:.95}100%{opacity:0;transform:rotate(var(--a)) translateY(-54px) scale(.25)}}
+@keyframes fwg{0%{opacity:0}6%{opacity:.55}40%{opacity:0}100%{opacity:0}}
+.beams{position:relative;width:1px;height:1px;pointer-events:none}
+.beams::after{content:"";position:absolute;left:-70px;top:-40px;width:140px;height:60px;border-radius:50%;background:radial-gradient(#ffe7a8aa,transparent 70%);animation:beamIn 1s forwards;opacity:0}
+.beams i{position:absolute;bottom:0;width:12px;height:340px;margin-left:-6px;transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,236,170,.85),rgba(255,236,170,0));filter:blur(3px);mix-blend-mode:screen;opacity:0;animation:beamIn 1s forwards,swing var(--d) ease-in-out infinite alternate}
+@keyframes beamIn{to{opacity:1}}
+@keyframes swing{from{transform:rotate(var(--r0))}to{transform:rotate(var(--r1))}}
+/* ---- end-of-day passport stamp ---- */
+.fin{position:fixed;z-index:660;left:calc(50% + min(210px,19vw));top:46%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:14px;cursor:pointer;transition:opacity .45s,transform .45s}
+.fin.out{opacity:0;transform:translate(-50%,-56%)}
+.stamp{width:min(230px,52vw);aspect-ratio:1;color:var(--ink,#b8323a);opacity:0;--r:-9deg;animation:slam .62s cubic-bezier(.2,.9,.25,1) .1s forwards;filter:drop-shadow(0 2px 0 #fff6)}
+.stamp svg{width:100%;height:100%;display:block}
+.fin .stamp{background:radial-gradient(#fbf6ea 0 64%,#efe4cc 70%,transparent 71%);border-radius:50%;filter:drop-shadow(0 16px 30px #000a)}
+@keyframes slam{0%{opacity:0;transform:scale(2.7) rotate(calc(var(--r) - 14deg))}55%{opacity:.95;transform:scale(.9) rotate(var(--r))}72%{transform:scale(1.05) rotate(var(--r))}100%{opacity:.92;transform:scale(1) rotate(var(--r))}}
+.fstats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fsIn .5s .7s forwards}
+.fstats span{background:#141b35e6;color:#f6efe0;border:1px solid #e9cf9566;border-radius:999px;padding:7px 13px;font-size:14px;font-weight:600;white-space:nowrap;box-shadow:0 8px 20px #0006}
+.fstats b{color:var(--gold2);font-size:17px;font-variant-numeric:tabular-nums}
+@keyframes fsIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#map.thud{animation:thud .32s ease-out}
+@keyframes thud{0%,100%{transform:none}30%{transform:translate(2px,3px)}60%{transform:translate(-2px,-1px)}}
+.passport{position:fixed;inset:0;z-index:670;display:grid;place-items:center;background:#0b1020b3;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;animation:fsIn .5s forwards;cursor:pointer;transition:opacity .45s}
+.passport.out{opacity:0}
+.pp{width:min(620px,92vw);background:#f6efe0;color:#2a2416;border-radius:16px;padding:22px 20px 18px;box-shadow:0 30px 80px #000a;background-image:repeating-linear-gradient(0deg,#0000 0 27px,#c9a04f14 27px 28px)}
+.pp h3{margin:0 0 2px;font-family:var(--serif,serif);font-size:20px;letter-spacing:.12em;text-align:center}
+.pp p{margin:0 0 14px;text-align:center;font-size:13px;color:#7a6a48}
+.pp .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.pp .stamp{width:100%;animation-duration:.5s}
+@media(max-width:820px){.fin{left:50%;top:21%;gap:10px}.fin .stamp{width:min(158px,42vw)}.fstats span{padding:5px 11px;font-size:13px}.pp .grid{gap:6px}.pp h3{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.stamp,.fstats,.passport{animation:none;opacity:1}.duo .bub{animation-duration:.01s}}
 @keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-14px) scale(1.08)}100%{transform:translateY(0)}}
 .chapter{position:fixed;inset:0;z-index:640;display:grid;place-items:center;pointer-events:none;text-align:center;opacity:0;transition:opacity .7s}
 .chapter.on{opacity:1}
@@ -380,6 +426,7 @@ function buildPalette() {
 function setNight(on) {
   if (NIGHT === on) return; NIGHT = on; document.body.classList.toggle('incity', !on);
   for (var id in PAL) for (var pr in PAL[id]) { try { map.setPaintProperty(id, pr, PAL[id][pr][on ? 1 : 0]); } catch (e) {} }
+  try { if (map.getLayer('b3d')) map.setPaintProperty('b3d', 'fill-extrusion-color', on ? LIT : '#efe6d3'); } catch (e) {}   // windows light up at night
   try { map.setSky(on ? { 'sky-color': '#0b1020', 'horizon-color': '#1a2340', 'fog-color': '#0e1428', 'sky-horizon-blend': .6, 'horizon-fog-blend': .5, 'fog-ground-blend': .6 }
                        : { 'sky-color': '#efe6d2', 'horizon-color': '#f4eee2', 'fog-color': '#f4eee2', 'sky-horizon-blend': .6, 'horizon-fog-blend': .5, 'fog-ground-blend': .7 }); } catch (e) {}
 }
@@ -389,7 +436,7 @@ function add3D() {
     map.addSource('ofm', { type: 'vector', url: 'https://tiles.openfreemap.org/planet' });
     var firstSym = (map.getStyle().layers.filter(function (l) { return l.type === 'symbol'; })[0] || {}).id;
     map.addLayer({ id: 'b3d', type: 'fill-extrusion', source: 'ofm', 'source-layer': 'building', minzoom: 14.6,
-      paint: { 'fill-extrusion-color': '#efe6d3', 'fill-extrusion-opacity': .88, 'fill-extrusion-vertical-gradient': true,
+      paint: { 'fill-extrusion-color': NIGHT ? LIT : '#efe6d3', 'fill-extrusion-color-transition': { duration: reduce ? 0 : 1600 }, 'fill-extrusion-opacity': .88, 'fill-extrusion-vertical-gradient': true,
         'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14.6, 0, 15.6, ['coalesce', ['get', 'render_height'], 12]],
         'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0] } }, firstSym);
   } catch (e) {}
@@ -439,6 +486,90 @@ function clearFx() { fx.forEach(function (m) { m.remove(); }); fx = []; }
 function geoBearing(a, b) { return Math.atan2((b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), b[1] - a[1]) * 180 / Math.PI; }
 function footprint(ll, brg, right) { var el = document.createElement('div'); el.className = 'fp'; el.innerHTML = '<i class="' + (right ? 'r' : 'l') + '"></i>'; fxMark(ll, el, { rotation: brg, rotationAlignment: 'map', pitchAlignment: 'map' }, 2700); }
 function dust(ll, right) { var el = document.createElement('div'); el.innerHTML = '<div class="puffs"' + (right ? ' style="scale:-1 1"' : '') + '><i></i><i></i><i></i><i></i></div>'; fxMark(ll, el, {}, 1100); }
+
+/* ---- time of day ---- */
+var skyEl = null;
+function skyAt(t) {
+  if (!skyEl) { skyEl = document.createElement('div'); skyEl.className = 'sky'; skyEl.innerHTML = '<i class="m"></i><i class="g"></i><i class="d"></i>'; var cv = map.getCanvas(); cv.parentNode.insertBefore(skyEl, cv.nextSibling); }
+  var h = t ? +t.slice(0, 2) + (+t.slice(3, 5)) / 60 : 12, ph = !t ? '' : h < 10.5 ? 'm' : h < 15 ? '' : h < 16.75 ? 'g' : h < 17.9 ? 'd' : 'n';
+  skyEl.className = 'sky ' + (ph === 'n' ? '' : ph);
+  setNight(ph === 'n');
+}
+var LIT = ['interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 10], 0, '#252e4e', 25, '#4a4560', 60, '#a9844a', 150, '#e8b75c', 300, '#ffdc8f'];
+/* ---- scene effects ---- */
+var LJZ = [121.4990, 31.2392];
+function fireworks(ll) {
+  var el = document.createElement('div'), h = '';
+  [[-190, -110, '#ffd27a', 0], [175, -150, '#ff7aa8', .5], [-150, -215, '#8fd3ff', .95], [205, -55, '#c9a2ff', 1.4], [-235, -20, '#ffe9a8', 1.8], [150, -240, '#9ff0c0', 2.2]].forEach(function (b) {
+    h += '<div class="burst" style="left:' + b[0] + 'px;top:' + b[1] + 'px;--c:' + b[2] + ';animation-delay:' + b[3] + 's">';
+    for (var k = 0; k < 14; k++) h += '<i style="--a:' + (k * 360 / 14) + 'deg"></i>';
+    h += '</div>';
+  });
+  el.className = 'fw'; el.innerHTML = h; fxMark(ll, el, { anchor: 'center' }, 6200);
+}
+function lightBeams(ll) {
+  var el = document.createElement('div'), h = '';
+  [[-50, -34, 10, 3.4], [-18, -20, 28, 4.6], [0, 18, -24, 3.9], [22, -10, 34, 5.2], [46, 30, -8, 4.2]].forEach(function (b) { h += '<i style="left:' + b[0] + 'px;--r0:' + b[1] + 'deg;--r1:' + b[2] + 'deg;--d:' + b[3] + 's"></i>'; });
+  el.className = 'beams'; el.innerHTML = h; fxMark(ll, el, { anchor: 'center' }, 6200);
+}
+/* ---- passport stamps ---- */
+var INK = ['#b8323a', '#24427a', '#2e7d5b', '#8a3f8f', '#b8323a', '#1f6f7a', '#a4542a', '#24427a'];
+var MON = 'DEC';
+function stampCity(n) { return n === 1 ? 'SHANGHAI · 上海 · ARRIVED' : n === 3 ? 'DISNEYLAND · 迪士尼' : n === 6 ? 'SUZHOU · 苏州' : n === D.length - 1 ? 'PVG → BKK · HOME' : 'SHANGHAI · 上海'; }
+function stampSVG(n) {
+  var d = D[n] || {}, dd = d.iso ? d.iso.slice(8) : '', ring = stampCity(n) + ' · ' + dd + ' ' + MON + ' 2026 · ', id = 'sp' + n + Math.random().toString(36).slice(2, 6);
+  return '<svg viewBox="0 0 200 200" aria-hidden="true"><defs><path id="' + id + '" d="M100,100 m-71,0 a71,71 0 1,1 142,0 a71,71 0 1,1 -142,0"/>' +
+    '<filter id="r' + id + '"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="' + n + '"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.45"/><feComposite in="SourceGraphic" operator="in"/></filter></defs>' +
+    '<g filter="url(#r' + id + ')" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="93" stroke-width="5"/><circle cx="100" cy="100" r="85" stroke-width="1.6"/><circle cx="100" cy="100" r="57" stroke-width="2.2"/>' +
+    '<text fill="currentColor" stroke="none" font-size="13.5" font-weight="700" letter-spacing="1.6" font-family="system-ui,sans-serif"><textPath href="#' + id + '" textLength="440">' + ring + '</textPath></text>' +
+    '<text x="100" y="88" text-anchor="middle" fill="currentColor" stroke="none" font-size="13" font-weight="700" letter-spacing="4" font-family="system-ui,sans-serif">DAY</text>' +
+    '<text x="100" y="131" text-anchor="middle" fill="currentColor" stroke="none" font-size="44" font-weight="900" font-family="Georgia,serif">' + (n < 10 ? '0' : '') + n + '</text></g></svg>';
+}
+function stampEl(n, rot) { return '<div class="stamp" style="--ink:' + INK[(n - 1) % 8] + ';--r:' + rot + 'deg">' + stampSVG(n) + '</div>'; }
+function thud() { var m = $('#map'); if (!m || reduce) return; m.classList.remove('thud'); void m.offsetWidth; m.classList.add('thud'); }
+function finale(n, stats, my, cb) {
+  var el = document.createElement('div'), rot = [-9, 7, -5, 10, -12, 6, -7, 9][n % 8];
+  el.className = 'fin';
+  el.innerHTML = stampEl(n, rot) + '<div class="fstats">' + stats.map(function (s) { return '<span>' + s[0] + ' <b data-v="' + s[1] + '" data-f="' + (s[3] || 0) + '">0</b> ' + s[2] + '</span>'; }).join('') + '</div>';
+  document.body.appendChild(el);
+  setTimeout(thud, reduce ? 0 : 420);
+  setTimeout(function () {   // count up
+    var bs = el.querySelectorAll('.fstats b'), t0 = performance.now();
+    (function f(now) { var p = Math.min(1, (now - t0) / 900), e = 1 - Math.pow(1 - p, 3); [].forEach.call(bs, function (b) { var v = +b.getAttribute('data-v') * e, k = +b.getAttribute('data-f'); b.textContent = k ? v.toFixed(k) : Math.round(v); }); if (p < 1 && el.isConnected) requestAnimationFrame(f); })(t0);
+  }, reduce ? 0 : 750);
+  var closed = false;
+  function close() { if (closed) return; closed = true; el.classList.add('out'); setTimeout(function () { el.remove(); }, 450); if (my === gen && cb) cb(); }
+  el.addEventListener('click', close);
+  setTimeout(close, reduce ? 1500 : 4300);
+  finEls.push(el);
+}
+var finEls = [];
+function clearFin() { finEls.forEach(function (e) { e.remove(); }); finEls = []; }
+function passport(my, cb) {
+  var el = document.createElement('div'), h = '';
+  for (var n = 1; n < D.length; n++) h += '<div>' + stampEl(n, [-9, 7, -5, 10, -12, 6, -7, 9][n % 8]) + '</div>';
+  el.className = 'passport';
+  el.innerHTML = '<div class="pp"><h3>PASSPORT · 上海 2026</h3><p>ครบ ' + (D.length - 1) + ' วัน · Toonzii &amp; Bear</p><div class="grid">' + h + '</div></div>';
+  document.body.appendChild(el); finEls.push(el);
+  [].forEach.call(el.querySelectorAll('.stamp'), function (s, i) { s.style.animationDelay = (reduce ? 0 : .5 + i * .28) + 's'; });
+  for (var i = 0; i < D.length - 1; i++) setTimeout(thud, reduce ? 0 : 800 + i * 280);
+  var closed = false;
+  function close() { if (closed) return; closed = true; el.classList.add('out'); setTimeout(function () { el.remove(); }, 450); if (my === gen && cb) cb(); }
+  el.addEventListener('click', close);
+  setTimeout(close, reduce ? 2000 : 8000);
+}
+function pathKm(p) { var m = 0; for (var i = 1; i < p.length; i++) { var a = p[i - 1], b = p[i], dx = (b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), dy = b[1] - a[1]; m += Math.sqrt(dx * dx + dy * dy) * 111.32; } return m; }
+function dayStats(d, nStops) {
+  var legs = dayLegs(d), km = 0, out = [];
+  legs.forEach(function (l, j) { if (l.prof === 'foot') km += pathKm(dayPaths && dayPaths[j] ? dayPaths[j] : [l.a, l.b]); });
+  var didi = (d.segs || []).filter(function (g) { return g.m === '🚕'; }).length;
+  if (idx === 1) out.push(['✈️', 1, 'เที่ยวบิน']);
+  if (d.suzhou) out.push(['🚄', 2, 'เที่ยวรถไฟ']);
+  if (km >= .1) out.push(['🚶', Math.round(km * 10) / 10, 'กม.', 1]);
+  out.push(['📍', nStops, 'จุด']);
+  if (didi) out.push(['🚕', didi, 'Didi']);
+  return out;
+}
 /* the train to Suzhou: Shanghai Railway Station → Kunshan → Suzhou Station */
 var RAIL = [[121.4460, 31.2527], [121.3950, 31.2585], [121.3200, 31.2830], [121.2300, 31.3060], [121.1400, 31.3250], [121.0400, 31.3380], [120.9520, 31.3440], [120.8600, 31.3520], [120.7700, 31.3500], [120.7090, 31.3420], [120.6600, 31.3365], [120.6058, 31.3325]];
 function cityTag(ll, t) { return mk(LL(ll), '<div class="ctag" style="transform:none"><span class="cd"></span><span class="cn"><small>' + (EN[t] || '') + '</small>' + t + '</span></div>', { anchor: 'left', offset: [-9, 0] }); }
@@ -567,7 +698,7 @@ function card(d) {
   }
   var legs = (d.segs || []).length ? '<p class="legs">' + d.segs.map(function (g) { return g.m; }).join(' ') + ' · ' + legSummary(d.segs) + '</p>' : '';
   c.innerHTML = '<div class="cover"><div class="cv" style="background-image:url(' + (d.cover || '') + ')"></div><div class="chips"><span class="chip">' + esc(d.d) + '</span>' + (d.tp ? '<span class="chip t">' + esc(d.tp) + '</span>' : '') + '</div></div>' +
-    '<div class="head"><h2>' + esc(d.h) + '</h2><p class="zh">' + esc(d.zh) + '</p>' + legs + (d.pins && d.pins.length > 1 ? '<button type="button" class="storyb" id="storyb">▶ เล่นทีละจุด</button>' : '') + '</div><div class="list">' +
+    '<div class="head"><h2>' + esc(d.h) + '</h2><p class="zh">' + esc(d.zh) + '</p>' + legs + (d.pins && (d.pins.length > 1 || d.it.filter(function (x) { return x.pin; }).length > 2) ? '<button type="button" class="storyb" id="storyb">▶ เล่นทีละจุด</button>' : '') + '</div><div class="list">' +
     d.it.map(function (x, k) { return '<div class="it" style="--i:' + Math.min(k, 10) + '" data-k="' + k + '"' + (x.pin ? ' data-pin="' + x.pin + '"' : '') + '><span class="tm">' + x.t + '</span><span class="ph"' + (x.img ? ' style="background-image:url(' + x.img + ')"' : '') + '>' + (x.img ? '' : (x.hotel ? '🏨' : '•')) + '</span><span class="tx">' + esc(x.title) + '</span>' + (x.hotel ? '<span class="b h">★</span>' : x.pin ? '<span class="b">' + x.pin + '</span>' : '<span></span>') + '</div>'; }).join('') + '</div>';
 }
 function legSummary(segs) {
@@ -589,7 +720,7 @@ function closePop() { if (popup) { popup.remove(); popup = null; } }
 
 function go(i, readyCb) {
   i = Math.max(0, Math.min(D.length - 1, i)); var prev = idx; idx = i; var d = D[i], my = ++gen;
-  ui(); closePop(); clearMarks(); document.body.classList.remove('storying', 'peek'); cancelAnimationFrame(drawRaf); setLine('arc', []); setLine('route', []); setLine('rail', []); map.stop(); clearFx();
+  ui(); closePop(); clearMarks(); document.body.classList.remove('storying', 'peek'); cancelAnimationFrame(drawRaf); setLine('arc', []); setLine('route', []); setLine('rail', []); map.stop(); clearFx(); clearFin(); if (skyEl) skyEl.className = 'sky';
   var c = $('#card');
   if (document.startViewTransition && !reduce && c.innerHTML) document.startViewTransition(function () { if (my !== gen) return; card(d); bindList(); });
   else { c.classList.add('out'); setTimeout(function () { if (my !== gen) return; card(d); c.classList.remove('out'); bindList(); }, reduce ? 0 : 450); }
@@ -598,7 +729,7 @@ function go(i, readyCb) {
     setNight(true);
     cityTag(BKK, 'กรุงเทพฯ'); cityTag(PVG, 'เซี่ยงไฮ้');
     view([LL(BKK), LL(PVG)], { maxZoom: 6, pitch: 35, bearing: -8, dur: 2800 });
-    if (d.asia) { chapter('DAY 0' + i, d.h); setTimeout(function () { if (my === gen) fly(ARC_BACK, reduce ? 10 : 4200, my, function () { setTimeout(done, 1500); }); }, reduce ? 0 : 2900); }
+    if (d.asia) { chapter('DAY 0' + i, d.h); setTimeout(function () { if (my === gen) fly(ARC_BACK, reduce ? 10 : 4200, my, function () { setTimeout(function () { if (my === gen) passport(my, done); }, reduce ? 0 : 900); }); }, reduce ? 0 : 2900); }
     else { setTimeout(function () { if (my === gen) drawLine('arc', ARC_GO, 2200, my); }, reduce ? 0 : 2400); setTimeout(done, reduce ? 0 : 5000); setTimeout(function () { prefetchDay(1); prefetchDay(2); }, 3000); }
     return;
   }
@@ -664,7 +795,7 @@ function go(i, readyCb) {
 
 /* story mode: a gold traveller runs the route, the camera swoops low and orbits each stop */
 function story(doneCb) {
-  var d = D[idx], my = gen; if (!d.pins) { if (doneCb) doneCb(); return; }
+  var d = D[idx], my = gen; clearFin(); if (!d.pins) { if (doneCb) doneCb(); return; }
   var stops = [], seen = {};
   d.it.forEach(function (x) { if (x.pin && !seen[x.pin + '|' + x.t]) { seen[x.pin + '|' + x.t] = 1; stops.push(x); } });
   var sb = $('#storyb'); if (sb) sb.textContent = '❚❚ หยุดเล่า'; document.body.classList.add('storying');
@@ -696,12 +827,13 @@ function story(doneCb) {
     closePop(); highlight(0); segEls.forEach(function (s) { var e = s.getElement().firstChild; if (e) e.classList.remove('act'); });
     if (d.suzhou && trav && !reduce) {   // evening train back to Shanghai
       document.body.classList.add('storying');
-      trainRide(RAIL.slice().reverse(), function () { document.body.classList.remove('storying', 'peek'); if (trav) { trav.remove(); trav = null; } setTimeout(function () { if (my === gen && doneCb) doneCb(); }, 1200); });
+      trainRide(RAIL.slice().reverse(), function () { document.body.classList.remove('storying', 'peek'); if (trav) { trav.remove(); trav = null; } if (my === gen) finale(idx, dayStats(d, stops.length), my, doneCb); });
       return;
     }
     if (trav) { trav.remove(); trav = null; }
     view(dayPts(d), { maxZoom: d.suzhou ? 14.5 : 15.3, pitch: 52, bearing: bear, dur: 2400 });
-    setTimeout(function () { if (my === gen && doneCb) doneCb(); }, reduce ? 0 : 2600);
+    try { map.setPaintProperty('route-glow', 'line-opacity', .7); setTimeout(function () { try { map.setPaintProperty('route-glow', 'line-opacity', .28); } catch (e) {} }, 4200); } catch (e) {}   // whole day's route glows
+    setTimeout(function () { if (my === gen) finale(idx, dayStats(d, stops.length), my, doneCb); }, reduce ? 0 : 1700);
   }
   function seg(a, b) { for (var j = 0; j < (d.segs || []).length; j++) { var g = d.segs[j]; if (Math.abs(g.b[0] - b[1]) < 1e-6 && Math.abs(g.b[1] - b[0]) < 1e-6) return j; } return -1; }
   function next() {
@@ -710,7 +842,7 @@ function story(doneCb) {
     var x = stops[k++], m = pinEls[x.pin - 1]; if (!m) { next(); return; }
     var to = m.getLngLat().toArray(), bar = bars[k - 1];
     if (bar) { bar.style.transitionDuration = (reduce ? 1.2 : 6.2) + 's'; bar.parentNode.classList.add('on'); }
-    highlight(x.pin, false); scrollRow(rowFor(x.pin)); closePop();
+    highlight(x.pin, false); scrollRow(rowFor(x.pin)); closePop(); skyAt(x.t);
     var sj = seg(from, to), mode = sj >= 0 ? d.segs[sj].m : '';
     segEls.forEach(function (s, j) { var e = s.getElement().firstChild; if (e) e.classList.toggle('act', j === sj); });
     var duo = trav.getElement().firstChild, isCar = mode && mode !== '🚶';
@@ -733,13 +865,18 @@ function story(doneCb) {
         } else if (lastPx && Math.abs(px.x - lastPx.x) > 1.5) vEl.classList.toggle('r', px.x > lastPx.x);   // car faces where it drives
         lastPx = px;
       }
-      if (p < 1) requestAnimationFrame(run); else { duo.className = 'duo'; void duo.offsetWidth; duo.className = 'duo hop at'; }
+      if (p < 1) requestAnimationFrame(run);
+      else {
+        duo.className = 'duo'; void duo.offsetWidth; duo.className = 'duo hop at';
+        if (x.em) { var ob = duo.querySelector('.bub'); if (ob) ob.remove(); var bb = document.createElement('span'); bb.className = 'bub'; bb.textContent = x.em; duo.appendChild(bb); setTimeout(function () { bb.remove(); }, 3400); }
+      }
     })(t0);
     from = to;
     setTimeout(function () {
       if (my !== gen) return;
       popup = new maplibregl.Popup({ className: 'story-pop', closeButton: false, closeOnClick: false, offset: 30, maxWidth: '260px' })
         .setLngLat(to).setHTML((x.img ? '<div class="sp-img" style="background-image:url(' + x.img + ')"></div>' : '') + '<div class="sp-t"><b>' + x.t + '</b> ' + esc(x.title) + '</div>').addTo(map);
+      if (x.fx === 'fw') fireworks(to); else if (x.fx === 'beam') { var lp = map.project(LJZ), cv = map.getCanvas(); lightBeams(lp.x > 60 && lp.y > 60 && lp.x < cv.clientWidth - 60 && lp.y < cv.clientHeight ? LJZ : map.unproject([map.project(to).x + 170, map.project(to).y + 10]).toArray()); }
       if (!reduce && D3) map.easeTo({ bearing: bear + 14, duration: 3600, easing: function (t) { return t; }, essential: true });  // slow orbit
       setTimeout(next, reduce ? 1200 : 3800);
     }, reduce ? 0 : 2100);

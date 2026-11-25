@@ -230,7 +230,7 @@ GEO = {
 
 
 
- (3, "08:30"): ((31.1456, 121.6536), "Disneyland"),
+ (3, "08:30"): ((31.1456, 121.6536), "Disneyland"), (3, "10:00"): ((31.1456, 121.6536), "Disneyland"), (3, "13:00"): ((31.1456, 121.6536), "Disneyland"), (3, "15:00"): ((31.1456, 121.6536), "Disneyland"), (3, "18:00"): ((31.1456, 121.6536), "Disneyland"), (3, "21:15"): ((31.1456, 121.6536), "Disneyland"),
 
  (7, "10:00"): ((31.2392, 121.4863), "Cocina 19"), 
  (7, "12:00"): ((31.2428, 121.4838), "Luneurs"), (7, "20:00"): ((31.2416, 121.4842), "Christmas Market"), (7, "16:30"): ((31.2387, 121.4947), "Superbrand Mall"), (7, "17:30"): ((31.2401, 121.4961), "สะพานลอยวงกลม"), (7, "18:30"): ((31.2392, 121.4956), "Chef Fei"),
@@ -863,6 +863,22 @@ open(OUT, "w", encoding="utf-8").write(page)
 print("written", len(page))
 
 # ---------- tour.html: animated day-by-day map, data taken from the plan above ----------
+# tour: the emoji that pops over the two heads at each stop, and the night effects
+EMOJI_KW = [("พลุ", "🎆"), ("Castle", "🏰"), ("Zootopia", "🦊"), ("Adventure", "🧗"), ("Treasure", "🏴‍☠️"), ("拙政园", "🌿"),
+            ("ฮั่นฝู", "👘"), ("Shantang", "🛶"), ("บะหมี่", "🍜"), ("Xiao Long", "🥟"), ("Bagel", "🥯"), ("Luneurs", "🍦"), ("Butterful", "🥐"),
+            ("MARZO", "🧸"), ("Pane", "👟"), ("Coffee", "☕"), ("Shashlik", "🍢"), ("Sukiyaki", "🍲"), ("Cocina", "🥘"), ("Chef Fei", "🌶️"),
+            ("คริสต์มาส", "🎄"), ("Lujiazui", "🌃"), ("Jing'an", "🛕"), ("Xintiandi", "🏮"), ("Dream Center", "🎡"), ("Bund", "📸"), ("Wukang", "📸"),
+            ("รถไฟ", "🚄"), ("Maglev", "🚄"), ("Grandma", "🥢"), ("Canton", "🥢"), ("Dongsheng", "🍣"), ("มื้อเย็น", "🍽️")]
+EMOJI_KIND = {"food": "🍽️", "shop": "🛍️", "see": "📸", "stay": "🏨", "fly": "✈️", "go": "🚶"}
+def stop_emoji(e):
+    for k, v in EMOJI_KW:
+        if k in e["title"]: return v
+    return EMOJI_KIND.get(e["kind"], "✨")
+def stop_fx(n, e):
+    if "พลุ" in e["title"]: return "fw"
+    if (n, e["t"]) in ((2, "19:00"), (7, "17:30"), (7, "20:00")): return "beam"
+    return ""
+
 def _tour():
     import json as _j, re as _r
     tpl = open(_osroot.path.join(_ROOT, "src", "tour_template.html"), encoding="utf-8").read()
@@ -881,7 +897,7 @@ def _tour():
         base = {"d": f"วันที่ {n} · {d['dow']} {dd} ธ.ค.", "tp": tp, "h": d["title"], "zh": ZH_DAY.get(n, ""), "cover": cover(n), "iso": d["iso"]}
         evs = d["events"]
         R = day_route(d); pins, idx, suzhou, route, segs = R["pins"], R["idx"], R["suzhou"], R["route"], R["segs"]
-        items = [{"t": e["t"], "title": clean(e["title"]), "img": img(e), "pin": idx.get(e["t"]), "hotel": e["kind"] == "stay"} for e in evs]
+        items = [{"t": e["t"], "title": clean(e["title"]), "img": img(e), "pin": idx.get(e["t"]), "hotel": e["kind"] == "stay", "em": stop_emoji(e), "fx": stop_fx(n, e)} for e in evs]
         if not pins or n == len(DAYS):
             D.append(dict(base, asia=1, it=items)); continue
         D.append(dict(base, pins=pins, route=route, it=items, suzhou=suzhou, segs=segs))
