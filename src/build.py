@@ -594,8 +594,7 @@ PRINTDOC = f"""
     </div>
     <div class="p-grid">
       <div><h2>เบอร์ฉุกเฉิน</h2><table class="p-tbl"><tbody>{_pr_sos}</tbody></table></div>
-      <div><h2>ประโยคที่ใช้บ่อย</h2><table class="p-tbl"><tbody>{_pr_phr}</tbody></table>
-        <h2>งบต่อคน</h2><table class="p-tbl"><tbody>{_pr_budget}<tr><td><b>รวม</b></td><td class="p-r"><b>{TOTAL:,} ฿</b></td></tr></tbody></table></div>
+      <div><h2>ประโยคที่ใช้บ่อย</h2><table class="p-tbl"><tbody>{_pr_phr}</tbody></table></div>
     </div>
     <h2>เช็กลิสต์ก่อนออกเดินทาง</h2><ul class="p-pack">{_pr_pack}</ul>
   </section>
@@ -641,7 +640,7 @@ page = f'''<!DOCTYPE html>
     <p class="sub">5–12 ธ.ค. 2026 · ไฟคริสต์มาส The Bund · Disneyland</p>
     <div class="cd" id="cd" role="timer" aria-label="นับถอยหลังถึงวันเดินทาง"></div>
     <p class="cd-msg" id="cd-msg"></p>
-    <div class="chips"><span class="chip"><i aria-hidden="true">🏨</i><span>Atour X Huaihai</span></span><span class="chip"><i aria-hidden="true">💰</i><span>{TOTAL:,} ฿/คน</span></span><span class="chip"><i aria-hidden="true">🚇</i><span>Metro + Didi</span></span></div>
+    <div class="chips"><span class="chip"><i aria-hidden="true">🏨</i><span>Atour X Huaihai</span></span><span class="chip"><i aria-hidden="true">🚇</i><span>Metro + Didi</span></span></div>
     <div class="hero-actions">
       <button type="button" class="hbtn" id="share-btn"><span aria-hidden="true">🔗</span>แชร์</button>
       <button type="button" class="hbtn" id="qr-btn"><span aria-hidden="true">📱</span>QR</button>
@@ -710,11 +709,7 @@ page = f'''<!DOCTYPE html>
   </section>
 
   <section class="sec" id="budget" aria-labelledby="bd-h">
-    <div class="sec-h"><h2 id="bd-h">💰 งบประมาณต่อคน</h2></div>
-    <div class="card">
-      <div class="btotal"><span>รวมทั้งหมด</span><b data-n="{TOTAL}">{TOTAL:,} ฿</b></div>
-      <ul class="blist">{budget_rows}</ul>
-    </div>
+    <div class="sec-h"><h2 id="bd-h">💱 แปลงเงิน</h2></div>
     <div class="card fx">
       <h3>💱 แปลงเงินหยวน → บาท</h3>
       <div class="fx-row">
@@ -826,7 +821,7 @@ page = f'''<!DOCTYPE html>
 <nav class="bnav" aria-label="เมนูหลัก">
   <a href="#plan" data-sec="plan"><i aria-hidden="true">🗓️</i>แผน</a>
   <a href="#flights" data-sec="flights"><i aria-hidden="true">✈️</i>ตั๋ว</a>
-  <a href="#budget" data-sec="budget"><i aria-hidden="true">💰</i>งบ</a>
+  <a href="#budget" data-sec="budget"><i aria-hidden="true">💱</i>แปลงเงิน</a>
   <a href="#prep" data-sec="prep"><i aria-hidden="true">🎒</i>เตรียมของ</a>
   <a href="#sos" data-sec="sos"><i aria-hidden="true">🆘</i>ช่วยเหลือ</a>
 </nav>
@@ -960,7 +955,7 @@ def _present():
                 cr.append(f"{_r.sub(r'\s*\(วันที่[^)]*\)', '', row[2])} — {row[5]} ({row[4]})")
     except Exception as ex:
         print("credits skipped:", ex)
-    html = tpl.replace("__DATA__", _j.dumps({"days": days, "credits": cr, "total": f"{TOTAL:,}"}, ensure_ascii=False))
+    html = tpl.replace("__DATA__", _j.dumps({"days": days, "credits": cr}, ensure_ascii=False))
     out = _osroot.path.join(_osroot.path.dirname(OUT), "present.html")
     open(out, "w", encoding="utf-8").write(html)
     print("written present.html", len(html))

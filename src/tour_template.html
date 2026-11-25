@@ -362,7 +362,6 @@ body.incity #map{background:#f4eee2}
 (function () {
 var D = __TOUR_DATA__;
 var HOTEL = [__HOTEL_LAT__, __HOTEL_LON__], BKK = [13.69, 100.75], PVG = [31.143, 121.805];
-var TOTAL = "__TOTAL__";
 var OSM_TILES = __OSM_TILES__;
 var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 var $ = function (s) { return document.querySelector(s); };
@@ -694,7 +693,7 @@ function card(d) {
     c.innerHTML = '<div class="cover"><div class="cv" style="background-image:url(' + (d.cover || '') + ')"></div><div class="chips"><span class="chip">5–12 ธ.ค. 2026</span><span class="chip t">8 วัน 7 คืน</span></div></div>' +
       '<div class="head"><h2>เซี่ยงไฮ้ + ซูโจว</h2><p class="zh">上海 · 苏州</p></div><div class="list ov"><div class="ovl">' +
       D.slice(1).map(function (x, k) { return '<div class="ovr" style="--i:' + k + '" data-go="' + (k + 1) + '"><span class="ph" style="background-image:url(' + String(x.cover || '').replace('-1280.', '-640.') + ')"></span><span><small>DAY ' + (k < 9 ? '0' : '') + (k + 1) + '</small><b>' + esc(x.h) + '</b></span><em>' + esc(String(x.d).split('·').pop().trim()) + '</em></div>'; }).join('') +
-      '</div><p class="ovsum">ที่พัก <b>Atour X Hotel</b> ถนน Huaihai · <b>Metro + Didi</b> · งบราว <b>' + TOTAL + ' บาท/คน</b></p>' + offHTML() + '</div>';
+      '</div><p class="ovsum">ที่พัก <b>Atour X Hotel</b> ถนน Huaihai · <b>Metro + Didi</b></p>' + offHTML() + '</div>';
     return;
   }
   var legs = (d.segs || []).length ? '<p class="legs">' + d.segs.map(function (g) { return g.m; }).join(' ') + ' · ' + legSummary(d.segs) + '</p>' : '';
