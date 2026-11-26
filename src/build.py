@@ -52,21 +52,19 @@ DAYS = [
       None, L(HOTEL_Q, "淮海中路1329号"), tag="ที่พัก", html_note=True),
   ], note="เครื่องลงค่ำ ถึงที่พักราว 23:45 (เช็คอินได้ตั้งแต่ 14:00 มาดึกได้) พักให้เต็มที่ พรุ่งนี้เริ่มสายได้"),
 
- dict(n=2, iso="2026-12-06", dow="อา.", date="อาทิตย์ 6 ธ.ค.", title="เที่ยวเบา ๆ + The Bund", icon="🌉", wx="⛅ 5–10°C",
+ dict(n=2, iso="2026-12-06", dow="อา.", date="อาทิตย์ 6 ธ.ค.", title="Wukang Road + Jing'an + West Nanjing Road", icon="🌳", wx="⛅ 5–10°C",
   events=[
-   ev("11:00", "go", "ออกจากที่พัก ไป People's Square", "รถไฟฟ้าสาย 1 จาก Changshu Road ไป People's Square ~15 นาที หรือเรียก Didi",
-      None, [("🧭 เส้นทางจากที่พัก", apple_dir("People's Square, Shanghai"))]),
-   ev("11:30", "food", "Lai Lai Xiao Long Bao (莱莱小笼)", "เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People's Square · วันอาทิตย์คิวยาว มาก่อนเที่ยงดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing'an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)",
-      "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路", QUEUE_LINK), tag="มื้อกลางวัน"),
-   ev("13:30", "shop", "No.1 Shopping Center (第一百货商业中心)", "ห้างเก่าแก่หัวมุม Nanjing Road ฝั่ง People's Square (南京东路830号) · เดินจาก Lai Lai ~10 นาที · เดินห้าง พักขา เข้าห้องน้ำ แล้วออกประตูฝั่ง Nanjing Road เดินต่อไปทาง The Bund ได้เลย · เวลาเปิด-ปิดเช็กใน Amap ก่อน", None, L("Shanghai No.1 Shopping Center, 830 East Nanjing Road", "第一百货商业中心 南京东路830号"), tag="ช้อป"),
-    ev("14:30", "shop", "Nanjing Road Pedestrian Street", "ถนนช้อปปิ้งหลัก เดินดูห้างและร้านแบรนด์จีนแบบไม่รีบ ไฟคริสต์มาสตามห้าง · ยาว ~1.2 กม. เดินสุดถนนก็ถึง The Bund", "nanjing-road", L("Nanjing Road Pedestrian Street, Shanghai", "南京路步行街")),
-  ev("15:45", "see", "The Bund ถ่ายรูปตอนกลางวัน", "ได้รูปตึกเก่าสไตล์ยุโรปตอนฟ้าสว่าง · แดดเย็นช่วงก่อนพระอาทิตย์ตก (~16:50) แสงสวยที่สุด · เดินขึ้นเหนือไป Rockbund (外滩源) ต่อได้เลย · 19:00 กลับมาดูอีกรอบตอนเปิดไฟ", None, L("The Bund, Shanghai", "外滩"), tag="ถ่ายรูป"),
-   ev("16:15", "see", "Rockbund ย่านตึกเก่า (外滩源)", "ย่านอาคารยุค 1920–30 ที่บูรณะแล้ว ปลายเหนือของ The Bund ระหว่างถนน Yuanmingyuan Road (圆明园路) กับ Huqiu Road (虎丘路) · ตึกอิฐ ตึกอาร์ตเดโค ร้านเก๋ ถ่ายรูปสวยช่วงแดดเย็น · เดินจาก The Bund ~5 นาที · ⚠️ ช่วงตลาดคริสต์มาส (25 พ.ย.–27 ธ.ค.) ถนน Yuanmingyuan Road เป็นพื้นที่ตลาด วันอาทิตย์เปิด 12:00 อาจต้องซื้อบัตรเข้าช่วงนั้น เดินถนน Huqiu Road และรอบ ๆ ได้ฟรี · ดูพระอาทิตย์ตก ~16:50 บนสะพาน Waibaidu แล้วข้ามไป Rei Flower", None, L("Rockbund, Yuanmingyuan Road, Shanghai", "外滩源 圆明园路"), tag="ถ่ายรูป"),
-  ev("17:00", "food", "Rei Flower Coffee Bar (汭REi·FLOWER COFFEE BAR)", "คาเฟ่ริมคลอง Suzhou Creek ย่าน North Bund · พักขาก่อนไป Manner North Bund · ลองลาเต้ดอกหอมหมื่นลี้ (桂花拿铁) ไอศกรีมมะพร้าว · ~¥55/คน · 234 North Suzhou Road (北苏州路234号) ใกล้สถานี Tiantong Road ทางออก 3 · จากปลาย Nanjing Road เดินข้ามสะพาน Waibaidu Bridge ไม่กี่นาที · เปิด 10:30–01:00 (ตาม Trip.com) · โทร +86 175 2118 7929", None, L("Rei Flower Coffee Bar, 234 North Suzhou Road, Shanghai", "汭REi FLOWER COFFEE BAR 北苏州路234号"), tag="คาเฟ่"),
-   ev("18:00", "food", "Manner Coffee สาขา North Bund ริมแม่น้ำ", "ร้านกระจกใส 3 ด้าน ริมแม่น้ำหวงผู่ หันตรงหอไข่มุก · ท่าเรือสำราญนานาชาติ North Bund (北外滩国客中心码头) ใกล้ Dongdaming Road / Taiping Road เขต Hongkou · จาก Rei Flower เดินเลียบคลอง ~1.5 กม. (~20 นาที) หรือ Didi ~5 นาที · ช่วงนี้ฟ้ามืดแล้ว หอไข่มุกเปิดไฟ วิวสวยที่สุด · วันอาทิตย์คนเยอะ อาจต้องรอที่นั่งริมกระจก · เปิด 07:30–22:00 (ตาม Trip.com) · ร้านอยู่ริมแม่น้ำ ห่างตึก International Port Affairs Building (国际港务大厦) ไปทางใต้ ~60 ม. · แล้ว Didi/เดินข้ามสะพาน Waibaidu ไป The Bund ~10 นาที", None, L("Manner Coffee North Bund International Cruise Terminal, Shanghai", "MANNER 北外滩国客中心滨江店"), tag="คาเฟ่"),
-  ev("19:00", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · คืนวันอาทิตย์คนแน่น ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
-  ev("20:00", "food", "Dongsheng Self-service Cuisine (东盛自助料理) บุฟเฟต์", "บุฟเฟต์ชื่อดัง เรตติ้ง 4.6 ติดอันดับในแอป Amap · ชั้น 5 ห้าง Mosaic Plaza (悦荟广场) 南京东路353号 · ~¥129 ต่อคน · เปิด 10:30–22:30 · จาก The Bund เดิน ~10 นาที · ช่วงค่ำคิวยาว กดคิวล่วงหน้าตอนอยู่ The Bund · ใน Amap/Dianping มีดีลกลุ่ม (团购) ราคาถูกกว่าหน้าร้าน · กลับที่พัก: รถไฟฟ้าสาย 2 สถานี East Nanjing Road ไป People's Square ต่อสาย 1 ไป Changshu Road ~25 นาที หรือ Didi ~20 นาที", None, L("Dongsheng Self-service Cuisine, Mosaic Plaza, 353 East Nanjing Road, Shanghai", "东盛自助料理 悦荟广场店", QUEUE_LINK), tag="มื้อเย็น"),
-  ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ"),
+   ev("10:50", "go", "ออกจากที่พัก เดินไป Wukang Road", "เดินตามถนน Huaihai Middle Road ไปทางตะวันตก ~1.5 กม. (~20 นาที) · 🏃 เช้านี้มี Shanghai Marathon ถนนบางช่วงปิด เรียก Didi ยาก เดินหรือนั่งรถไฟฟ้าสะดวกกว่า · ข้ามถนนตามจุดที่เจ้าหน้าที่เปิดให้",
+      None, [("🧭 เส้นทางเดินจากที่พัก", apple_dir("Wukang Road, Shanghai", "w"))]),
+   ev("11:15", "food", "Grandma's Home (奶奶家) สาขา Wukang Road", "ร้านอาหารเซี่ยงไฮ้ชื่อดัง · วันอาทิตย์คิวยาว กดคิวออนไลน์ตั้งแต่ออกจากที่พัก (ดู 🎫 วิธีกดคิว) · เช็กเวลาเปิดใน Dianping/Amap ก่อน · กินเสร็จเดินไป Wukang Mansion ~5 นาที", "grandmas-home", L("Grandma's Home Wukang Road, Shanghai", "奶奶家 武康路", QUEUE_LINK), tag="มื้อกลางวัน"),
+   ev("12:30", "see", "เดินเล่น Wukang Road", "ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย · เดินเสร็จต่อไป 13DE MARZO ที่หัวถนน Anfu Road ~10 นาที", "wukang-road", L("Wukang Mansion, Shanghai", "武康大楼")),
+   ev("13:30", "food", "13DE MARZO คาเฟ่หมีแฟลกชิป 🧸", "ร้านหลักของแบรนด์ · 安福路322号 (322 Anfu Road) ช่วงปลายถนนฝั่ง Wukang Road · เครื่องดื่ม ~¥26–39 ทุกแก้วได้ตุ๊กตาหมี · ซื้อกลับเท่านั้น ไม่มีที่นั่ง · คิวยาวที่สุดในบรรดาสาขา บางช่วงเกิน 1 ชม. และวันอาทิตย์ยาวกว่าวันธรรมดา · สั่งล่วงหน้าผ่านมินิโปรแกรม 13DE MARZO ใน Alipay/WeChat ระหว่างเดิน Wukang Road ~13:10 ไปถึงรับได้เลย · ยังไม่ยืนยันเวลาเปิด เช็กใน Amap ก่อนไป · เสร็จแล้ว Didi ไปวัด Jing'an ~10 นาที", None, L("13DE MARZO, 322 Anfu Road, Shanghai", "13DE MARZO 安福路322号"), tag="คาเฟ่"),
+   ev("14:15", "see", "วัด Jing'an (静安寺)", "วัดพุทธเก่าแก่กว่า 1,700 ปี หลังคาทองกลางเมือง ตัดกับตึกสูงรอบ ๆ ถ่ายรูปสวย · ค่าเข้า ~¥50 · เปิดราว 07:30–17:00 · ใช้เวลา ~1 ชม. · จาก 13DE MARZO Didi ~10 นาที · อยู่ติดสถานี Jing'an Temple (สาย 2, 7, 14)", None, L("Jing'an Temple, Shanghai", "静安寺")),
+   ev("15:15", "shop", "รองเท้า Pane สาขา Yongyuan Road", "แฟลกชิปสโตร์แรกของแบรนด์ ขายดีที่สุด สต๊อกคนละร้านกับ TX Huaihai · เลขที่ 22 Yongyuan Road (永源路22号) เขต Jing'an ระหว่าง Nanjing West Road กับ Yuyuan Road · เปิดเมื่อ มิ.ย. 2025 · ยังไม่ได้ยืนยันเวลาเปิด (ร้านแนวนี้ปกติราว 10:00–22:00) เช็กใน Amap/Dianping ก่อนไป · จากวัด Jing'an เดิน ~10 นาที · เสร็จแล้วเดินกลับมาเริ่ม West Nanjing Road ฝั่งวัด", "pane", L("PANE, 22 Yongyuan Road, Jing'an, Shanghai", "PANE 永源路22号", PANE_LINK), tag="ช้อป"),
+   ev("16:00", "shop", "เดินเล่น West Nanjing Road (南京西路)", "ถนนช้อปปิ้งหรูสายหลัก เดินจากวัด Jing'an ไปทางตะวันออก ~1.5 กม. · ผ่าน Jing'an Kerry Centre, Plaza 66, HKRI Taikoo Hui · ช่วงธันวาคมห้างแถวนี้มักตกแต่งต้นคริสต์มาสใหญ่ ถ่ายรูปได้ · แวะคาเฟ่/พักในห้างได้ · ปลายทางคือ Butterful ที่ Wujiang Road แล้วต่อ 818 Plaza ใกล้ถนน Shimen Yi Road", None, L("West Nanjing Road, Jing'an, Shanghai", "南京西路 静安"), tag="ช้อป"),
+   ev("16:45", "food", "Butterful & Creamorous (黄油与面包) แฟลกชิป 🥐", "เบเกอรี่ดังที่สุดตอนนี้ของเซี่ยงไฮ้ คนต่อคิวเยอะ · สาขาแฟลกชิป 吴江路289-291号 (Wujiang Road ใกล้ Taixing Road) ซอยขนานกับ West Nanjing Road · เมนูแนะนำ: ชาบัตตาเม็ดมะม่วงพริกเสฉวน ครัวซองต์ช็อกโกแลต ไส้กรอกชีสลาวา นโปเลียนเบอร์รี่ · เริ่ม ~¥12 · เปิด 12:00–22:00 (ตามรีวิว) · ซื้อกลับไปกินคืนนี้/พรุ่งนี้เช้าได้ · เดินไป Long Time Ago 818 ~5 นาที", None, L("Butterful & Creamorous, 289 Wujiang Road, Shanghai", "黄油与面包 吴江路289号"), tag="ของหวาน"),
+   ev("17:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串) สาขา 818 Plaza", "ร้านเนื้อแกะเสียบไม้ย่างสไตล์มองโกเลีย บรรยากาศสนุก · 南京西路818号 818广场 (818 West Nanjing Road ใกล้ Shimen Yi Road) · ไม้ละ ~¥6 ชุด 6 ไม้ ~¥35 · คนละ ~¥100–130 · คิวยาวช่วงค่ำ ไปเร็ว 17:30 หรือกดคิวล่วงหน้า · ลองมะเขือยาวย่าง ข้าวผัดไข่ · กลับที่พัก: รถไฟฟ้าสาย 2 สถานี West Nanjing Road หรือ Didi ~15 นาที", "long-time-ago", L("Long Time Ago Mutton Shashlik, 818 West Nanjing Road, Shanghai", "很久以前羊肉串 南京西路818广场店", QUEUE_LINK), tag="มื้อเย็น"),
+  ], note="🏃 อา. 6 ธ.ค. มี Shanghai Marathon ออกตัว 06:45 จาก The Bund ผ่าน Nanjing Road, วัด Jing'an, Huaihai Road, Xintiandi ไปเส้นชัย Xujiahui ถนนแถวนั้นปิดช่วงเช้าถึงราวเที่ยง วันนี้จึงเริ่มสายและเดินจากที่พัก ช่วงบ่ายรถกลับมาวิ่งปกติ · ทุกที่ในวันนี้เปิดวันอาทิตย์ แต่คนเยอะกว่าวันธรรมดา"),
 
  dict(n=3, iso="2026-12-07", dow="จ.", date="จันทร์ 7 ธ.ค.", title="Shanghai Disneyland", icon="🏰", wx="☁️ 4–8°C", disney=True,
   events=[
@@ -81,17 +79,21 @@ DAYS = [
    ev("22:00", "go", "กลับที่พัก", "รถไฟฟ้าสาย 11 เที่ยวสุดท้ายออกจากสถานี Disney Resort ประมาณ 22:30 · Didi หลัง 22:00 ราคาขึ้น 2–3 เท่า (~¥300)"),
   ], note="วันจันทร์คนน้อยกว่าเสาร์-อาทิตย์ ตั๋ววันธรรมดาถูกกว่า (ประมาณ ¥499–539 ต่อคน เช็กราคาวันที่ 7 ธ.ค. อีกครั้งตอนซื้อ) · ถ้าวันนี้ฝนตกหนัก สลับกับวันที่ 4 ได้ · ต่อแถวกลางแจ้งนาน ใส่เสื้อหนา · ปีนี้ฉลองครบ 10 ปี มีโชว์และขบวนพาเหรดพิเศษ"),
 
- dict(n=4, iso="2026-12-08", dow="อ.", date="อังคาร 8 ธ.ค.", title="Wukang Road + Jing'an + West Nanjing Road", icon="🌳", wx="🌥️ 4–9°C",
+ dict(n=4, iso="2026-12-08", dow="อ.", date="อังคาร 8 ธ.ค.", title="Nanjing Road + The Bund", icon="🌉", wx="🌥️ 4–9°C",
   events=[
-   ev("09:45", "food", "Grandma's Home (奶奶家) สาขา Wukang Road", "ร้านอาหารเซี่ยงไฮ้ชื่อดัง · ไปถึงก่อน 10:00 เพื่อได้คิวรอบแรก · ร้านอาจเปิดราว 10:30–11:00 เช็กเวลาใน Dianping/Amap ก่อน และกดคิวล่วงหน้าได้ (ดู 🎫 วิธีกดคิว) · กินเสร็จเดินไป Wukang Mansion ~5 นาที", "grandmas-home", L("Grandma's Home Wukang Road, Shanghai", "奶奶家 武康路", QUEUE_LINK), tag="มื้อกลางวัน"),
-   ev("11:00", "see", "เดินเล่น Wukang Road", "ตึก Wukang Mansion (武康大楼) ตึกยุโรปเก่า ถนนต้นไม้ร่มรื่น คาเฟ่ถ่ายรูปสวย · เดินเสร็จต่อไป 13DE MARZO ที่หัวถนน Anfu Road ~10 นาที", "wukang-road", L("Wukang Mansion, Shanghai", "武康大楼")),
-   ev("12:00", "food", "13DE MARZO คาเฟ่หมีแฟลกชิป 🧸", "ร้านหลักของแบรนด์ · 安福路322号 (322 Anfu Road) ช่วงปลายถนนฝั่ง Wukang Road · เครื่องดื่ม ~¥26–39 ทุกแก้วได้ตุ๊กตาหมี · ซื้อกลับเท่านั้น ไม่มีที่นั่ง · คิวยาวที่สุดในบรรดาสาขา บางช่วงเกิน 1 ชม. (วันธรรมดาช่วงเช้ารอ ~20 นาที) · ช่วงเที่ยงคิวอาจยาวขึ้น สั่งล่วงหน้าผ่านมินิโปรแกรม 13DE MARZO ใน Alipay/WeChat ระหว่างเดิน Wukang Road ~11:40 ไปถึงรับได้เลย · ยังไม่ยืนยันเวลาเปิด เช็กใน Amap ก่อนไป · เสร็จแล้ว Didi ไปวัด Jing'an ~10 นาที", None, L("13DE MARZO, 322 Anfu Road, Shanghai", "13DE MARZO 安福路322号"), tag="คาเฟ่"),
-   ev("13:00", "see", "วัด Jing'an (静安寺)", "วัดพุทธเก่าแก่กว่า 1,700 ปี หลังคาทองกลางเมือง ตัดกับตึกสูงรอบ ๆ ถ่ายรูปสวย · ค่าเข้า ~¥50 · เปิดราว 07:30–17:00 · ใช้เวลา ~1 ชม. · จาก 13DE MARZO Didi ~10 นาที · อยู่ติดสถานี Jing'an Temple (สาย 2, 7, 14)", None, L("Jing'an Temple, Shanghai", "静安寺")),
-   ev("14:00", "shop", "รองเท้า Pane สาขา Yongyuan Road", "แฟลกชิปสโตร์แรกของแบรนด์ ขายดีที่สุด สต๊อกคนละร้านกับ TX Huaihai · เลขที่ 22 Yongyuan Road (永源路22号) เขต Jing'an ระหว่าง Nanjing West Road กับ Yuyuan Road · เปิดเมื่อ มิ.ย. 2025 · ยังไม่ได้ยืนยันเวลาเปิด (ร้านแนวนี้ปกติราว 10:00–22:00) เช็กใน Amap/Dianping ก่อนไป · จากวัด Jing'an เดิน ~10 นาที · เสร็จแล้วเดินกลับมาเริ่ม West Nanjing Road ฝั่งวัด", "pane", L("PANE, 22 Yongyuan Road, Jing'an, Shanghai", "PANE 永源路22号", PANE_LINK), tag="ช้อป"),
-   ev("15:00", "shop", "เดินเล่น West Nanjing Road (南京西路)", "ถนนช้อปปิ้งหรูสายหลัก เดินจากวัด Jing'an ไปทางตะวันออก ~1.5 กม. · ผ่าน Jing'an Kerry Centre, Plaza 66, HKRI Taikoo Hui · ช่วงธันวาคมห้างแถวนี้มักตกแต่งต้นคริสต์มาสใหญ่ ถ่ายรูปได้ · แวะคาเฟ่/พักในห้างได้ · ปลายทางคือ Butterful ที่ Wujiang Road แล้วต่อ 818 Plaza ใกล้ถนน Shimen Yi Road", None, L("West Nanjing Road, Jing'an, Shanghai", "南京西路 静安"), tag="ช้อป"),
-   ev("16:45", "food", "Butterful & Creamorous (黄油与面包) แฟลกชิป 🥐", "เบเกอรี่ดังที่สุดตอนนี้ของเซี่ยงไฮ้ คนต่อคิวเยอะ · สาขาแฟลกชิป 吴江路289-291号 (Wujiang Road ใกล้ Taixing Road) ซอยขนานกับ West Nanjing Road · เมนูแนะนำ: ชาบัตตาเม็ดมะม่วงพริกเสฉวน ครัวซองต์ช็อกโกแลต ไส้กรอกชีสลาวา นโปเลียนเบอร์รี่ · เริ่ม ~¥12 · เปิด 12:00–22:00 (ตามรีวิว) · ซื้อกลับไปกินคืนนี้/พรุ่งนี้เช้าได้ · เดินไป Long Time Ago 818 ~5 นาที", None, L("Butterful & Creamorous, 289 Wujiang Road, Shanghai", "黄油与面包 吴江路289号"), tag="ของหวาน"),
-   ev("17:30", "food", "Long Time Ago Mutton Shashlik (很久以前羊肉串) สาขา 818 Plaza", "ร้านเนื้อแกะเสียบไม้ย่างสไตล์มองโกเลีย บรรยากาศสนุก · 南京西路818号 818广场 (818 West Nanjing Road ใกล้ Shimen Yi Road) · ไม้ละ ~¥6 ชุด 6 ไม้ ~¥35 · คนละ ~¥100–130 · คิวยาวช่วงค่ำ ไปเร็ว 17:30 หรือกดคิวล่วงหน้า · ลองมะเขือยาวย่าง ข้าวผัดไข่ · กลับที่พัก: รถไฟฟ้าสาย 2 สถานี West Nanjing Road หรือ Didi ~15 นาที", "long-time-ago", L("Long Time Ago Mutton Shashlik, 818 West Nanjing Road, Shanghai", "很久以前羊肉串 南京西路818广场店", QUEUE_LINK), tag="มื้อเย็น"),
-  ], note="ถ้าวัน Disney (วันที่ 3) ฝนตก สลับกับวันนี้ได้ · ทุกที่ในวันนี้เปิดวันอังคารตามปกติ"),
+   ev("11:00", "go", "ออกจากที่พัก ไป People's Square", "รถไฟฟ้าสาย 1 จาก Changshu Road ไป People's Square ~15 นาที หรือเรียก Didi",
+      None, [("🧭 เส้นทางจากที่พัก", apple_dir("People's Square, Shanghai"))]),
+   ev("11:30", "food", "Lai Lai Xiao Long Bao (莱莱小笼)", "เสี่ยวหลงเปาไข่ปู Michelin Bib Gourmand · 506 Tianjin Road ใกล้ People's Square · วันธรรมดาคิวสั้นกว่าเสาร์-อาทิตย์ แต่มาก่อนเที่ยงก็ยังดีกว่า · ถ้าสาขานี้ปิด มีสาขา Jing'an ที่ 1726 Beijing West Road ใกล้ที่พัก (เปิด 8:00–14:00, 15:00–20:00)",
+      "lailai", L("Lai Lai Xiao Long Bao, 506 Tianjin Road, Shanghai", "莱莱小笼 天津路", QUEUE_LINK), tag="มื้อกลางวัน"),
+   ev("13:30", "shop", "No.1 Shopping Center (第一百货商业中心)", "ห้างเก่าแก่หัวมุม Nanjing Road ฝั่ง People's Square (南京东路830号) · เดินจาก Lai Lai ~10 นาที · เดินห้าง พักขา เข้าห้องน้ำ แล้วออกประตูฝั่ง Nanjing Road เดินต่อไปทาง The Bund ได้เลย · เวลาเปิด-ปิดเช็กใน Amap ก่อน", None, L("Shanghai No.1 Shopping Center, 830 East Nanjing Road", "第一百货商业中心 南京东路830号"), tag="ช้อป"),
+    ev("14:30", "shop", "Nanjing Road Pedestrian Street", "ถนนช้อปปิ้งหลัก เดินดูห้างและร้านแบรนด์จีนแบบไม่รีบ ไฟคริสต์มาสตามห้าง · ยาว ~1.2 กม. เดินสุดถนนก็ถึง The Bund", "nanjing-road", L("Nanjing Road Pedestrian Street, Shanghai", "南京路步行街")),
+  ev("15:45", "see", "The Bund ถ่ายรูปตอนกลางวัน", "ได้รูปตึกเก่าสไตล์ยุโรปตอนฟ้าสว่าง · แดดเย็นช่วงก่อนพระอาทิตย์ตก (~16:50) แสงสวยที่สุด · เดินขึ้นเหนือไป Rockbund (外滩源) ต่อได้เลย · 19:00 กลับมาดูอีกรอบตอนเปิดไฟ", None, L("The Bund, Shanghai", "外滩"), tag="ถ่ายรูป"),
+   ev("16:15", "see", "Rockbund ย่านตึกเก่า (外滩源)", "ย่านอาคารยุค 1920–30 ที่บูรณะแล้ว ปลายเหนือของ The Bund ระหว่างถนน Yuanmingyuan Road (圆明园路) กับ Huqiu Road (虎丘路) · ตึกอิฐ ตึกอาร์ตเดโค ร้านเก๋ ถ่ายรูปสวยช่วงแดดเย็น · เดินจาก The Bund ~5 นาที · ⚠️ ช่วงตลาดคริสต์มาส (25 พ.ย.–27 ธ.ค.) ถนน Yuanmingyuan Road เป็นพื้นที่ตลาด วันอาทิตย์เปิด 12:00 อาจต้องซื้อบัตรเข้าช่วงนั้น เดินถนน Huqiu Road และรอบ ๆ ได้ฟรี · ดูพระอาทิตย์ตก ~16:50 บนสะพาน Waibaidu แล้วข้ามไป Rei Flower", None, L("Rockbund, Yuanmingyuan Road, Shanghai", "外滩源 圆明园路"), tag="ถ่ายรูป"),
+  ev("17:00", "food", "Rei Flower Coffee Bar (汭REi·FLOWER COFFEE BAR)", "คาเฟ่ริมคลอง Suzhou Creek ย่าน North Bund · พักขาก่อนไป Manner North Bund · ลองลาเต้ดอกหอมหมื่นลี้ (桂花拿铁) ไอศกรีมมะพร้าว · ~¥55/คน · 234 North Suzhou Road (北苏州路234号) ใกล้สถานี Tiantong Road ทางออก 3 · จากปลาย Nanjing Road เดินข้ามสะพาน Waibaidu Bridge ไม่กี่นาที · เปิด 10:30–01:00 (ตาม Trip.com) · โทร +86 175 2118 7929", None, L("Rei Flower Coffee Bar, 234 North Suzhou Road, Shanghai", "汭REi FLOWER COFFEE BAR 北苏州路234号"), tag="คาเฟ่"),
+   ev("18:00", "food", "Manner Coffee สาขา North Bund ริมแม่น้ำ", "ร้านกระจกใส 3 ด้าน ริมแม่น้ำหวงผู่ หันตรงหอไข่มุก · ท่าเรือสำราญนานาชาติ North Bund (北外滩国客中心码头) ใกล้ Dongdaming Road / Taiping Road เขต Hongkou · จาก Rei Flower เดินเลียบคลอง ~1.5 กม. (~20 นาที) หรือ Didi ~5 นาที · ช่วงนี้ฟ้ามืดแล้ว หอไข่มุกเปิดไฟ วิวสวยที่สุด · วันอาทิตย์คนเยอะ อาจต้องรอที่นั่งริมกระจก · เปิด 07:30–22:00 (ตาม Trip.com) · ร้านอยู่ริมแม่น้ำ ห่างตึก International Port Affairs Building (国际港务大厦) ไปทางใต้ ~60 ม. · แล้ว Didi/เดินข้ามสะพาน Waibaidu ไป The Bund ~10 นาที", None, L("Manner Coffee North Bund International Cruise Terminal, Shanghai", "MANNER 北外滩国客中心滨江店"), tag="คาเฟ่"),
+  ev("19:00", "see", "The Bund ชมวิวแม่น้ำหวงผู่", "ตึกฝั่ง Lujiazui เปิดไฟยามค่ำ ธันวาคมมีไฟประดับสวยเป็นพิเศษ · ฟรี · ช่วงค่ำคนเยอะ ระวังกระเป๋า", "bund", L("The Bund, Shanghai", "外滩")),
+  ev("20:00", "food", "Dongsheng Self-service Cuisine (东盛自助料理) บุฟเฟต์", "บุฟเฟต์ชื่อดัง เรตติ้ง 4.6 ติดอันดับในแอป Amap · ชั้น 5 ห้าง Mosaic Plaza (悦荟广场) 南京东路353号 · ~¥129 ต่อคน · เปิด 10:30–22:30 · จาก The Bund เดิน ~10 นาที · ช่วงค่ำคิวยาว กดคิวล่วงหน้าตอนอยู่ The Bund · ใน Amap/Dianping มีดีลกลุ่ม (团购) ราคาถูกกว่าหน้าร้าน · กลับที่พัก: รถไฟฟ้าสาย 2 สถานี East Nanjing Road ไป People's Square ต่อสาย 1 ไป Changshu Road ~25 นาที หรือ Didi ~20 นาที", None, L("Dongsheng Self-service Cuisine, Mosaic Plaza, 353 East Nanjing Road, Shanghai", "东盛自助料理 悦荟广场店", QUEUE_LINK), tag="มื้อเย็น"),
+  ], note="ธันวาคมเซี่ยงไฮ้หนาว 4–11°C กลางคืนอาจต่ำกว่านั้น ใส่โค้ท ผ้าพันคอ และถุงมือ · ย้ายมาวันอังคารเพื่อหลบงานวิ่งมาราธอนวันอาทิตย์ The Bund วันธรรมดาคนน้อยกว่า · ถ้าวัน Disney (วันที่ 3) ฝนตก สลับกับวันนี้ได้"),
 
  dict(n=5, iso="2026-12-09", dow="พ.", date="พุธ 9 ธ.ค.", title="Canton 8 + West Bund + Xintiandi", icon="🏭", wx="☀️ 3–9°C",
   events=[
@@ -219,18 +221,18 @@ def links_html(links):
 HOTEL_LL = (31.2162, 121.4458)   # 1329 Middle Huaihai Rd, ~160 m from Changshu Rd station
 PVG_LL = (31.1525, 121.8018)
 GEO = {
- (4, "14:00"): ((31.2222, 121.4347), "Pane Yongyuan"),
- (5, "16:45"): ((31.2185, 121.4706), "Bagelous"), (4, "16:45"): ((31.2318, 121.4552), "Butterful"),
+ (2, "15:15"): ((31.2222, 121.4347), "Pane Yongyuan"),
+ (5, "16:45"): ((31.2185, 121.4706), "Bagelous"), (2, "16:45"): ((31.2318, 121.4552), "Butterful"),
  (5, "09:45"): ((31.2180, 121.4568), "Pushing Coffee"),
  (5, "17:30"): ((31.2245, 121.4680), "Pane TX Huaihai"),
  (5, "20:00"): ((31.2175, 121.4545), "Huaihai Road"),
  (5, "11:15"): ((31.2065, 121.4743), "Canton 8"), (5, "13:00"): ((31.1749, 121.4574), "Gate M West Bund"), (5, "16:00"): ((31.2219, 121.4704), "Xintiandi"), (5, "18:30"): ((31.2208, 121.4600), "New Sukiyaki Huaihai"),
- (4, "13:00"): ((31.2253, 121.4407), "วัด Jing'an"), (4, "15:00"): ((31.2300, 121.4505), "West Nanjing Road"), (4, "17:30"): ((31.2341, 121.4572), "Long Time Ago 818"),
+ (2, "14:15"): ((31.2253, 121.4407), "วัด Jing'an"), (2, "16:00"): ((31.2300, 121.4505), "West Nanjing Road"), (2, "17:30"): ((31.2341, 121.4572), "Long Time Ago 818"),
  (6, "08:00"): ((31.2527, 121.4460), "สถานีรถไฟเซี่ยงไฮ้"), (6, "08:40"): ((31.3325, 120.6058), "สถานีซูโจว"), (6, "09:30"): ((31.3264, 120.6258), "拙政园"), (6, "11:00"): ((31.3177, 120.6303), "Pingjiang Road"), (6, "13:00"): ((31.3243, 120.6222), "บะหมี่ซูโจว"), (6, "15:00"): ((31.3185, 120.6040), "Shantang Street"), (6, "18:00"): ((31.3190, 120.6060), "มื้อเย็นซูโจว"), (6, "19:30"): ((31.3325, 120.6058), "สถานีซูโจว"),
  (1, "22:05"): (PVG_LL, "สนามบินผู่ตง T2"),
- (2, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (2, "13:30"): ((31.2368, 121.4702), "No.1 Shopping Center"),
- (2, "14:30"): ((31.2395, 121.4745), "Nanjing Road"), (2, "15:45"): ((31.2401, 121.4866), "The Bund (กลางวัน)"), (2, "16:15"): ((31.2430, 121.4830), "Rockbund"), (2, "17:00"): ((31.2465, 121.4835), "Rei Flower"), (2, "18:00"): ((31.2500, 121.4940), "Manner North Bund"), (2, "19:00"): ((31.2422, 121.4861), "The Bund"), (2, "20:00"): ((31.2386, 121.4780), "Dongsheng Buffet"),
- (4, "09:45"): ((31.2068, 121.4352), "Grandma's Home"), (4, "12:00"): ((31.2160, 121.4376), "13DE MARZO"), (4, "11:00"): ((31.2063, 121.4337), "Wukang Mansion"),
+ (4, "11:30"): ((31.2381, 121.4726), "Lai Lai"), (4, "13:30"): ((31.2368, 121.4702), "No.1 Shopping Center"),
+ (4, "14:30"): ((31.2395, 121.4745), "Nanjing Road"), (4, "15:45"): ((31.2401, 121.4866), "The Bund (กลางวัน)"), (4, "16:15"): ((31.2430, 121.4830), "Rockbund"), (4, "17:00"): ((31.2465, 121.4835), "Rei Flower"), (4, "18:00"): ((31.2500, 121.4940), "Manner North Bund"), (4, "19:00"): ((31.2422, 121.4861), "The Bund"), (4, "20:00"): ((31.2386, 121.4780), "Dongsheng Buffet"),
+ (2, "11:15"): ((31.2068, 121.4352), "Grandma's Home"), (2, "13:30"): ((31.2160, 121.4376), "13DE MARZO"), (2, "12:30"): ((31.2063, 121.4337), "Wukang Mansion"),
 
 
 
@@ -303,7 +305,7 @@ _CRED = {r[0]: r for r in json.load(open(_os.path.join(_os.path.dirname(OUT) or 
 HD_BY_OLD = {"bkk": "bkk", "peoples-square": "peoples", "nanjing-road": "nanjing", "bund": "bund", "wukang-road": "wukang",
              "xintiandi": "xintiandi", "yu-garden": "yu", "disneyland": "disney", "castle": "castle", "adventure-isle": "adventure",
              "treasure-cove": "treasure", "pvg": "pvg", "fireworks": "fireworks", "superbrand": "superbrand", "huaihai-road": "huaihai"}
-HD_BY_SLOT = {(2, "20:00"): "dongsheng", (4, "16:45"): "butterful", (5, "16:45"): "bagel", (5, "20:00"): "huaihai", (5, "13:00"): "westbund", (4, "15:00"): "wnanjing", (4, "13:00"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (2, "16:15"): "rockbund", (2, "13:30"): "no1dept", (2, "17:00"): "waibaidu", (2, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (2, "15:45"): "bundday", (4, "12:00"): "marzo", (7, "12:00"): "luneurs", (7, "20:00"): "xmas",}
+HD_BY_SLOT = {(4, "20:00"): "dongsheng", (2, "16:45"): "butterful", (5, "16:45"): "bagel", (5, "20:00"): "huaihai", (5, "13:00"): "westbund", (2, "16:00"): "wnanjing", (2, "14:15"): "jingan", (6, "08:00"): "sz-shstation", (6, "08:40"): "sz-train", (6, "09:30"): "sz-garden", (6, "11:00"): "sz-pingjiang", (6, "13:00"): "sz-noodle", (6, "15:00"): "sz-shantang", (6, "18:00"): "sz-fish", (6, "19:30"): "sz-station", (4, "16:15"): "rockbund", (4, "13:30"): "no1dept", (4, "17:00"): "waibaidu", (4, "18:00"): "northbund", (3, "10:00"): "zootopia", (1, "16:45"): "spring", (8, "12:05"): "spring", (7, "17:30"): "ljznight", (8, "08:00"): "pvg", (4, "15:45"): "bundday", (2, "13:30"): "marzo", (7, "12:00"): "luneurs", (7, "20:00"): "xmas",}
 for _d in DAYS:
     for _e in _d["events"]:
         _e["hd"] = HD_BY_SLOT.get((_d["n"], _e["t"])) or HD_BY_OLD.get(_e["img"] or "")
@@ -317,10 +319,10 @@ def credit_html(key):
 
 
 # Chinese names for the summary pictures (ไทย / 中文 switch)
-ZH_DAY = {1: "出发去上海", 2: "人民广场 + 外滩", 4: "武康路 + 静安寺 + 南京西路", 5: "喜粤8号 + 西岸 + 新天地", 3: "上海迪士尼乐园", 6: "苏州一日游 · 拙政园 + 平江路 + 山塘街", 7: "Cocina 19 + 外滩 + 陆家嘴", 8: "回国"}
+ZH_DAY = {1: "出发去上海", 4: "人民广场 + 外滩", 2: "武康路 + 静安寺 + 南京西路", 5: "喜粤8号 + 西岸 + 新天地", 3: "上海迪士尼乐园", 6: "苏州一日游 · 拙政园 + 平江路 + 山塘街", 7: "Cocina 19 + 外滩 + 陆家嘴", 8: "回国"}
 SKIP = {
- (2, "17:00"): "คาเฟ่ 2 ร้านติดกัน เลือกไปร้านเดียวก็พอ",
- (2, "18:00"): "คาเฟ่ 2 ร้านติดกัน เลือกไปร้านเดียวก็พอ",
+ (4, "17:00"): "คาเฟ่ 2 ร้านติดกัน เลือกไปร้านเดียวก็พอ",
+ (4, "18:00"): "คาเฟ่ 2 ร้านติดกัน เลือกไปร้านเดียวก็พอ",
 
 
  (7, "13:30"): "แวะเฉพาะถ้ายังไม่ได้ไซซ์",
@@ -328,17 +330,17 @@ SKIP = {
 }
 
 ZH_EV = {
- (4, "14:00"): "PANE 球鞋（永源路22号）",
- (5, "16:45"): "New York Bagelous Museum（新天地时尚 L111）", (4, "16:45"): "黄油与面包 Butterful & Creamorous（吴江路289号）",
+ (2, "15:15"): "PANE 球鞋（永源路22号）",
+ (5, "16:45"): "New York Bagelous Museum（新天地时尚 L111）", (2, "16:45"): "黄油与面包 Butterful & Creamorous（吴江路289号）",
  (5, "09:45"): "Pushing Coffee 狗狗咖啡（茂名路）",
  (5, "17:30"): "PANE 球鞋（TX淮海 淮海中路523号）",
  (5, "20:00"): "淮海中路 散步回酒店",
  (5, "11:15"): "喜粤8号（汝南街）", (5, "13:00"): "西岸梦中心", (5, "16:00"): "新天地", (5, "18:30"): "牛New寿喜烧（淮海中路755号 3楼）",
- (4, "13:00"): "静安寺", (4, "15:00"): "南京西路 逛街", (4, "17:30"): "很久以前羊肉串（南京西路818广场店）",
+ (2, "14:15"): "静安寺", (2, "16:00"): "南京西路 逛街", (2, "17:30"): "很久以前羊肉串（南京西路818广场店）",
  (6, "08:00"): "去上海站", (6, "08:40"): "高铁去苏州站", (6, "09:30"): "拙政园", (6, "11:00"): "平江路 · 租汉服拍照", (6, "13:00"): "苏式汤面（裕兴记）", (6, "15:00"): "山塘街 · 坐船", (6, "18:00"): "苏帮菜 · 松鼠桂鱼", (6, "19:30"): "高铁回上海",
  (1, "13:45"): "曼谷素万那普机场 值机", (1, "16:45"): "航班 9C7284 曼谷 → 上海浦东", (1, "22:05"): "抵达浦东国际机场 2号航站楼", (1, "23:45"): "入住 海玥名庭酒店 淮海中路",
- (2, "11:00"): "从酒店出发 去人民广场", (2, "11:30"): "莱莱小笼（天津路）", (2, "13:30"): "第一百货商业中心（南京东路830号）", (2, "14:30"): "南京路步行街", (2, "15:45"): "外滩 · 白天拍照", (2, "16:15"): "外滩源（圆明园路 · 虎丘路）", (2, "17:00"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (2, "18:00"): "MANNER 咖啡（北外滩国客中心滨江店）", (2, "19:00"): "外滩 · 黄浦江夜景", (2, "20:00"): "东盛自助料理（悦荟广场店 南京东路353号 5楼）",
- (4, "12:00"): "13DE MARZO 小熊咖啡（安福路322号）", (4, "09:45"): "奶奶家（武康路店）", (4, "11:00"): "武康路 · 武康大楼",
+ (4, "11:00"): "从酒店出发 去人民广场", (4, "11:30"): "莱莱小笼（天津路）", (4, "13:30"): "第一百货商业中心（南京东路830号）", (4, "14:30"): "南京路步行街", (4, "15:45"): "外滩 · 白天拍照", (4, "16:15"): "外滩源（圆明园路 · 虎丘路）", (4, "17:00"): "汭REi·FLOWER COFFEE BAR（北苏州路234号）", (4, "18:00"): "MANNER 咖啡（北外滩国客中心滨江店）", (4, "19:00"): "外滩 · 黄浦江夜景", (4, "20:00"): "东盛自助料理（悦荟广场店 南京东路353号 5楼）",
+ (2, "13:30"): "13DE MARZO 小熊咖啡（安福路322号）", (2, "11:15"): "奶奶家（武康路店）", (2, "12:30"): "武康路 · 武康大楼",
 
  (3, "07:00"): "从酒店出发 去上海迪士尼", (3, "08:30"): "奇幻童话城堡", (3, "10:00"): "疯狂动物城 + 明日世界", (3, "13:00"): "探险岛", (3, "15:00"): "宝藏湾",
  (3, "18:00"): "园内晚餐", (3, "21:15"): "点亮奇梦 + 烟花表演", (3, "22:00"): "回酒店",
@@ -450,7 +452,7 @@ def arrivals(d):
             if ev: out[ev["t"]] = (g["m"], g["min"])
     return out
 
-DAY_COVER = {1: "spring", 2: "bund", 4: "wukang", 5: "xintiandi", 3: "castle", 6: "sz-garden", 7: "ljznight", 8: "pvg"}
+DAY_COVER = {1: "spring", 4: "bund", 2: "wukang", 5: "xintiandi", 3: "castle", 6: "sz-garden", 7: "ljznight", 8: "pvg"}
 def day_html(d):
     disney = ' <span class="tag gold">DISNEY DAY</span>' if d.get("disney") else ""
     mp = day_geo(d)
@@ -526,8 +528,8 @@ QUEUE_PHR = [
  ("过号了，还可以进吗？", "เลยคิวไปแล้ว ยังเข้าได้ไหม"),
 ]
 queue_rows = "".join(f'<button type="button" class="phr" data-say="{E(z.replace(" …", ""))}"><span><span class="zh">{E(z)}</span><span class="th">{E(t)}</span></span><span class="spk" aria-hidden="true">🔊</span></button>' for z, t in QUEUE_PHR)
-QUEUE_SHOPS = [("วันที่ 2 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 2 · 20:00", "Dongsheng Buffet", "东盛自助料理 悦荟广场"),
-               ("วันที่ 4 · 09:45", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 4 · 17:30", "Long Time Ago (818 Plaza)", "很久以前羊肉串 南京西路818"), ("วันที่ 7 · 18:30", "Chef Fei", "费大厨 陆家嘴")]
+QUEUE_SHOPS = [("วันที่ 4 · 11:30", "Lai Lai", "莱莱小笼"), ("วันที่ 4 · 20:00", "Dongsheng Buffet", "东盛自助料理 悦荟广场"),
+               ("วันที่ 2 · 11:15", "Grandma's Home", "奶奶家 武康路"), ("วันที่ 2 · 17:30", "Long Time Ago (818 Plaza)", "很久以前羊肉串 南京西路818"), ("วันที่ 7 · 18:30", "Chef Fei", "费大厨 陆家嘴")]
 queue_shops = "".join(f'<li><b>{E(d)}</b> {E(n)} · ค้นว่า <span class="q-zh" lang="zh-CN">{E(z)}</span></li>' for d, n, z in QUEUE_SHOPS)
 tips_rows = "".join(f'<details class="tip"><summary><span aria-hidden="true">{ic}</span>{E(h)}</summary><p>{E(t)}</p></details>' for ic, h, t in TIPS)
 
@@ -886,12 +888,14 @@ EMOJI_KW = [("พลุ", "🎆"), ("Castle", "🏰"), ("Zootopia", "🦊"), ("A
             ("รถไฟ", "🚄"), ("Maglev", "🚄"), ("Grandma", "🥢"), ("Canton", "🥢"), ("Dongsheng", "🍣"), ("มื้อเย็น", "🍽️")]
 EMOJI_KIND = {"food": "🍽️", "shop": "🛍️", "see": "📸", "stay": "🏨", "fly": "✈️", "go": "🚶"}
 def stop_emoji(e):
+    if e["kind"] == "go": return "🚶"
+    if "Grandma" in e["title"]: return "🥢"
     for k, v in EMOJI_KW:
         if k in e["title"]: return v
     return EMOJI_KIND.get(e["kind"], "✨")
 def stop_fx(n, e):
     if "พลุ" in e["title"]: return "fw"
-    if (n, e["t"]) in ((2, "19:00"), (7, "17:30"), (7, "20:00")): return "beam"
+    if (n, e["t"]) in ((4, "19:00"), (7, "17:30"), (7, "20:00")): return "beam"
     return ""
 
 def _tour():
